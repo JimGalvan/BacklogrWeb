@@ -1,0 +1,77 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.rail {
+  width: 56px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px 0;
+  border-right: 1px solid var(--line-soft);
+  gap: 0;
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent) 0%, oklch(0.65 0.16 35) 100%);
+  box-shadow: 0 2px 14px oklch(0.80 0.155 75 / .35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  flex-shrink: 0;
+}
+
+.nav-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+
+.nav-btn:hover,
+.nav-btn.active {
+  background: var(--panel);
+  color: var(--text);
+}
+
+.spacer {
+  flex: 1;
+}
+
+.user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, oklch(0.55 0.15 290), oklch(0.45 0.18 340));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+}

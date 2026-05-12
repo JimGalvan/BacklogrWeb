@@ -1,12 +1,30 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, signal, ViewChild } from '@angular/core';
+import { LeftRailComponent } from './components/left-rail/left-rail';
+import { TopbarComponent } from './components/topbar/topbar';
+import { TicketBodyComponent } from './components/ticket-body/ticket-body';
+import { InsightsPanelComponent } from './components/insights-panel/insights-panel';
+import { ImportModalComponent } from './components/import-modal/import-modal';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [
+    LeftRailComponent,
+    TopbarComponent,
+    TicketBodyComponent,
+    InsightsPanelComponent,
+    ImportModalComponent,
+  ],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class App {
-  protected readonly title = signal('Backlogr');
+  showModal = signal(false);
+
+  @ViewChild(InsightsPanelComponent)
+  insightsPanel?: InsightsPanelComponent;
+
+  onImported() {
+    this.showModal.set(false);
+    this.insightsPanel?.startStream();
+  }
 }

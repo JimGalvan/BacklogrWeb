@@ -1,0 +1,20 @@
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 5px;
+  background: oklch(0.78 0.13 235 / .14);
+  color: var(--info);
+  border: 1px solid oklch(0.78 0.13 235 / .25);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--info);
+  flex-shrink: 0;
+}

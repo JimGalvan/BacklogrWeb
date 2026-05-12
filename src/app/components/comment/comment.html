@@ -1,0 +1,14 @@
+<div class="comment">
+  <app-avatar
+    [initials]="comment().avatar.initials"
+    [variant]="comment().avatar.variant"
+    [size]="28"
+  />
+  <div class="comment-body">
+    <div class="comment-head">
+      <span class="comment-author">{{ comment().author }}</span>
+      <span class="comment-time">{{ comment().timeAgo }}</span>
+    </div>
+    <p class="comment-text rich-text" [innerHTML]="comment().bodyHtml | safeHtml"></p>
+  </div>
+</div>

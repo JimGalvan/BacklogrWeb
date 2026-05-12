@@ -1,0 +1,49 @@
+<div class="meta-row">
+  <div class="meta-cell">
+    <div class="meta-label">STATUS</div>
+    <app-status-chip [status]="ticket().status" />
+  </div>
+
+  <div class="meta-cell">
+    <div class="meta-label">ASSIGNEE</div>
+    <div class="meta-person">
+      <app-avatar
+        [initials]="ticket().assignee.avatar.initials"
+        [variant]="ticket().assignee.avatar.variant"
+        [size]="18"
+      />
+      <span class="meta-value">{{ ticket().assignee.name }}</span>
+    </div>
+  </div>
+
+  <div class="meta-cell">
+    <div class="meta-label">REPORTER</div>
+    <div class="meta-person">
+      <app-avatar
+        [initials]="ticket().reporter.avatar.initials"
+        [variant]="ticket().reporter.avatar.variant"
+        [size]="18"
+      />
+      <span class="meta-value">{{ ticket().reporter.name }}</span>
+    </div>
+  </div>
+
+  <div class="meta-cell">
+    <div class="meta-label">SPRINT</div>
+    <span class="meta-value">{{ ticket().sprint }}</span>
+  </div>
+
+  <div class="meta-cell">
+    <div class="meta-label">AFFECTS</div>
+    <span class="meta-value mono">{{ ticket().affects }}</span>
+  </div>
+
+  <div class="meta-cell">
+    <div class="meta-label">LABELS</div>
+    <div class="tags-row">
+      @for (label of ticket().labels; track label) {
+        <app-tag [label]="label" />
+      }
+    </div>
+  </div>
+</div>

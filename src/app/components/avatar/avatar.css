@@ -1,0 +1,23 @@
+.avatar {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Geist Mono', monospace;
+  font-weight: 600;
+  color: oklch(0.96 0.005 250);
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.gradient-a {
+  background: linear-gradient(135deg, oklch(0.55 0.10 270), oklch(0.42 0.08 330));
+}
+
+.gradient-b {
+  background: linear-gradient(135deg, oklch(0.55 0.12 180), oklch(0.40 0.10 220));
+}
+
+.gradient-c {
+  background: linear-gradient(135deg, oklch(0.60 0.13 55), oklch(0.45 0.11 30));
+}

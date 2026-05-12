@@ -1,0 +1,20 @@
+:host {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: 56px 1fr 460px;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.main-col {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}

@@ -1,0 +1,57 @@
+:host {
+  display: block;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.ticket-body {
+  padding: 28px 40px 80px;
+}
+
+/* Title block */
+.title-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.priority-wrapper {
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.ticket-title {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  text-wrap: pretty;
+  max-width: 56ch;
+  color: var(--text);
+}
+
+/* Section labels */
+.section-label {
+  font-size: 10.5px;
+  color: var(--muted-2);
+  letter-spacing: 0.09em;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 22px 0 10px;
+}
+
+/* Description */
+.description {
+  max-width: 72ch;
+  font-size: 13.5px;
+  color: var(--text-2);
+  line-height: 1.65;
+}
+
+/* Comments */
+.comments {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 72ch;
+}

@@ -1,0 +1,240 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-2);
+  border-left: 1px solid var(--line-soft);
+  overflow: hidden;
+}
+
+.insights-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Header */
+.panel-header {
+  padding: 14px 20px 0;
+  flex-shrink: 0;
+}
+
+.header-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.sparkle-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: var(--accent-2);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.panel-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.analyzing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 8px var(--ok);
+  animation: pulse-dot 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.live-text {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+/* Body */
+.panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Summary card */
+.summary-card {
+  background: var(--panel);
+  border: 1px solid var(--line-soft);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.card-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  background: var(--accent-2);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+.card-meta {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10.5px;
+  color: var(--muted);
+}
+
+/* TL;DR block */
+.tldr-block {
+  padding: 12px 14px;
+  background: linear-gradient(180deg, var(--accent-2) 0%, transparent 100%);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.tldr-quote {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--text);
+  text-wrap: pretty;
+  line-height: 1.45;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Blinking caret */
+.caret {
+  display: inline-block;
+  width: 7px;
+  height: 13px;
+  background: var(--accent);
+  vertical-align: -2px;
+  margin-left: 1px;
+  animation: blink-caret 1s steps(2) infinite;
+}
+
+.caret.hidden {
+  display: none;
+}
+
+@keyframes blink-caret {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Bullets */
+.bullets-block {
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.bullet-item {
+  display: flex;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.5;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.bullet-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.bullet-arrow {
+  font-family: 'Geist Mono', monospace;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Footer */
+.panel-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--line-soft);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--muted-2);
+}
+
+.footer-meta {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  color: var(--muted-2);
+}
+
+.reanalyze-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 1px solid var(--line-soft);
+  background: var(--panel);
+  color: var(--text-2);
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  margin-left: auto;
+}
+
+.reanalyze-btn:hover {
+  background: var(--panel-2);
+  color: var(--text);
+}

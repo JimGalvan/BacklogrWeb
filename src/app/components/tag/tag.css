@@ -1,0 +1,13 @@
+.tag {
+  display: inline-flex;
+  align-items: center;
+  height: 19px;
+  padding: 0 7px;
+  border-radius: 4px;
+  background: var(--bg);
+  border: 1px solid var(--line-soft);
+  color: var(--text-2);
+  font-family: 'Geist Mono', monospace;
+  font-size: 10.5px;
+  white-space: nowrap;
+}
