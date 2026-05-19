@@ -1,0 +1,21 @@
+@if (isPopup) {
+  <div class="callback-page">
+    <div class="callback-card">
+      <div class="spinner"></div>
+      <p class="callback-msg">Finishing connection…</p>
+    </div>
+  </div>
+} @else {
+  <div class="callback-page">
+    <div class="callback-card">
+      <div class="success-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <h1 class="callback-title">{{ providerName }} connected</h1>
+      <p class="callback-subtitle">You can now import tickets from this workspace.</p>
+      <a routerLink="/integrations" class="btn-back">Go to integrations</a>
+    </div>
+  </div>
+}

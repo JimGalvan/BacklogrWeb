@@ -1,0 +1,84 @@
+:host {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+}
+
+.callback-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.callback-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.success-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: oklch(0.78 0.14 158 / .12);
+  border: 1px solid oklch(0.78 0.14 158 / .3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ok);
+}
+
+.callback-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.callback-subtitle {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.btn-back {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  height: 34px;
+  padding: 0 18px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: oklch(0.18 0.01 80);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: filter 0.15s;
+}
+
+.btn-back:hover {
+  filter: brightness(1.08);
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2.5px solid var(--line);
+  border-top-color: var(--accent);
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.callback-msg {
+  font-size: 13px;
+  color: var(--muted);
+}

@@ -60,28 +60,27 @@
       @if (activeTab() === 'connect') {
         <!-- Workspace cards -->
         <div class="workspace-cards">
-          <div class="workspace-card">
-            <div class="workspace-logo logo-atlassian">A</div>
-            <div class="workspace-info">
-              <div class="workspace-name">acme.atlassian.net</div>
-              <div class="workspace-sub">8 projects · 12,481 tickets · synced 4m ago</div>
+          @for (provider of providers; track provider.id) {
+            <div class="workspace-card" [class.faded]="!isConnected(provider.id)">
+              <div class="workspace-logo {{ provider.logoClass }}">{{ provider.logoInitial }}</div>
+              <div class="workspace-info">
+                <div class="workspace-name">{{ provider.name }}</div>
+                <div class="workspace-sub">
+                  {{ isConnected(provider.id) ? 'Connected · OAuth' : 'Not connected · OAuth required' }}
+                </div>
+              </div>
+              @if (isConnected(provider.id)) {
+                <button class="workspace-btn connected">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Connected
+                </button>
+              } @else {
+                <button class="workspace-btn" (click)="connect(provider.id)">Connect</button>
+              }
             </div>
-            <button class="workspace-btn connected">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"/>
-              </svg>
-              Connected
-            </button>
-          </div>
-
-          <div class="workspace-card faded">
-            <div class="workspace-logo logo-linear">L</div>
-            <div class="workspace-info">
-              <div class="workspace-name">linear.app/acme</div>
-              <div class="workspace-sub">Not connected · OAuth required</div>
-            </div>
-            <button class="workspace-btn">Connect</button>
-          </div>
+          }
         </div>
         <p class="workspace-hint">Read-only. We never write back to your tracker.</p>
       }
@@ -89,7 +88,12 @@
 
     <!-- Error message -->
     @if (errorMessage()) {
-      <p class="error-message">{{ errorMessage() }}</p>
+      <div class="error-message">
+        {{ errorMessage() }}
+        @if (showConnectHint()) {
+          <button class="error-connect-link" (click)="activeTab.set('connect')">Connect a workspace →</button>
+        }
+      </div>
     }
 
     <!-- Footer -->

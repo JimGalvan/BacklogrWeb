@@ -1,6 +1,8 @@
 import { Component, inject, output, signal } from '@angular/core';
 import { TicketService } from '../../services/ticket.service';
+import { IntegrationService } from '../../services/integration.service';
 import { WorkspaceTicketSummary } from '../../models/ticket.model';
+import { INTEGRATION_PROVIDERS, IntegrationProvider } from '../../models/integration.model';
 
 type ModalTab = 'url' | 'connect';
 
@@ -12,6 +14,7 @@ type ModalTab = 'url' | 'connect';
 })
 export class ImportModalComponent {
   private ticketService = inject(TicketService);
+  private integrationService = inject(IntegrationService);
 
   close = output<void>();
   imported = output<void>();
@@ -19,11 +22,22 @@ export class ImportModalComponent {
   activeTab = signal<ModalTab>('url');
   urlValue = signal('');
   isLoading = signal(false);
+  errorMessage = signal<string | null>(null);
+  showConnectHint = signal(false);
 
+  readonly providers: IntegrationProvider[] = INTEGRATION_PROVIDERS;
   recentTickets: WorkspaceTicketSummary[] = [];
 
   constructor() {
     this.ticketService.getRecentTickets().subscribe(t => (this.recentTickets = t));
+  }
+
+  isConnected(id: string): boolean {
+    return this.integrationService.isConnected(id);
+  }
+
+  connect(id: string): void {
+    this.integrationService.connect(id);
   }
 
   onUrlInput(event: Event) {
@@ -36,14 +50,13 @@ export class ImportModalComponent {
     }
   }
 
-  errorMessage = signal<string | null>(null);
-
   importFromUrl(url?: string) {
     const target = url ?? this.urlValue();
     if (!target || this.isLoading()) return;
 
     this.isLoading.set(true);
     this.errorMessage.set(null);
+    this.showConnectHint.set(false);
 
     this.ticketService.importTicket(target).subscribe({
       next: () => {
@@ -54,6 +67,9 @@ export class ImportModalComponent {
       error: (err) => {
         this.isLoading.set(false);
         this.errorMessage.set(err.error?.message ?? 'Import failed. Please try again.');
+        if (err.status === 400 && err.error?.message?.toLowerCase().includes('connect')) {
+          this.showConnectHint.set(true);
+        }
       },
     });
   }

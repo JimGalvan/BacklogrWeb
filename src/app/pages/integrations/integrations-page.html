@@ -1,0 +1,35 @@
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">Integrations</h1>
+    <p class="page-subtitle">Connect your issue trackers to import tickets into Backlogr.</p>
+  </div>
+
+  <div class="provider-list">
+    @for (provider of providers; track provider.id) {
+      <div class="provider-card">
+        <div class="provider-logo {{ provider.logoClass }}">{{ provider.logoInitial }}</div>
+
+        <div class="provider-info">
+          <div class="provider-name">{{ provider.name }}</div>
+          <div class="provider-description">{{ provider.description }}</div>
+        </div>
+
+        <div class="provider-actions">
+          @if (isConnected(provider.id)) {
+            <div class="status-connected">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Connected
+            </div>
+            <button class="btn-reconnect" (click)="connect(provider.id)">Reconnect</button>
+          } @else {
+            <button class="btn-connect" (click)="connect(provider.id)">Connect</button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <p class="read-only-note">Read-only access only. Backlogr never writes back to your tracker.</p>
+</div>

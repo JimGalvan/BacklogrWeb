@@ -226,13 +226,9 @@
   flex-shrink: 0;
 }
 
-.logo-atlassian {
-  background: linear-gradient(135deg, oklch(0.55 0.13 200), oklch(0.40 0.10 240));
-}
-
-.logo-linear {
-  background: linear-gradient(135deg, oklch(0.50 0.12 280), oklch(0.36 0.10 320));
-}
+.logo-jira    { background: linear-gradient(135deg, oklch(0.55 0.13 200), oklch(0.40 0.10 240)); }
+.logo-linear  { background: linear-gradient(135deg, oklch(0.50 0.12 280), oklch(0.36 0.10 320)); }
+.logo-github  { background: linear-gradient(135deg, oklch(0.35 0.01 250), oklch(0.25 0.01 250)); }
 
 .workspace-info {
   flex: 1;
@@ -294,6 +290,25 @@
   border: 1px solid oklch(0.72 0.18 25 / .25);
   border-radius: 6px;
   padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.error-connect-link {
+  flex-shrink: 0;
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+}
+
+.error-connect-link:hover {
+  text-decoration: underline;
 }
 
 /* Footer */
