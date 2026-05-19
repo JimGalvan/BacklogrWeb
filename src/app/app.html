@@ -1,21 +1,6 @@
-<div class="app-grid">
-  <!-- Left rail -->
+<div class="shell">
   <app-left-rail />
-
-  <!-- Main column -->
-  <div class="main-col">
-    <app-topbar (importClick)="showModal.set(true)" />
-    <app-ticket-body />
-  </div>
-
-  <!-- Insights panel -->
-  <app-insights-panel />
+  <main class="shell-content">
+    <router-outlet />
+  </main>
 </div>
-
-<!-- Import modal -->
-@if (showModal()) {
-  <app-import-modal
-    (close)="showModal.set(false)"
-    (imported)="onImported()"
-  />
-}

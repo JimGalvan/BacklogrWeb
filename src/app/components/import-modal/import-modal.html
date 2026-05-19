@@ -87,6 +87,11 @@
       }
     </div>
 
+    <!-- Error message -->
+    @if (errorMessage()) {
+      <p class="error-message">{{ errorMessage() }}</p>
+    }
+
     <!-- Footer -->
     <div class="modal-footer">
       <span class="footer-hint">⌥ Enter to import</span>

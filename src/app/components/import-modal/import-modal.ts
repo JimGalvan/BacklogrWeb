@@ -36,14 +36,25 @@ export class ImportModalComponent {
     }
   }
 
+  errorMessage = signal<string | null>(null);
+
   importFromUrl(url?: string) {
     const target = url ?? this.urlValue();
     if (!target || this.isLoading()) return;
+
     this.isLoading.set(true);
-    this.ticketService.importTicket(target).subscribe(() => {
-      this.isLoading.set(false);
-      this.close.emit();
-      this.imported.emit();
+    this.errorMessage.set(null);
+
+    this.ticketService.importTicket(target).subscribe({
+      next: () => {
+        this.isLoading.set(false);
+        this.close.emit();
+        this.imported.emit();
+      },
+      error: (err) => {
+        this.isLoading.set(false);
+        this.errorMessage.set(err.error?.message ?? 'Import failed. Please try again.');
+      },
     });
   }
 }

@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { Insights } from '../models/insights.model';
+import { environment } from '../../environments/environment';
+
+const BASE = `${environment.apiBaseUrl}/api/${environment.apiVersion}`;
 
 const MOCK_INSIGHTS: Insights = {
   ticketKey: 'PAY-4827',
@@ -19,7 +22,7 @@ const MOCK_INSIGHTS: Insights = {
 
 @Injectable({ providedIn: 'root' })
 export class InsightsService {
-  // GET /api/v1/insights/:ticketKey
+  // GET /api/v1/insights/:ticketKey  →  `${BASE}/insights/${ticketKey}`
   getInsights(_ticketKey: string): Observable<Insights> {
     return of(MOCK_INSIGHTS).pipe(delay(0));
   }

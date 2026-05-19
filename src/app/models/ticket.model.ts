@@ -35,3 +35,13 @@ export interface WorkspaceTicketSummary {
   title: string;
   project: string;
 }
+
+export interface TicketListItem {
+  key: string;
+  project: string;
+  title: string;
+  priority: 'P1' | 'P2' | 'P3';
+  status: string;
+  assignee: { name: string; avatar: PersonAvatar };
+  importedAt: string;
+}

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, input, OnChanges, signal } from '@angular/core';
 import { Ticket } from '../../models/ticket.model';
 import { TicketService } from '../../services/ticket.service';
 import { PriorityChipComponent } from '../priority-chip/priority-chip';
@@ -13,11 +13,13 @@ import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
   templateUrl: './ticket-body.html',
   styleUrl: './ticket-body.css',
 })
-export class TicketBodyComponent implements OnInit {
+export class TicketBodyComponent implements OnChanges {
   private ticketService = inject(TicketService);
+
+  ticketKey = input<string>('PAY-4827');
   ticket = signal<Ticket | null>(null);
 
-  ngOnInit() {
-    this.ticketService.getTicket('PAY-4827').subscribe(t => this.ticket.set(t));
+  ngOnChanges() {
+    this.ticketService.getTicket(this.ticketKey()).subscribe(t => this.ticket.set(t));
   }
 }

@@ -4,17 +4,14 @@
   overflow: hidden;
 }
 
-.app-grid {
+.shell {
   display: grid;
-  grid-template-columns: 56px 1fr 460px;
+  grid-template-columns: 56px 1fr;
   height: 100vh;
   overflow: hidden;
-  background: var(--bg);
 }
 
-.main-col {
-  display: flex;
-  flex-direction: column;
+.shell-content {
   height: 100vh;
   overflow: hidden;
 }
