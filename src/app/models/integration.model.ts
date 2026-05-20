@@ -8,6 +8,7 @@ export interface IntegrationProvider {
   description: string;
   logoInitial: string;
   logoClass: string;
+  comingSoon?: boolean;
 }
 
 export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
@@ -24,6 +25,7 @@ export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
     description: 'Linear · modern software planning',
     logoInitial: 'L',
     logoClass: 'logo-linear',
+    comingSoon: true,
   },
   {
     id: 'github',
@@ -31,5 +33,6 @@ export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
     description: 'GitHub · repository issue tracking',
     logoInitial: 'G',
     logoClass: 'logo-github',
+    comingSoon: true,
   },
 ];

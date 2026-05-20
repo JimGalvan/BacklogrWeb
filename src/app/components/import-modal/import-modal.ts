@@ -25,7 +25,7 @@ export class ImportModalComponent {
   errorMessage = signal<string | null>(null);
   showConnectHint = signal(false);
 
-  readonly providers: IntegrationProvider[] = INTEGRATION_PROVIDERS;
+  readonly providers: IntegrationProvider[] = INTEGRATION_PROVIDERS.filter(p => !p.comingSoon);
   recentTickets: WorkspaceTicketSummary[] = [];
 
   constructor() {

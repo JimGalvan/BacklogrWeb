@@ -2,7 +2,22 @@
   "permissions": {
     "allow": [
       "Bash(npx ng *)",
-      "Bash(Remove-Item *)"
+      "Bash(Remove-Item *)",
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\jimmy\\\\WebstormProjects\\\\Backlogr\" -Force)",
+      "Bash(Select-Object Name, FullName)",
+      "Bash(npx tsc *)",
+      "Bash(node *)",
+      "Bash(pip show *)",
+      "Bash(python3 -m playwright --version)",
+      "Bash(npx puppeteer *)",
+      "Bash(curl -s -o /tmp/workspaces-check.html http://localhost:4201/)",
+      "Bash(curl -s http://localhost:4201/)",
+      "Bash(npm list *)",
+      "Read(//c/Users/jimmy/AppData/Roaming/npm/node_modules/**)",
+      "Bash(npm install *)",
+      "Bash(rm verify-ws.mjs)",
+      "Bash(npm uninstall *)"
     ]
   }
 }

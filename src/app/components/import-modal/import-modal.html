@@ -3,7 +3,7 @@
     <!-- Modal head -->
     <div class="modal-head">
       <h3 class="modal-heading">Import a ticket</h3>
-      <p class="modal-subheading">Paste a link, connect a workspace, or pick from recents.</p>
+      <p class="modal-subheading">Paste a link, connect an integration, or pick from recents.</p>
     </div>
 
     <!-- Tab strip -->
@@ -17,7 +17,7 @@
         class="modal-tab"
         [class.active]="activeTab() === 'connect'"
         (click)="activeTab.set('connect')"
-      >Connect workspace</button>
+      >Connect integration</button>
     </div>
 
     <!-- Body -->
@@ -38,11 +38,11 @@
             (keydown.enter)="importFromUrl()"
           />
         </div>
-        <p class="input-hint">⌘V · accepts Jira, Linear, GitHub Issues, ServiceNow</p>
+        <p class="input-hint">⌘V · accepts Jira</p>
 
         <!-- Recents -->
         <div class="recents-section">
-          <div class="recents-label">RECENT IN YOUR WORKSPACE</div>
+          <div class="recents-label">RECENTLY IMPORTED</div>
           <div class="recents-list">
             @for (ticket of recentTickets; track ticket.key) {
               <button class="recent-row" (click)="importFromUrl(ticket.key)">
@@ -59,30 +59,30 @@
 
       @if (activeTab() === 'connect') {
         <!-- Workspace cards -->
-        <div class="workspace-cards">
+        <div class="integration-cards">
           @for (provider of providers; track provider.id) {
-            <div class="workspace-card" [class.faded]="!isConnected(provider.id)">
-              <div class="workspace-logo {{ provider.logoClass }}">{{ provider.logoInitial }}</div>
-              <div class="workspace-info">
-                <div class="workspace-name">{{ provider.name }}</div>
-                <div class="workspace-sub">
+            <div class="integration-card" [class.faded]="!isConnected(provider.id)">
+              <div class="integration-logo {{ provider.logoClass }}">{{ provider.logoInitial }}</div>
+              <div class="integration-info">
+                <div class="integration-name">{{ provider.name }}</div>
+                <div class="integration-sub">
                   {{ isConnected(provider.id) ? 'Connected · OAuth' : 'Not connected · OAuth required' }}
                 </div>
               </div>
               @if (isConnected(provider.id)) {
-                <button class="workspace-btn connected">
+                <button class="integration-btn connected">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12"/>
                   </svg>
                   Connected
                 </button>
               } @else {
-                <button class="workspace-btn" (click)="connect(provider.id)">Connect</button>
+                <button class="integration-btn" (click)="connect(provider.id)">Connect</button>
               }
             </div>
           }
         </div>
-        <p class="workspace-hint">Read-only. We never write back to your tracker.</p>
+        <p class="integration-hint">Read-only. We never write back to your tracker.</p>
       }
     </div>
 
@@ -91,7 +91,7 @@
       <div class="error-message">
         {{ errorMessage() }}
         @if (showConnectHint()) {
-          <button class="error-connect-link" (click)="activeTab.set('connect')">Connect a workspace →</button>
+          <button class="error-connect-link" (click)="activeTab.set('connect')">Connect an integration →</button>
         }
       </div>
     }

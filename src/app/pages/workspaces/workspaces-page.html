@@ -1,0 +1,321 @@
+<div class="ws-layout">
+
+  <!-- Workspace list sidebar -->
+  <aside class="ws-sidebar">
+    <div class="ws-sidebar-head">
+      <h2>Workspaces</h2>
+      <span class="ws-count">{{ workspaces().length }}</span>
+      <button class="new-btn" (click)="openCreate()" title="Create workspace">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+    </div>
+
+    <div class="ws-search">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+      <input [(ngModel)]="listSearch" placeholder="Find a workspace…" />
+    </div>
+
+    <div class="ws-items">
+      @for (ws of filteredWorkspaces(); track ws.id) {
+        <div class="ws-row" [class.active]="ws.id === selectedId()" (click)="selectWorkspace(ws.id)">
+          <div class="ws-glyph {{ glyphOf(ws.name) }}">{{ initialsOf(ws.name, '') }}</div>
+          <div class="ws-meta">
+            <div class="ws-name">{{ ws.name }}</div>
+          </div>
+          <span class="role-mark {{ ws.ownerId === currentUserId() ? '' : 'member' }}">
+            {{ ws.ownerId === currentUserId() ? 'Owner' : 'Member' }}
+          </span>
+        </div>
+      }
+      @if (filteredWorkspaces().length === 0) {
+        <div class="ws-empty">No workspaces match.</div>
+      }
+    </div>
+  </aside>
+
+  <!-- Main panel -->
+  <div class="ws-main">
+
+    @if (selectedWorkspace(); as ws) {
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="crumbs">
+          <span class="crumb-dim">Workspaces</span>
+          <span class="crumb-sep">/</span>
+          <span class="crumb-here">
+            <span class="mini-glyph ws-glyph {{ glyphOf(ws.name) }}">{{ initialsOf(ws.name, '') }}</span>
+            {{ ws.name }}
+          </span>
+        </div>
+        <div class="topbar-spacer"></div>
+        @if (isOwner()) {
+          <button class="pill pill--primary" (click)="openInvite()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="8" r="4"/><path d="M2 21a8 8 0 0 1 14.5-4.6"/><path d="M19 14v6M16 17h6"/></svg>
+            Invite members
+          </button>
+        } @else {
+          <span class="pill pill--ghost pill--warn-text">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2L12 3z"/><path d="M12 10v4M12 18h.01"/></svg>
+            Owner-only actions
+          </span>
+        }
+      </header>
+
+      <!-- Detail -->
+      <div class="detail">
+
+        <!-- Workspace header -->
+        <div class="detail-head">
+          <div class="ws-big-glyph {{ glyphOf(ws.name) }}">{{ initialsOf(ws.name, '') }}</div>
+          <div class="detail-meta">
+            <h1>{{ ws.name }}</h1>
+            <p class="ws-id">{{ ws.id }}</p>
+            <div class="meta-row">
+              <div class="meta-item">
+                <span class="meta-k">Owner</span>
+                <span class="meta-v">
+                  @if (members().length > 0) {
+                    @for (m of members(); track m.userId) {
+                      @if (m.userId === ws.ownerId) {
+                        <span class="av {{ avOf(m.userId) }} av--sm">{{ initialsOf(m.name, m.email) }}</span>
+                        {{ m.name ?? m.email }}
+                        @if (m.userId === currentUserId()) {
+                          <span class="you-tag">(you)</span>
+                        }
+                      }
+                    }
+                  }
+                </span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-k">Members</span>
+                <span class="meta-v">{{ members().length }}</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-k">Your role</span>
+                <span class="meta-v">
+                  <span class="role-pill {{ isOwner() ? 'role-pill--owner' : 'role-pill--member' }}">
+                    @if (isOwner()) {
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l2-10 5 4 2-7 2 7 5-4 2 10"/><path d="M3 20h18"/></svg>
+                      OWNER
+                    } @else {
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                      MEMBER
+                    }
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Members section -->
+        <div class="members-toolbar">
+          <div class="search-input">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+            <input [(ngModel)]="memberSearch" placeholder="Search members by name or email…" />
+          </div>
+          <div class="members-toolbar-spacer"></div>
+          <span class="member-count-hint">{{ filteredMembers().length }} of {{ members().length }}</span>
+        </div>
+
+        <div class="members-card">
+          <table>
+            <thead>
+              <tr>
+                <th class="col-member">Member</th>
+                <th class="col-role">Role</th>
+                <th class="col-actions"></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (m of filteredMembers(); track m.userId) {
+                <tr>
+                  <td>
+                    <div class="member-cell">
+                      <span class="av {{ avOf(m.userId) }}">{{ initialsOf(m.name, m.email) }}</span>
+                      <div>
+                        <div class="member-name">
+                          {{ m.name ?? m.email }}
+                          @if (m.userId === currentUserId()) {
+                            <span class="you-tag">(you)</span>
+                          }
+                        </div>
+                        <div class="member-email">{{ m.email }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="role-pill {{ m.userId === ws.ownerId ? 'role-pill--owner' : 'role-pill--member' }}">
+                      @if (m.userId === ws.ownerId) {
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l2-10 5 4 2-7 2 7 5-4 2 10"/><path d="M3 20h18"/></svg>
+                        OWNER
+                      } @else {
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                        MEMBER
+                      }
+                    </span>
+                  </td>
+                  <td>
+                    <div class="row-actions">
+                      <button
+                        class="icon-btn"
+                        [class.icon-btn--danger]="isOwner() && m.userId !== ws.ownerId"
+                        [disabled]="m.userId === ws.ownerId || !isOwner()"
+                        [title]="m.userId === ws.ownerId ? 'Owner cannot be removed' : isOwner() ? 'Remove from workspace' : 'Only the owner can remove members'"
+                        (click)="askRemove(m)">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+              @if (filteredMembers().length === 0) {
+                <tr>
+                  <td colspan="3" class="table-empty">No members match.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        @if (!isOwner()) {
+          <div class="forbidden">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2L12 3z"/><path d="M12 10v4M12 18h.01"/></svg>
+            <div>
+              <strong>Read-only view</strong>
+              You're a member of this workspace, not the owner. Only the owner can invite or remove members.
+            </div>
+          </div>
+        }
+
+      </div>
+    } @else {
+      <div class="no-selection">Select a workspace to view details.</div>
+    }
+  </div>
+</div>
+
+<!-- Create workspace modal -->
+@if (createOpen()) {
+  <div class="modal-bg" (click)="createOpen.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-head">
+        <h3>Create a workspace</h3>
+        <p>You'll be added as the owner automatically.</p>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label class="field-label">Workspace name</label>
+          <div class="input-wrap">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2 21a7 7 0 0 1 14 0"/><circle cx="17" cy="7" r="2.8"/><path d="M16 14a6 6 0 0 1 6 6"/></svg>
+            <input
+              [(ngModel)]="createName"
+              placeholder="e.g. Payments Platform"
+              (keydown.enter)="submitCreate()"
+              autofocus />
+          </div>
+        </div>
+        @if (createName().trim()) {
+          <div class="create-preview">
+            <div class="ws-glyph {{ createGlyph() }}" style="width:32px;height:32px">{{ createInitials() }}</div>
+            <span class="create-preview-label">Preview — this is how it will appear in your list.</span>
+          </div>
+        }
+        @if (createError()) {
+          <p class="field-error">{{ createError() }}</p>
+        }
+      </div>
+      <div class="modal-foot">
+        <div class="modal-foot-spacer"></div>
+        <button class="btn" (click)="createOpen.set(false)">Cancel</button>
+        <button class="btn btn--primary" (click)="submitCreate()" [disabled]="createLoading() || !createName().trim()">
+          @if (createLoading()) {
+            <span class="spin"></span> Creating…
+          } @else {
+            Create workspace
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Invite modal -->
+@if (inviteOpen() && selectedWorkspace(); as ws) {
+  <div class="modal-bg" (click)="inviteOpen.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-head">
+        <h3>Invite a member to {{ ws.name }}</h3>
+        <p>Enter their email address. They'll gain access immediately.</p>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label class="field-label">Email address</label>
+          <div class="input-wrap">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+            <input
+              [(ngModel)]="inviteEmail"
+              type="email"
+              placeholder="jane.doe@example.com"
+              (keydown.enter)="invite()"
+              autofocus />
+          </div>
+        </div>
+        @if (inviteError()) {
+          <p class="field-error">{{ inviteError() }}</p>
+        }
+      </div>
+      <div class="modal-foot">
+        <div class="modal-foot-spacer"></div>
+        <button class="btn" (click)="inviteOpen.set(false)">Cancel</button>
+        <button class="btn btn--primary" (click)="invite()" [disabled]="inviteLoading() || !inviteEmail().trim()">
+          @if (inviteLoading()) {
+            <span class="spin"></span> Inviting…
+          } @else {
+            Invite
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Confirm remove modal -->
+@if (confirmRemove(); as member) {
+  <div class="modal-bg" (click)="confirmRemove.set(null)">
+    <div class="modal modal--sm" (click)="$event.stopPropagation()">
+      <div class="modal-body modal-body--confirm">
+        <div class="confirm-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg>
+        </div>
+        <h3>Remove {{ member.name ?? member.email }}?</h3>
+        <p>They'll lose access to <strong>{{ selectedWorkspace()?.name }}</strong> immediately. You can re-invite them later.</p>
+      </div>
+      <div class="modal-foot">
+        <div class="modal-foot-spacer"></div>
+        <button class="btn" (click)="confirmRemove.set(null)">Cancel</button>
+        <button class="btn btn--danger" (click)="confirmDoRemove()" [disabled]="removeLoading()">
+          @if (removeLoading()) {
+            <span class="spin"></span>
+          }
+          Remove member
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Toast -->
+@if (toast(); as t) {
+  <div class="toast {{ t.type === 'err' ? 'toast--err' : '' }}">
+    <span class="toast-ico">
+      @if (t.type === 'err') {
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l10 18H2L12 3z"/><path d="M12 10v4M12 18h.01"/></svg>
+      } @else {
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+      }
+    </span>
+    <span>{{ t.msg }}</span>
+  </div>
+}
