@@ -42,3 +42,8 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+/docs/angular-crash-course.md
+/docs/tickets-management-contract.md
+/docs/PROJECT-REFERENCE.md
+/docs/workspace-contract.md
+/docs/workspace-tickets-contract.md

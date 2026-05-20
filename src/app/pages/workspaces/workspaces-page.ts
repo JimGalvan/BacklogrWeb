@@ -1,5 +1,6 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { WorkspaceService } from '../../services/workspace.service';
@@ -42,7 +43,7 @@ interface Toast {
 
 @Component({
   selector: 'app-workspaces-page',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './workspaces-page.html',
   styleUrl: './workspaces-page.css',
 })
@@ -182,11 +183,11 @@ export class WorkspacesPageComponent implements OnInit {
     this.inviteError.set('');
     const wsId = this.selectedId();
     this.workspaceService.inviteMember(wsId, email).subscribe({
-      next: member => {
-        this.members.update(ms => [...ms, member]);
-        this.inviteEmail.set('');
+      next: () => {
         this.inviteLoading.set(false);
-        this.showToast('ok', `Invited ${member.name ?? member.email} to ${this.selectedWorkspace()?.name}`);
+        this.inviteOpen.set(false);
+        this.loadMembers(wsId);
+        this.showToast('ok', `Invited ${email} to ${this.selectedWorkspace()?.name}`);
       },
       error: err => {
         this.inviteLoading.set(false);

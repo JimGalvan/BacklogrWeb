@@ -21,3 +21,21 @@ export interface CreateWorkspaceRequest {
 export interface InviteRequest {
   email: string;
 }
+
+export interface WorkspaceTicket {
+  id: string;
+  ticketKey: string;
+  workspaceId: string;
+  importedBy: string;
+  projectKey: string;
+  summary: string;
+  createdAt: string;
+  importedAt: string;
+}
+
+export interface ImportTicketRequest {
+  ticketKey: string;
+  projectKey: string;
+  summary: string;
+  createdAt: string;
+}

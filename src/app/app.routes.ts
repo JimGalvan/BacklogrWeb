@@ -7,6 +7,7 @@ import { TicketDetailPageComponent } from './pages/ticket-detail/ticket-detail-p
 import { IntegrationsPageComponent } from './pages/integrations/integrations-page';
 import { IntegrationCallbackPageComponent } from './pages/integrations/callback/integration-callback-page';
 import { WorkspacesPageComponent } from './pages/workspaces/workspaces-page';
+import { WorkspaceTicketsPageComponent } from './pages/workspace-tickets/workspace-tickets-page';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -22,7 +23,8 @@ export const routes: Routes = [
       { path: 'tickets/:key',            component: TicketDetailPageComponent },
       { path: 'integrations',            component: IntegrationsPageComponent },
       { path: 'integrations/callback',   component: IntegrationCallbackPageComponent },
-      { path: 'workspaces',              component: WorkspacesPageComponent },
+      { path: 'workspaces',                              component: WorkspacesPageComponent },
+      { path: 'workspaces/:workspaceId/tickets',         component: WorkspaceTicketsPageComponent },
     ],
   },
 ];
