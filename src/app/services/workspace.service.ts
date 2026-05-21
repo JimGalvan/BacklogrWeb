@@ -31,14 +31,14 @@ export class WorkspaceService {
   }
 
   getWorkspaceTickets(workspaceId: string): Observable<WorkspaceTicket[]> {
-    return this.http.get<WorkspaceTicket[]>(`${BASE}/workspaces/${workspaceId}/tickets`);
+    return this.http.get<WorkspaceTicket[]>(`${BASE}/tickets/${workspaceId}`);
   }
 
   importWorkspaceTicket(workspaceId: string, req: ImportTicketRequest): Observable<WorkspaceTicket> {
-    return this.http.post<WorkspaceTicket>(`${BASE}/workspaces/${workspaceId}/tickets`, req);
+    return this.http.post<WorkspaceTicket>(`${BASE}/tickets/${workspaceId}/import`, req);
   }
 
   removeWorkspaceTicket(workspaceId: string, ticketKey: string): Observable<void> {
-    return this.http.delete<void>(`${BASE}/workspaces/${workspaceId}/tickets/${ticketKey}`);
+    return this.http.delete<void>(`${BASE}/tickets/${workspaceId}/${ticketKey}`);
   }
 }

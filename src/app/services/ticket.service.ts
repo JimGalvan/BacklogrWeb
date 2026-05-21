@@ -1,11 +1,7 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { Ticket, TicketListItem, WorkspaceTicketSummary } from '../models/ticket.model';
-import { environment } from '../../environments/environment';
-
-const BASE = `${environment.apiBaseUrl}/api/${environment.apiVersion}`;
+import { Ticket, WorkspaceTicketSummary } from '../models/ticket.model';
 
 const MOCK_TICKET: Ticket = {
   key: 'PAY-4827',
@@ -71,72 +67,6 @@ const MOCK_TICKET: Ticket = {
   ],
 };
 
-const MOCK_TICKET_LIST: TicketListItem[] = [
-  {
-    key: 'PAY-4827',
-    project: 'Payments',
-    title: 'Checkout fails silently when applying expired promo code — order completes at full price',
-    priority: 'P1',
-    status: 'In Progress',
-    assignee: { name: 'Marcus Tang', avatar: { initials: 'MT', variant: 'b' } },
-    importedAt: '2026-05-11T09:00:00Z',
-  },
-  {
-    key: 'PAY-4801',
-    project: 'Payments',
-    title: '3DS challenge dialog flashes and dismisses on Safari 17',
-    priority: 'P2',
-    status: 'In Review',
-    assignee: { name: 'Anya Volkov', avatar: { initials: 'AV', variant: 'c' } },
-    importedAt: '2026-05-10T14:30:00Z',
-  },
-  {
-    key: 'CART-2192',
-    project: 'Cart',
-    title: 'Item count badge desyncs after add-from-search',
-    priority: 'P2',
-    status: 'Open',
-    assignee: { name: 'Priya Ramachandran', avatar: { initials: 'PR', variant: 'a' } },
-    importedAt: '2026-05-10T11:00:00Z',
-  },
-  {
-    key: 'AUTH-891',
-    project: 'Auth',
-    title: 'Session token not refreshed on tab focus after 24h idle',
-    priority: 'P1',
-    status: 'Open',
-    assignee: { name: 'Marcus Tang', avatar: { initials: 'MT', variant: 'b' } },
-    importedAt: '2026-05-09T16:00:00Z',
-  },
-  {
-    key: 'CART-2187',
-    project: 'Cart',
-    title: 'Discount stacking produces negative totals on multi-item orders',
-    priority: 'P1',
-    status: 'Done',
-    assignee: { name: 'Anya Volkov', avatar: { initials: 'AV', variant: 'c' } },
-    importedAt: '2026-05-08T10:00:00Z',
-  },
-  {
-    key: 'PAY-4798',
-    project: 'Payments',
-    title: 'Webhook retry storm on payment processor timeout',
-    priority: 'P2',
-    status: 'In Progress',
-    assignee: { name: 'Priya Ramachandran', avatar: { initials: 'PR', variant: 'a' } },
-    importedAt: '2026-05-07T08:00:00Z',
-  },
-  {
-    key: 'INFRA-312',
-    project: 'Infrastructure',
-    title: 'EU-WEST pod memory ceiling causes OOM on traffic spikes',
-    priority: 'P3',
-    status: 'Backlog',
-    assignee: { name: 'Marcus Tang', avatar: { initials: 'MT', variant: 'b' } },
-    importedAt: '2026-05-06T12:00:00Z',
-  },
-];
-
 const RECENT_TICKETS: WorkspaceTicketSummary[] = [
   { key: 'PAY-4827', title: 'Checkout fails silently when applying expired promo code', project: 'Payments' },
   { key: 'PAY-4801', title: '3DS challenge dialog flashes and dismisses on Safari 17', project: 'Payments' },
@@ -145,30 +75,13 @@ const RECENT_TICKETS: WorkspaceTicketSummary[] = [
 
 @Injectable({ providedIn: 'root' })
 export class TicketService {
-  private http = inject(HttpClient);
-
-  // GET /api/v1/tickets/:key  →  `${BASE}/tickets/${key}`
+  // GET /api/v1/tickets/:key
   getTicket(_key: string): Observable<Ticket> {
     return of(MOCK_TICKET).pipe(delay(0));
   }
 
-  // GET /api/v1/workspace/tickets  →  `${BASE}/workspace/tickets`
+  // GET /api/v1/workspace/tickets
   getRecentTickets(): Observable<WorkspaceTicketSummary[]> {
     return of(RECENT_TICKETS).pipe(delay(0));
-  }
-
-  // POST /api/v1/tickets/import  →  `${BASE}/tickets/import`
-  importTicket(url: string): Observable<Ticket> {
-    return this.http.post<Ticket>(`${BASE}/tickets/import`, { url });
-  }
-
-  // GET /api/v1/tickets  →  `${BASE}/tickets`
-  getImportedTickets(): Observable<TicketListItem[]> {
-    return of(MOCK_TICKET_LIST).pipe(delay(0));
-  }
-
-  // DELETE /api/v1/tickets/:key  →  `${BASE}/tickets/${key}`
-  removeTicket(_key: string): Observable<void> {
-    return of(undefined).pipe(delay(0));
   }
 }

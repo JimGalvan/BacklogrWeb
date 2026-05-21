@@ -10,7 +10,7 @@
       <span class="crumb-here">Tickets</span>
     </div>
     <div class="header-spacer"></div>
-    <button class="pill pill--primary" (click)="openImport()">
+    <button class="pill pill--primary" (click)="showImport.set(true)">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
       Import ticket
     </button>
@@ -80,57 +80,12 @@
 </div>
 
 <!-- Import modal -->
-@if (importOpen()) {
-  <div class="modal-bg" (click)="importOpen.set(false)">
-    <div class="modal" (click)="$event.stopPropagation()">
-      <div class="modal-head">
-        <h3>Import a ticket</h3>
-        <p>Add a ticket from your source tracker into this workspace.</p>
-      </div>
-      <div class="modal-body">
-        <div class="field-row">
-          <div class="field">
-            <label class="field-label">Ticket key</label>
-            <div class="input-wrap">
-              <input [(ngModel)]="importTicketKey" placeholder="PAY-4827" (keydown.enter)="submitImport()" autofocus />
-            </div>
-          </div>
-          <div class="field">
-            <label class="field-label">Project key</label>
-            <div class="input-wrap">
-              <input [(ngModel)]="importProjectKey" placeholder="PAY" (keydown.enter)="submitImport()" />
-            </div>
-          </div>
-        </div>
-        <div class="field">
-          <label class="field-label">Summary</label>
-          <div class="input-wrap">
-            <input [(ngModel)]="importSummary" placeholder="Ticket title or summary" (keydown.enter)="submitImport()" />
-          </div>
-        </div>
-        <div class="field">
-          <label class="field-label">Created in source tracker</label>
-          <div class="input-wrap">
-            <input type="date" [(ngModel)]="importCreatedAt" />
-          </div>
-        </div>
-        @if (importError()) {
-          <p class="field-error">{{ importError() }}</p>
-        }
-      </div>
-      <div class="modal-foot">
-        <div class="modal-foot-spacer"></div>
-        <button class="btn" (click)="importOpen.set(false)">Cancel</button>
-        <button class="btn btn--primary" (click)="submitImport()" [disabled]="importLoading() || !importValid()">
-          @if (importLoading()) {
-            <span class="spin"></span> Importing…
-          } @else {
-            Import
-          }
-        </button>
-      </div>
-    </div>
-  </div>
+@if (showImport()) {
+  <app-import-modal
+    [workspaceId]="workspaceId()"
+    (close)="showImport.set(false)"
+    (imported)="onImported()"
+  />
 }
 
 <!-- Remove confirm modal -->

@@ -34,8 +34,5 @@ export interface WorkspaceTicket {
 }
 
 export interface ImportTicketRequest {
-  ticketKey: string;
-  projectKey: string;
-  summary: string;
-  createdAt: string;
+  url: string;
 }

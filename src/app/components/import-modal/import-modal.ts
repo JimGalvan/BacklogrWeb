@@ -1,5 +1,6 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, inject, Input, output, signal } from '@angular/core';
 import { TicketService } from '../../services/ticket.service';
+import { WorkspaceService } from '../../services/workspace.service';
 import { IntegrationService } from '../../services/integration.service';
 import { WorkspaceTicketSummary } from '../../models/ticket.model';
 import { INTEGRATION_PROVIDERS, IntegrationProvider } from '../../models/integration.model';
@@ -14,8 +15,10 @@ type ModalTab = 'url' | 'connect';
 })
 export class ImportModalComponent {
   private ticketService = inject(TicketService);
+  private workspaceService = inject(WorkspaceService);
   private integrationService = inject(IntegrationService);
 
+  @Input() workspaceId = '';
   close = output<void>();
   imported = output<void>();
 
@@ -58,7 +61,14 @@ export class ImportModalComponent {
     this.errorMessage.set(null);
     this.showConnectHint.set(false);
 
-    this.ticketService.importTicket(target).subscribe({
+    const wsId = this.workspaceId;
+    if (!wsId) {
+      this.isLoading.set(false);
+      this.errorMessage.set('Open a workspace first, then import from there.');
+      return;
+    }
+
+    this.workspaceService.importWorkspaceTicket(wsId, { url: target }).subscribe({
       next: () => {
         this.isLoading.set(false);
         this.close.emit();

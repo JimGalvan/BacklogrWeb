@@ -1,10 +1,11 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { WorkspaceService } from '../../services/workspace.service';
-import { WorkspaceTicket, ImportTicketRequest } from '../../models/workspace.model';
+import { WorkspaceTicket } from '../../models/workspace.model';
+import { FormsModule } from '@angular/forms';
+import { ImportModalComponent } from '../../components/import-modal/import-modal';
 
 function errorMessage(err: unknown): string {
   if (err instanceof HttpErrorResponse && err.error?.message) return err.error.message;
@@ -15,7 +16,7 @@ interface Toast { type: 'ok' | 'err'; msg: string; }
 
 @Component({
   selector: 'app-workspace-tickets-page',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, ImportModalComponent],
   templateUrl: './workspace-tickets-page.html',
   styleUrl: './workspace-tickets-page.css',
 })
@@ -31,15 +32,8 @@ export class WorkspaceTicketsPageComponent implements OnInit {
   mineOnly = signal(false);
   search = signal('');
   loading = signal(true);
+  showImport = signal(false);
   toast = signal<Toast | null>(null);
-
-  importOpen = signal(false);
-  importTicketKey = signal('');
-  importProjectKey = signal('');
-  importSummary = signal('');
-  importCreatedAt = signal('');
-  importLoading = signal(false);
-  importError = signal('');
 
   confirmRemove = signal<WorkspaceTicket | null>(null);
   removeLoading = signal(false);
@@ -57,13 +51,6 @@ export class WorkspaceTicketsPageComponent implements OnInit {
         )
       : base;
   });
-
-  readonly importValid = computed(() =>
-    !!this.importTicketKey().trim() &&
-    !!this.importProjectKey().trim() &&
-    !!this.importSummary().trim() &&
-    !!this.importCreatedAt()
-  );
 
   ngOnInit() {
     const wsId = this.route.snapshot.paramMap.get('workspaceId') ?? '';
@@ -94,37 +81,8 @@ export class WorkspaceTicketsPageComponent implements OnInit {
     });
   }
 
-  openImport() {
-    this.importTicketKey.set('');
-    this.importProjectKey.set('');
-    this.importSummary.set('');
-    this.importCreatedAt.set('');
-    this.importError.set('');
-    this.importOpen.set(true);
-  }
-
-  submitImport() {
-    if (!this.importValid() || this.importLoading()) return;
-    const req: ImportTicketRequest = {
-      ticketKey: this.importTicketKey().trim(),
-      projectKey: this.importProjectKey().trim(),
-      summary: this.importSummary().trim(),
-      createdAt: new Date(this.importCreatedAt()).toISOString(),
-    };
-    this.importLoading.set(true);
-    this.importError.set('');
-    this.workspaceService.importWorkspaceTicket(this.workspaceId(), req).subscribe({
-      next: ticket => {
-        this.tickets.update(ts => [ticket, ...ts]);
-        this.importOpen.set(false);
-        this.importLoading.set(false);
-        this.showToast('ok', `Ticket ${ticket.ticketKey} imported`);
-      },
-      error: err => {
-        this.importLoading.set(false);
-        this.importError.set(errorMessage(err));
-      },
-    });
+  onImported() {
+    this.loadTickets();
   }
 
   askRemove(ticket: WorkspaceTicket) {
