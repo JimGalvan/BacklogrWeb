@@ -17,7 +17,10 @@
       "Read(//c/Users/jimmy/AppData/Roaming/npm/node_modules/**)",
       "Bash(npm install *)",
       "Bash(rm verify-ws.mjs)",
-      "Bash(npm uninstall *)"
+      "Bash(npm uninstall *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\jimmy\\\\WebstormProjects\\\\Backlogr\\\\src\\\\app\" -Recurse -Include \"*.ts\", \"*.html\", \"*.css\")",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(npx rg *)"
     ]
   }
 }
