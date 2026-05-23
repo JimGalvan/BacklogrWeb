@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { Ticket, WorkspaceTicketSummary } from '../models/ticket.model';
+import { MockTicket, WorkspaceTicketSummary } from '../models/ticket.model';
 
-const MOCK_TICKET: Ticket = {
+const MOCK_TICKET: MockTicket = {
   key: 'PAY-4827',
   project: 'Payments',
   title: 'Checkout fails silently when applying expired promo code — order completes at full price',
@@ -76,7 +76,7 @@ const RECENT_TICKETS: WorkspaceTicketSummary[] = [
 @Injectable({ providedIn: 'root' })
 export class TicketService {
   // GET /api/v1/tickets/:key
-  getTicket(_key: string): Observable<Ticket> {
+  getTicket(_key: string): Observable<MockTicket> {
     return of(MOCK_TICKET).pipe(delay(0));
   }
 

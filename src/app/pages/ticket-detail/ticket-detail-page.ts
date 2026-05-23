@@ -17,8 +17,13 @@ export class TicketDetailPageComponent {
   private route = inject(ActivatedRoute);
 
   ticketKey = toSignal(
-    this.route.paramMap.pipe(map(p => p.get('key') ?? 'PAY-4827')),
+    this.route.paramMap.pipe(map(params => params.get('ticketKey') ?? params.get('key') ?? 'PAY-4827')),
     { initialValue: 'PAY-4827' }
+  );
+
+  workspaceId = toSignal(
+    this.route.paramMap.pipe(map(params => params.get('workspaceId') ?? '')),
+    { initialValue: '' }
   );
 
   showModal = signal(false);

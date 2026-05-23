@@ -1,7 +1,7 @@
 <div class="detail-grid">
   <div class="main-col">
     <app-topbar (importClick)="showModal.set(true)" />
-    <app-ticket-body [ticketKey]="ticketKey()" />
+    <app-ticket-body [ticketKey]="ticketKey()" [workspaceId]="workspaceId()" />
   </div>
   <app-insights-panel />
 </div>

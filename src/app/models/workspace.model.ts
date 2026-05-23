@@ -22,7 +22,7 @@ export interface InviteRequest {
   email: string;
 }
 
-export interface WorkspaceTicket {
+export interface Ticket {
   id: string;
   ticketKey: string;
   workspaceId: string;

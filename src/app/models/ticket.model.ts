@@ -13,7 +13,7 @@ export interface TicketComment {
   bodyHtml: string;
 }
 
-export interface Ticket {
+export interface MockTicket {
   key: string;
   project: string;
   title: string;

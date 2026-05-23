@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { Ticket } from '../../models/ticket.model';
+import { MockTicket } from '../../models/ticket.model';
 import { AvatarComponent } from '../avatar/avatar';
 import { StatusChipComponent } from '../status-chip/status-chip';
 import { TagComponent } from '../tag/tag';
@@ -11,5 +11,5 @@ import { TagComponent } from '../tag/tag';
   styleUrl: './meta-row.css',
 })
 export class MetaRowComponent {
-  ticket = input.required<Ticket>();
+  ticket = input.required<MockTicket>();
 }

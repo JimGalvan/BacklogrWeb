@@ -3,7 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { WorkspaceService } from '../../services/workspace.service';
-import { WorkspaceTicket } from '../../models/workspace.model';
+import { Ticket } from '../../models/workspace.model';
 import { FormsModule } from '@angular/forms';
 import { ImportModalComponent } from '../../components/import-modal/import-modal';
 
@@ -20,7 +20,7 @@ interface Toast { type: 'ok' | 'err'; msg: string; }
   templateUrl: './workspace-tickets-page.html',
   styleUrl: './workspace-tickets-page.css',
 })
-export class WorkspaceTicketsPageComponent implements OnInit {
+export class TicketsPageComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
   private workspaceService = inject(WorkspaceService);
@@ -28,38 +28,38 @@ export class WorkspaceTicketsPageComponent implements OnInit {
   workspaceId = signal('');
   workspaceName = signal('');
   currentUserId = signal('');
-  tickets = signal<WorkspaceTicket[]>([]);
+  tickets = signal<Ticket[]>([]);
   mineOnly = signal(false);
   search = signal('');
   loading = signal(true);
   showImport = signal(false);
   toast = signal<Toast | null>(null);
 
-  confirmRemove = signal<WorkspaceTicket | null>(null);
+  confirmRemove = signal<Ticket | null>(null);
   removeLoading = signal(false);
 
   readonly filteredTickets = computed(() => {
-    const q = this.search().toLowerCase();
+    const query = this.search().toLowerCase();
     const base = this.mineOnly()
-      ? this.tickets().filter(t => t.importedBy === this.currentUserId())
+      ? this.tickets().filter(ticket => ticket.importedBy === this.currentUserId())
       : this.tickets();
-    return q
-      ? base.filter(t =>
-          t.ticketKey.toLowerCase().includes(q) ||
-          t.summary.toLowerCase().includes(q) ||
-          t.projectKey.toLowerCase().includes(q)
+    return query
+      ? base.filter(ticket =>
+          ticket.ticketKey.toLowerCase().includes(query) ||
+          ticket.summary.toLowerCase().includes(query) ||
+          ticket.projectKey.toLowerCase().includes(query)
         )
       : base;
   });
 
   ngOnInit() {
-    const wsId = this.route.snapshot.paramMap.get('workspaceId') ?? '';
-    this.workspaceId.set(wsId);
+    const workspaceId = this.route.snapshot.paramMap.get('workspaceId') ?? '';
+    this.workspaceId.set(workspaceId);
 
     this.authService.currentUser().subscribe(user => {
       this.currentUserId.set(user.id);
       this.workspaceService.getUserWorkspaces(user.id).subscribe({
-        next: wss => this.workspaceName.set(wss.find(w => w.id === wsId)?.name ?? wsId),
+        next: workspaces => this.workspaceName.set(workspaces.find(workspace => workspace.id === workspaceId)?.name ?? workspaceId),
         error: () => {},
       });
     });
@@ -69,7 +69,7 @@ export class WorkspaceTicketsPageComponent implements OnInit {
 
   private loadTickets() {
     this.loading.set(true);
-    this.workspaceService.getWorkspaceTickets(this.workspaceId()).subscribe({
+    this.workspaceService.getTickets(this.workspaceId()).subscribe({
       next: tickets => {
         this.tickets.set(tickets);
         this.loading.set(false);
@@ -85,7 +85,7 @@ export class WorkspaceTicketsPageComponent implements OnInit {
     this.loadTickets();
   }
 
-  askRemove(ticket: WorkspaceTicket) {
+  askRemove(ticket: Ticket) {
     this.confirmRemove.set(ticket);
   }
 
@@ -93,7 +93,7 @@ export class WorkspaceTicketsPageComponent implements OnInit {
     const ticket = this.confirmRemove();
     if (!ticket || this.removeLoading()) return;
     this.removeLoading.set(true);
-    this.workspaceService.removeWorkspaceTicket(this.workspaceId(), ticket.ticketKey).subscribe({
+    this.workspaceService.removeTicket(this.workspaceId(), ticket.ticketKey).subscribe({
       next: () => {
         this.tickets.update(ts => ts.filter(t => t.ticketKey !== ticket.ticketKey));
         this.confirmRemove.set(null);

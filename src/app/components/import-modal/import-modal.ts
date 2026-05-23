@@ -61,20 +61,19 @@ export class ImportModalComponent {
     this.errorMessage.set(null);
     this.showConnectHint.set(false);
 
-    const wsId = this.workspaceId;
-    if (!wsId) {
+    if (!this.workspaceId) {
       this.isLoading.set(false);
       this.errorMessage.set('Open a workspace first, then import from there.');
       return;
     }
 
-    this.workspaceService.importWorkspaceTicket(wsId, { url: target }).subscribe({
+    this.workspaceService.importTicket(this.workspaceId, { url: target }).subscribe({
       next: () => {
         this.isLoading.set(false);
         this.close.emit();
         this.imported.emit();
       },
-      error: (err) => {
+      error: (err: { status: number; error?: { message?: string } }) => {
         this.isLoading.set(false);
         this.errorMessage.set(err.error?.message ?? 'Import failed. Please try again.');
         if (err.status === 400 && err.error?.message?.toLowerCase().includes('connect')) {

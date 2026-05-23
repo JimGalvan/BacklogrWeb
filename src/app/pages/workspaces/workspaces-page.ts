@@ -82,9 +82,9 @@ export class WorkspacesPageComponent implements OnInit {
   );
 
   readonly filteredWorkspaces = computed(() => {
-    const q = this.listSearch().toLowerCase();
-    return q
-      ? this.workspaces().filter(w => w.name.toLowerCase().includes(q))
+    const query = this.listSearch().toLowerCase();
+    return query
+      ? this.workspaces().filter(workspace => workspace.name.toLowerCase().includes(query))
       : this.workspaces();
   });
 
@@ -98,10 +98,10 @@ export class WorkspacesPageComponent implements OnInit {
   });
 
   readonly filteredMembers = computed(() => {
-    const q = this.memberSearch().toLowerCase();
-    return q
-      ? this.sortedMembers().filter(m =>
-          (m.name?.toLowerCase().includes(q) ?? false) || m.email.toLowerCase().includes(q)
+    const query = this.memberSearch().toLowerCase();
+    return query
+      ? this.sortedMembers().filter(member =>
+          (member.name?.toLowerCase().includes(query) ?? false) || member.email.toLowerCase().includes(query)
         )
       : this.sortedMembers();
   });
@@ -118,11 +118,11 @@ export class WorkspacesPageComponent implements OnInit {
       this.currentUserId.set(user.id);
       this.currentUserEmail.set(user.email);
       this.workspaceService.getUserWorkspaces(user.id).subscribe({
-        next: wss => {
-          this.workspaces.set(wss);
-          if (wss.length > 0) {
-            this.selectedId.set(wss[0].id);
-            this.loadMembers(wss[0].id);
+        next: workspaces => {
+          this.workspaces.set(workspaces);
+          if (workspaces.length > 0) {
+            this.selectedId.set(workspaces[0].id);
+            this.loadMembers(workspaces[0].id);
           }
         },
         error: err => this.showToast('err', errorMessage(err)),
@@ -156,7 +156,7 @@ export class WorkspacesPageComponent implements OnInit {
     this.createError.set('');
     this.workspaceService.createWorkspace({ name, ownerId: this.currentUserId() }).subscribe({
       next: ws => {
-        this.workspaces.update(wss => [ws, ...wss]);
+        this.workspaces.update(list => [ws, ...list]);
         this.selectedId.set(ws.id);
         this.loadMembers(ws.id);
         this.createOpen.set(false);
@@ -181,12 +181,12 @@ export class WorkspacesPageComponent implements OnInit {
     if (!email || this.inviteLoading()) return;
     this.inviteLoading.set(true);
     this.inviteError.set('');
-    const wsId = this.selectedId();
-    this.workspaceService.inviteMember(wsId, email).subscribe({
+    const workspaceId = this.selectedId();
+    this.workspaceService.inviteMember(workspaceId, email).subscribe({
       next: () => {
         this.inviteLoading.set(false);
         this.inviteOpen.set(false);
-        this.loadMembers(wsId);
+        this.loadMembers(workspaceId);
         this.showToast('ok', `Invited ${email} to ${this.selectedWorkspace()?.name}`);
       },
       error: err => {
@@ -204,14 +204,14 @@ export class WorkspacesPageComponent implements OnInit {
     const member = this.confirmRemove();
     if (!member || this.removeLoading()) return;
     this.removeLoading.set(true);
-    const wsId = this.selectedId();
-    const wsName = this.selectedWorkspace()?.name ?? '';
-    this.workspaceService.removeMember(wsId, member.userId).subscribe({
+    const workspaceId = this.selectedId();
+    const workspaceName = this.selectedWorkspace()?.name ?? '';
+    this.workspaceService.removeMember(workspaceId, member.userId).subscribe({
       next: () => {
-        this.members.update(ms => ms.filter(m => m.userId !== member.userId));
+        this.members.update(members => members.filter(m => m.userId !== member.userId));
         this.confirmRemove.set(null);
         this.removeLoading.set(false);
-        this.showToast('ok', `Removed ${member.name ?? member.email} from ${wsName}`);
+        this.showToast('ok', `Removed ${member.name ?? member.email} from ${workspaceName}`);
       },
       error: err => {
         this.removeLoading.set(false);
