@@ -22,6 +22,8 @@ export interface InviteRequest {
   email: string;
 }
 
+import { AdfDoc } from './adf.model';
+
 export interface Ticket {
   id: string;
   ticketKey: string;
@@ -29,6 +31,8 @@ export interface Ticket {
   importedBy: string;
   projectKey: string;
   summary: string;
+  description?: AdfDoc | null;
+  provider?: string;
   createdAt: string;
   importedAt: string;
 }

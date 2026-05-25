@@ -1,27 +1,29 @@
-@if (ticket(); as t) {
+@if (ticket(); as ticket) {
   <div class="ticket-body">
     <!-- Title block -->
     <div class="title-block">
       <div class="priority-wrapper">
         <app-priority-chip />
       </div>
-      <h1 class="ticket-title">{{ t.title }}</h1>
+      <h1 class="ticket-title">{{ ticket.title }}</h1>
     </div>
 
     <!-- Meta row -->
-    <app-meta-row [ticket]="t" />
+    <app-meta-row [ticket]="ticket" />
 
     <!-- Description -->
     <div class="section-label">DESCRIPTION</div>
-    <div class="description rich-text" [innerHTML]="t.descriptionHtml | safeHtml"></div>
+    <div class="description">
+      <app-rich-text [doc]="ticket.description" />
+    </div>
 
     <!-- Stack trace -->
-    <app-stack-trace [html]="t.stackTraceHtml" [label]="t.stackTraceLabel" />
+    <app-stack-trace [html]="ticket.stackTraceHtml" [label]="ticket.stackTraceLabel" />
 
     <!-- Comments -->
-    <div class="section-label">COMMENTS · {{ t.comments.length }}</div>
+    <div class="section-label">COMMENTS · {{ ticket.comments.length }}</div>
     <div class="comments">
-      @for (comment of t.comments; track comment.id) {
+      @for (comment of ticket.comments; track comment.id) {
         <app-comment [comment]="comment" />
       }
     </div>

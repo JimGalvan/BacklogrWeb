@@ -53,9 +53,21 @@ body {
 .mut { color: var(--muted-2); }
 .hl  { color: var(--accent); }
 
-/* Rich text styles for [innerHTML] content (description, comments) */
+/* Rich text styles for [innerHTML] content (description, comments, ADF output) */
 .rich-text p  { margin: 0 0 12px; }
 .rich-text p:last-child { margin-bottom: 0; }
+
+.rich-text h1, .rich-text h2, .rich-text h3,
+.rich-text h4, .rich-text h5, .rich-text h6 {
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 16px 0 8px;
+}
+.rich-text h1 { font-size: 20px; }
+.rich-text h2 { font-size: 17px; }
+.rich-text h3 { font-size: 15px; }
+.rich-text h4, .rich-text h5, .rich-text h6 { font-size: 13.5px; }
 
 .rich-text code {
   font-family: 'Geist Mono', monospace;
@@ -67,17 +79,86 @@ body {
   color: var(--text);
 }
 
+.rich-text pre {
+  background: var(--panel);
+  border: 1px solid var(--line-soft);
+  border-radius: 6px;
+  padding: 12px 14px;
+  overflow-x: auto;
+  margin: 0 0 12px;
+}
+.rich-text pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
 .rich-text strong {
   color: var(--text);
   font-weight: 600;
 }
 
-.rich-text ul {
+.rich-text em { font-style: italic; }
+
+.rich-text a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.rich-text a:hover { opacity: 0.8; }
+
+.rich-text ul, .rich-text ol {
   padding-left: 20px;
+  margin: 0 0 12px;
+}
+.rich-text li { margin: 3px 0; }
+
+.rich-text blockquote {
+  border-left: 3px solid var(--line);
+  margin: 0 0 12px;
+  padding: 4px 0 4px 14px;
+  color: var(--text-2);
 }
 
-.rich-text li {
-  margin: 3px 0;
+.rich-text hr {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 16px 0;
+}
+
+/* ADF panel types */
+.rich-text .adf-panel {
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin: 0 0 12px;
+  border-left: 3px solid;
+}
+.rich-text .adf-panel--info    { background: oklch(0.78 0.13 235 / .08); border-color: var(--info); }
+.rich-text .adf-panel--note    { background: oklch(0.78 0.13 235 / .08); border-color: var(--info); }
+.rich-text .adf-panel--warning { background: var(--warn-2); border-color: var(--warn); }
+.rich-text .adf-panel--error   { background: var(--danger-2); border-color: var(--danger); }
+.rich-text .adf-panel--success { background: var(--ok-2); border-color: var(--ok); }
+
+/* ADF table */
+.rich-text .adf-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0 0 12px;
+  font-size: 12.5px;
+}
+.rich-text .adf-table th,
+.rich-text .adf-table td {
+  border: 1px solid var(--line);
+  padding: 6px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+.rich-text .adf-table th {
+  background: var(--panel);
+  color: var(--text);
+  font-weight: 600;
 }
 
 /* Insights bullet code */

@@ -1,3 +1,5 @@
+import { RichTextDoc } from './rich-text.model';
+
 export type AvatarVariant = 'a' | 'b' | 'c';
 
 export interface PersonAvatar {
@@ -24,7 +26,7 @@ export interface MockTicket {
   sprint: string;
   affects: string;
   labels: string[];
-  descriptionHtml: string;
+  description: RichTextDoc;
   stackTraceLabel: string;
   stackTraceHtml: string;
   comments: TicketComment[];

@@ -14,7 +14,9 @@ const MOCK_TICKET: MockTicket = {
   sprint: 'Sprint 47 · May 4–18',
   affects: '2.41.0 · prod',
   labels: ['regression', 'silent-failure', 'promo-engine', 'p1-customer'],
-  descriptionHtml: `
+  description: {
+    format: 'html' as const,
+    content: `
     <p>During the May 4 release we shipped <code>promo-engine@3.2.0</code>, which moved expiration validation from the checkout service into a shared <code>PromotionGateway</code>. Since then, customers applying an expired code see the discount line appear in the cart for ~600ms, then quietly disappear without any error toast or message. <strong>The order proceeds and is charged at full price.</strong></p>
     <p>We have 47 confirmed customer reports since Monday (see linked Zendesk macro <code>CS-PROMO-SILENT</code>). Refund volume on the affected SKUs is up 4.2× WoW.</p>
     <p><strong>Steps to reproduce</strong></p>
@@ -28,6 +30,7 @@ const MOCK_TICKET: MockTicket = {
     <p><strong>Expected</strong></p>
     <p>Inline error under the promo field: <code>This code has expired</code>. No mutation to the cart total.</p>
   `,
+  },
   stackTraceLabel: 'STACK TRACE · CHECKOUT-SERVICE · POD-EU-WEST-1-A7F',
   stackTraceHtml: `PromotionGatewayError: rule:expiration_window failed (code=SPRING20, exp=2026-04-30T23:59:59Z)
   at PromotionGateway.evaluate (gateway.ts:184)
