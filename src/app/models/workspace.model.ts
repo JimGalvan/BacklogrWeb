@@ -24,6 +24,26 @@ export interface InviteRequest {
 
 import { AdfDoc } from './adf.model';
 
+export interface TicketPerson {
+  name: string;
+  avatarInitials: string;
+  avatarColor: string;
+}
+
+export interface TicketComment {
+  id: string;
+  author: string;
+  avatarInitials: string;
+  avatarColor: string;
+  createdAt: string;
+  body: string;
+}
+
+export interface TicketStackTrace {
+  label: string;
+  html: string;
+}
+
 export interface Ticket {
   id: string;
   ticketKey: string;
@@ -31,7 +51,16 @@ export interface Ticket {
   importedBy: string;
   projectKey: string;
   summary: string;
+  priority?: 'P1' | 'P2' | 'P3';
+  status?: string;
+  assignee?: TicketPerson;
+  reporter?: TicketPerson;
+  sprint?: string;
+  affects?: string;
+  labels?: string[];
   description?: AdfDoc | null;
+  stackTrace?: TicketStackTrace;
+  comments?: TicketComment[];
   provider?: string;
   createdAt: string;
   importedAt: string;

@@ -1,30 +1,42 @@
-@if (ticket(); as ticket) {
+@if (status() === 'loading') {
   <div class="ticket-body">
-    <!-- Title block -->
-    <div class="title-block">
-      <div class="priority-wrapper">
-        <app-priority-chip />
-      </div>
-      <h1 class="ticket-title">{{ ticket.title }}</h1>
+    <div class="skeleton-title"></div>
+
+    <div class="skeleton-meta">
+      <div class="skeleton-chip"></div>
+      <div class="skeleton-chip"></div>
+      <div class="skeleton-chip"></div>
+      <div class="skeleton-chip"></div>
     </div>
 
-    <!-- Meta row -->
+    <div class="skeleton-label"></div>
+    <div class="skeleton-lines">
+      <div class="skeleton-line" style="width: 92%"></div>
+      <div class="skeleton-line" style="width: 78%"></div>
+      <div class="skeleton-line" style="width: 85%"></div>
+      <div class="skeleton-line" style="width: 60%"></div>
+    </div>
+  </div>
+} @else if (status() === 'error') {
+  <div class="empty-state">
+    <span class="empty-icon">&#9888;</span>
+    <p class="empty-heading">Could not load ticket</p>
+    <p class="empty-subtext">{{ ticketKey() }} could not be retrieved. Try refreshing the page.</p>
+  </div>
+} @else if (status() === 'loaded' && ticket(); as ticket) {
+  <div class="ticket-body">
+    <div class="title-block">
+      <h1 class="ticket-title">{{ ticket.summary }}</h1>
+    </div>
+
     <app-meta-row [ticket]="ticket" />
 
-    <!-- Description -->
     <div class="section-label">DESCRIPTION</div>
     <div class="description">
-      <app-rich-text [doc]="ticket.description" />
-    </div>
-
-    <!-- Stack trace -->
-<!--    <app-stack-trace [html]="ticket.stackTraceHtml" [label]="ticket.stackTraceLabel" />-->
-
-    <!-- Comments -->
-    <div class="section-label">COMMENTS · {{ ticket.comments.length }}</div>
-    <div class="comments">
-      @for (comment of ticket.comments; track comment.id) {
-        <app-comment [comment]="comment" />
+      @if (ticket.description) {
+        <app-rich-text [doc]="{ format: 'adf', content: ticket.description }" />
+      } @else {
+        <span class="placeholder">No description provided.</span>
       }
     </div>
   </div>

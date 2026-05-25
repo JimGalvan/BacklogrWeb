@@ -1,49 +1,59 @@
 <div class="meta-row">
   <div class="meta-cell">
     <div class="meta-label">STATUS</div>
-    <app-status-chip [status]="ticket().status" />
+    <app-status-chip [status]="ticket().status ?? ''" />
   </div>
 
-  <div class="meta-cell">
-    <div class="meta-label">ASSIGNEE</div>
-    <div class="meta-person">
-      <app-avatar
-        [initials]="ticket().assignee.avatar.initials"
-        [variant]="ticket().assignee.avatar.variant"
-        [size]="18"
-      />
-      <span class="meta-value">{{ ticket().assignee.name }}</span>
+  @if (ticket().assignee; as assignee) {
+    <div class="meta-cell">
+      <div class="meta-label">ASSIGNEE</div>
+      <div class="meta-person">
+        <app-avatar
+          [initials]="assignee.avatarInitials"
+          [variant]="avatarVariant(assignee.avatarColor)"
+          [size]="18"
+        />
+        <span class="meta-value">{{ assignee.name }}</span>
+      </div>
     </div>
-  </div>
+  }
 
-  <div class="meta-cell">
-    <div class="meta-label">REPORTER</div>
-    <div class="meta-person">
-      <app-avatar
-        [initials]="ticket().reporter.avatar.initials"
-        [variant]="ticket().reporter.avatar.variant"
-        [size]="18"
-      />
-      <span class="meta-value">{{ ticket().reporter.name }}</span>
+  @if (ticket().reporter; as reporter) {
+    <div class="meta-cell">
+      <div class="meta-label">REPORTER</div>
+      <div class="meta-person">
+        <app-avatar
+          [initials]="reporter.avatarInitials"
+          [variant]="avatarVariant(reporter.avatarColor)"
+          [size]="18"
+        />
+        <span class="meta-value">{{ reporter.name }}</span>
+      </div>
     </div>
-  </div>
+  }
 
-  <div class="meta-cell">
-    <div class="meta-label">SPRINT</div>
-    <span class="meta-value">{{ ticket().sprint }}</span>
-  </div>
-
-  <div class="meta-cell">
-    <div class="meta-label">AFFECTS</div>
-    <span class="meta-value mono">{{ ticket().affects }}</span>
-  </div>
-
-  <div class="meta-cell">
-    <div class="meta-label">LABELS</div>
-    <div class="tags-row">
-      @for (label of ticket().labels; track label) {
-        <app-tag [label]="label" />
-      }
+  @if (ticket().sprint) {
+    <div class="meta-cell">
+      <div class="meta-label">SPRINT</div>
+      <span class="meta-value">{{ ticket().sprint }}</span>
     </div>
-  </div>
+  }
+
+  @if (ticket().affects) {
+    <div class="meta-cell">
+      <div class="meta-label">AFFECTS</div>
+      <span class="meta-value mono">{{ ticket().affects }}</span>
+    </div>
+  }
+
+  @if (ticket().labels?.length) {
+    <div class="meta-cell">
+      <div class="meta-label">LABELS</div>
+      <div class="tags-row">
+        @for (label of ticket().labels; track label) {
+          <app-tag [label]="label" />
+        }
+      </div>
+    </div>
+  }
 </div>

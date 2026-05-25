@@ -15,11 +15,6 @@
   gap: 12px;
 }
 
-.priority-wrapper {
-  margin-top: 6px;
-  flex-shrink: 0;
-}
-
 .ticket-title {
   font-size: 24px;
   font-weight: 500;
@@ -54,4 +49,93 @@
   flex-direction: column;
   gap: 16px;
   max-width: 72ch;
+}
+
+/* Skeleton loading */
+@keyframes shimmer {
+  from { background-position: -400px 0; }
+  to   { background-position:  400px 0; }
+}
+
+.skeleton-title,
+.skeleton-chip,
+.skeleton-label,
+.skeleton-line {
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--surface-2, #2a2a2a) 25%,
+    var(--surface-3, #333)    50%,
+    var(--surface-2, #2a2a2a) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+.skeleton-title {
+  height: 28px;
+  width: 62%;
+  margin-bottom: 24px;
+}
+
+.skeleton-meta {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.skeleton-chip {
+  height: 22px;
+  width: 80px;
+  border-radius: 999px;
+}
+
+.skeleton-label {
+  height: 10px;
+  width: 88px;
+  margin-bottom: 14px;
+}
+
+.skeleton-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 72ch;
+}
+
+.skeleton-line {
+  height: 13px;
+}
+
+/* Empty / error state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 8px;
+  color: var(--muted-2);
+  text-align: center;
+  padding: 40px;
+}
+
+.empty-icon {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+
+.empty-heading {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-2);
+  margin: 0;
+}
+
+.empty-subtext {
+  font-size: 12.5px;
+  color: var(--muted-2);
+  margin: 0;
+  max-width: 40ch;
+  line-height: 1.5;
 }

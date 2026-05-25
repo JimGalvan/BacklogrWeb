@@ -1,5 +1,6 @@
 import { Component, input } from '@angular/core';
-import { MockTicket } from '../../models/ticket.model';
+import { Ticket } from '../../models/workspace.model';
+import { AvatarVariant } from '../../models/ticket.model';
 import { AvatarComponent } from '../avatar/avatar';
 import { StatusChipComponent } from '../status-chip/status-chip';
 import { TagComponent } from '../tag/tag';
@@ -11,5 +12,10 @@ import { TagComponent } from '../tag/tag';
   styleUrl: './meta-row.css',
 })
 export class MetaRowComponent {
-  ticket = input.required<MockTicket>();
+  ticket = input.required<Ticket>();
+
+  avatarVariant(color: string): AvatarVariant {
+    const map: Record<string, AvatarVariant> = { purple: 'a', teal: 'b', amber: 'c' };
+    return map[color] ?? 'a';
+  }
 }
