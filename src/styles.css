@@ -172,16 +172,30 @@ body {
   color: var(--accent);
 }
 
-/* TLDR comment reference chips — must be global since they live inside [innerHTML] */
-li[data-comment-id] {
+/* TLDR — must be global since content lives inside [innerHTML] */
+.tldr-markdown p {
+  font-size: 14.5px;
+  color: var(--text);
+  font-weight: 500;
+  line-height: 1.55;
+  margin: 0 0 14px;
+}
+
+.tldr-markdown li[data-comment-id] {
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   cursor: pointer;
 }
 
-li[data-comment-id]:hover {
+.tldr-markdown li[data-comment-id]::before {
+  content: '→';
+  color: var(--accent);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.tldr-markdown li[data-comment-id]:hover {
   color: var(--text);
 }
 
@@ -194,10 +208,11 @@ li[data-comment-id]:hover {
   border-radius: 4px;
   flex-shrink: 0;
   white-space: nowrap;
+  margin-left: auto;
   transition: background 150ms;
 }
 
-li[data-comment-id]:hover .comment-ref {
+.tldr-markdown li[data-comment-id]:hover .comment-ref {
   background: var(--accent-3);
 }
 
