@@ -1,14 +1,16 @@
-<div class="comment">
+<div class="comment" [id]="'comment-' + comment().id">
   <app-avatar
-    [initials]="comment().avatar.initials"
-    [variant]="comment().avatar.variant"
+    [initials]="initials()"
+    [variant]="avatarVariant()"
     [size]="28"
   />
   <div class="comment-body">
     <div class="comment-head">
-      <span class="comment-author">{{ comment().author }}</span>
-      <span class="comment-time">{{ comment().timeAgo }}</span>
+      <span class="comment-author">{{ comment().authorName || comment().authorEmail }}</span>
+      <span class="comment-time">{{ formattedDate() }}</span>
     </div>
-    <p class="comment-text rich-text" [innerHTML]="comment().bodyHtml | safeHtml"></p>
+    <div class="comment-text">
+      <app-rich-text [doc]="richTextDoc()" />
+    </div>
   </div>
 </div>

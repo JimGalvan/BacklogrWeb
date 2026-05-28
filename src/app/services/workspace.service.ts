@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Workspace, WorkspaceMember, CreateWorkspaceRequest, Ticket, ImportTicketRequest } from '../models/workspace.model';
+import { Workspace, WorkspaceMember, CreateWorkspaceRequest, Ticket, TicketComment, ImportTicketRequest } from '../models/workspace.model';
 
 const BASE = `${environment.apiBaseUrl}/api/${environment.apiVersion}`;
 
@@ -44,5 +44,9 @@ export class WorkspaceService {
 
   removeTicket(workspaceId: string, ticketKey: string): Observable<void> {
     return this.http.delete<void>(`${BASE}/workspaces/${workspaceId}/tickets/${ticketKey}`);
+  }
+
+  getTicketComments(workspaceId: string, ticketKey: string): Observable<TicketComment[]> {
+    return this.http.get<TicketComment[]>(`${BASE}/workspaces/${workspaceId}/tickets/${ticketKey}/comments`);
   }
 }

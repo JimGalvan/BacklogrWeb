@@ -33,3 +33,13 @@
   line-height: 1.6;
   margin: 0;
 }
+
+@keyframes comment-highlight {
+  0%   { background-color: var(--accent-2); }
+  100% { background-color: transparent; }
+}
+
+.comment-highlight {
+  border-radius: 6px;
+  animation: comment-highlight 3s ease-out forwards;
+}

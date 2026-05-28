@@ -46,7 +46,7 @@ export class TicketsPageComponent implements OnInit {
     return query
       ? base.filter(ticket =>
           ticket.ticketKey.toLowerCase().includes(query) ||
-          ticket.summary.toLowerCase().includes(query) ||
+          ticket.title.toLowerCase().includes(query) ||
           ticket.projectKey.toLowerCase().includes(query)
         )
       : base;

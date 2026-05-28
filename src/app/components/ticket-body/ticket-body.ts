@@ -1,12 +1,13 @@
 import { Component, effect, inject, input, signal } from '@angular/core';
-import { Ticket } from '../../models/workspace.model';
+import { Ticket, TicketComment } from '../../models/workspace.model';
 import { WorkspaceService } from '../../services/workspace.service';
 import { MetaRowComponent } from '../meta-row/meta-row';
 import { RichTextComponent } from '../rich-text/rich-text';
+import { CommentComponent } from '../comment/comment';
 
 @Component({
   selector: 'app-ticket-body',
-  imports: [MetaRowComponent, RichTextComponent],
+  imports: [MetaRowComponent, RichTextComponent, CommentComponent],
   templateUrl: './ticket-body.html',
   styleUrl: './ticket-body.css',
 })
@@ -17,15 +18,17 @@ export class TicketBodyComponent {
   workspaceId = input<string>('');
   ticket = signal<Ticket | null>(null);
   status = signal<'idle' | 'loading' | 'loaded' | 'error'>('idle');
+  comments = signal<TicketComment[]>([]);
+  commentsStatus = signal<'idle' | 'loading' | 'loaded' | 'error'>('idle');
 
   constructor() {
     effect(() => {
-      const key = this.ticketKey();
+      const ticketKey = this.ticketKey();
       const workspaceId = this.workspaceId();
 
-      if (workspaceId && key) {
+      if (workspaceId && ticketKey) {
         this.status.set('loading');
-        this.workspaceService.getTicket(workspaceId, key).subscribe({
+        this.workspaceService.getTicket(workspaceId, ticketKey).subscribe({
           next: (ticket: Ticket) => {
             this.ticket.set(ticket);
             this.status.set('loaded');
@@ -35,8 +38,21 @@ export class TicketBodyComponent {
             this.status.set('error');
           },
         });
+
+        this.commentsStatus.set('loading');
+        this.workspaceService.getTicketComments(workspaceId, ticketKey).subscribe({
+          next: (comments: TicketComment[]) => {
+            this.comments.set([...comments].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+            this.commentsStatus.set('loaded');
+          },
+          error: () => {
+            this.comments.set([]);
+            this.commentsStatus.set('error');
+          },
+        });
       } else {
         this.status.set('idle');
+        this.commentsStatus.set('idle');
       }
     });
   }

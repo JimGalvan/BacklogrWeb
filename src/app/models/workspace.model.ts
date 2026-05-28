@@ -1,3 +1,5 @@
+import { AdfDoc } from './adf.model';
+
 export interface Workspace {
   id: string;
   name: string;
@@ -22,8 +24,6 @@ export interface InviteRequest {
   email: string;
 }
 
-import { AdfDoc } from './adf.model';
-
 export interface TicketPerson {
   name: string;
   avatarInitials: string;
@@ -32,11 +32,11 @@ export interface TicketPerson {
 
 export interface TicketComment {
   id: string;
-  author: string;
-  avatarInitials: string;
-  avatarColor: string;
+  authorEmail: string;
+  authorName: string;
+  body: AdfDoc;
   createdAt: string;
-  body: string;
+  updatedAt: string;
 }
 
 export interface TicketStackTrace {
@@ -50,7 +50,7 @@ export interface Ticket {
   workspaceId: string;
   importedBy: string;
   projectKey: string;
-  summary: string;
+  title: string;
   priority?: 'P1' | 'P2' | 'P3';
   status?: string;
   assignee?: TicketPerson;

@@ -165,35 +165,44 @@
   50% { opacity: 0; }
 }
 
-/* Bullets */
-.bullets-block {
-  padding: 10px 14px;
+/* Rendered markdown */
+.tldr-markdown {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+.tldr-markdown ul.tldr-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
-.bullet-item {
+.tldr-markdown ul.tldr-list > li {
+  padding-left: 0;
+}
+
+
+.tldr-markdown ul.tldr-sublist {
+  list-style: disc;
+  padding-left: 18px;
+  margin: 5px 0 0;
   display: flex;
-  gap: 8px;
-  padding: 4px 0;
-  font-size: 12px;
+  flex-direction: column;
+  gap: 3px;
   color: var(--text-2);
-  line-height: 1.5;
-  opacity: 0;
-  transform: translateY(4px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-.bullet-item.visible {
-  opacity: 1;
-  transform: translateY(0);
+.tldr-markdown strong {
+  color: var(--text);
+  font-weight: 600;
 }
 
-.bullet-arrow {
-  font-family: 'Geist Mono', monospace;
-  color: var(--accent);
-  flex-shrink: 0;
-  margin-top: 1px;
+.tldr-markdown p {
+  margin: 0 0 10px;
 }
 
 /* Footer */

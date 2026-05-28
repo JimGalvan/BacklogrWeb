@@ -26,7 +26,7 @@
 } @else if (status() === 'loaded' && ticket(); as ticket) {
   <div class="ticket-body">
     <div class="title-block">
-      <h1 class="ticket-title">{{ ticket.summary }}</h1>
+      <h1 class="ticket-title">{{ ticket.title }}</h1>
     </div>
 
     <app-meta-row [ticket]="ticket" />
@@ -39,5 +39,20 @@
         <span class="placeholder">No description provided.</span>
       }
     </div>
+
+    <div class="section-label">COMMENTS</div>
+    @if (commentsStatus() === 'loading') {
+      <div class="comments-loading">Loading comments…</div>
+    } @else if (commentsStatus() === 'error') {
+      <div class="comments-error">Could not load comments.</div>
+    } @else if (comments().length === 0) {
+      <div class="comments-empty">No comments yet.</div>
+    } @else {
+      <div class="comments-list">
+        @for (comment of comments(); track comment.id) {
+          <app-comment [comment]="comment" />
+        }
+      </div>
+    }
   </div>
 }

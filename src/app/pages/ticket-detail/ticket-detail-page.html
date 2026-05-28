@@ -3,7 +3,7 @@
     <app-topbar (importClick)="showModal.set(true)" />
     <app-ticket-body [ticketKey]="ticketKey()" [workspaceId]="workspaceId()" />
   </div>
-  <app-insights-panel />
+  <app-insights-panel [workspaceId]="workspaceId()" [ticketKey]="ticketKey()" />
 </div>
 
 @if (showModal()) {

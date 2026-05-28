@@ -39,20 +39,15 @@
 
         <!-- TL;DR quote -->
         <div class="tldr-block">
-          <blockquote class="tldr-quote">
-            "{{ streamedText() }}<span class="caret" [class.hidden]="isDone()"></span>"
-          </blockquote>
-        </div>
-
-        <!-- Bullets -->
-        <div class="bullets-block">
-          @for (bullet of data.bullets; track $index; let i = $index) {
-            <div class="bullet-item" [class.visible]="i < visibleBullets()">
-              <span class="bullet-arrow">→</span>
-              <span class="bullet-html" [innerHTML]="bullet.html | safeHtml"></span>
-            </div>
+          @if (isDone()) {
+            <div class="tldr-markdown" [innerHTML]="tldrHtml() | safeHtml" (click)="onTldrClick($event)"></div>
+          } @else {
+            <blockquote class="tldr-quote">
+              {{ streamedText() }}<span class="caret"></span>
+            </blockquote>
           }
         </div>
+
       </div>
     }
   </div>
