@@ -19,7 +19,7 @@ export class ToolTabsComponent {
   tabs: ToolTab[] = [
     { id: 'summary', label: 'Summary' },
     { id: 'refinement', label: 'Refinement Analysis' },
-    { id: 'tests', label: 'Test cases', disabled: true },
+    { id: 'tests', label: 'Test cases' },
     { id: 'hypotheses', label: 'Hypotheses', disabled: true },
     { id: 'risk', label: 'Risk', disabled: true },
     { id: 'similar', label: 'Similar', disabled: true },

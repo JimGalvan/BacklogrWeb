@@ -3,10 +3,21 @@ import { Subject, merge, takeUntil } from 'rxjs';
 import { Insights } from '../../models/insights.model';
 import { TicketComment } from '../../models/workspace.model';
 import { RefinementAnalysis, RefinementAnalysisResponse } from '../../models/refinement.model';
+import { TestCase, TestCases, TestCasesResponse } from '../../models/test-cases.model';
+
+const TEST_CASE_CATEGORIES: { title: string; key: keyof TestCases }[] = [
+  { title: 'Integration Testing',  key: 'integrationTesting' },
+  { title: 'System Testing',       key: 'systemTesting' },
+  { title: 'End-to-End Testing',   key: 'endToEndTesting' },
+  { title: 'Regression Testing',   key: 'regressionTesting' },
+  { title: 'Negative Testing',     key: 'negativeTesting' },
+  { title: 'Security Testing',     key: 'securityTesting' },
+];
 import { InsightsService } from '../../services/insights.service';
 import { AiService } from '../../services/ai.service';
 import { WorkspaceService } from '../../services/workspace.service';
 import { ToolTabsComponent } from '../tool-tabs/tool-tabs';
+import { TestCaseSectionComponent } from '../test-case-section/test-case-section';
 import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
 
 function parseTldr(text: string, authorMap: Map<string, string>): string {
@@ -26,7 +37,7 @@ function parseTldr(text: string, authorMap: Map<string, string>): string {
 
 @Component({
   selector: 'app-insights-panel',
-  imports: [ToolTabsComponent, SafeHtmlPipe],
+  imports: [ToolTabsComponent, TestCaseSectionComponent, SafeHtmlPipe],
   templateUrl: './insights-panel.html',
   styleUrl: './insights-panel.css',
 })
@@ -51,6 +62,13 @@ export class InsightsPanelComponent implements OnDestroy {
   refinementIsStreaming = signal(false);
   refinementIsError = signal(false);
 
+  readonly testCaseCategories = TEST_CASE_CATEGORIES;
+  testCasesRawJson = signal('');
+  testCasesData = signal<TestCases | null>(null);
+  testCasesIsDone = signal(false);
+  testCasesIsStreaming = signal(false);
+  testCasesIsError = signal(false);
+
   readonly commentAuthorMap = computed(() =>
     new Map(this.comments().map(comment => [comment.id, comment.authorName || comment.authorEmail]))
   );
@@ -63,6 +81,7 @@ export class InsightsPanelComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
   private cancel$ = new Subject<void>();
   private cancelRefinement$ = new Subject<void>();
+  private cancelTestCases$ = new Subject<void>();
 
   constructor() {
     this.insightsService.getInsights('').subscribe(data => this.insights.set(data));
@@ -139,6 +158,42 @@ export class InsightsPanelComponent implements OnDestroy {
       });
   }
 
+  startTestCasesStream() {
+    const workspaceId = this.workspaceId();
+    const ticketKey = this.ticketKey();
+    if (!workspaceId || !ticketKey) return;
+
+    this.cancelTestCases$.next();
+    this.testCasesRawJson.set('');
+    this.testCasesData.set(null);
+    this.testCasesIsDone.set(false);
+    this.testCasesIsError.set(false);
+    this.testCasesIsStreaming.set(true);
+
+    const stop$ = merge(this.destroy$, this.cancelTestCases$);
+
+    this.aiService.streamTestCases(workspaceId, ticketKey)
+      .pipe(takeUntil(stop$))
+      .subscribe({
+        next: raw => this.testCasesRawJson.set(raw),
+        error: () => {
+          this.testCasesIsError.set(true);
+          this.testCasesIsDone.set(true);
+          this.testCasesIsStreaming.set(false);
+        },
+        complete: () => {
+          try {
+            const parsed = JSON.parse(this.testCasesRawJson()) as TestCasesResponse;
+            this.testCasesData.set(parsed.testCases);
+          } catch {
+            this.testCasesIsError.set(true);
+          }
+          this.testCasesIsDone.set(true);
+          this.testCasesIsStreaming.set(false);
+        },
+      });
+  }
+
   onTldrClick(event: MouseEvent) {
     const listItem = (event.target as Element).closest('li[data-comment-id]');
     if (!listItem) return;
@@ -154,5 +209,6 @@ export class InsightsPanelComponent implements OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
     this.cancelRefinement$.complete();
+    this.cancelTestCases$.complete();
   }
 }
