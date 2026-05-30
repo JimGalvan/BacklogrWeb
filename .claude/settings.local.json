@@ -20,7 +20,9 @@
       "Bash(npm uninstall *)",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\jimmy\\\\WebstormProjects\\\\Backlogr\\\\src\\\\app\" -Recurse -Include \"*.ts\", \"*.html\", \"*.css\")",
       "Bash(Select-Object -ExpandProperty FullName)",
-      "Bash(npx rg *)"
+      "Bash(npx rg *)",
+      "Bash(findstr /i \"mark\")",
+      "Bash(findstr /i \"mark\\\\|ngx\\\\|md\")"
     ]
   }
 }

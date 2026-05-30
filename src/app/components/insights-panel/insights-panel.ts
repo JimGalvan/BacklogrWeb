@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, input, OnDestroy, signal } from '@
 import { Subject, merge, takeUntil } from 'rxjs';
 import { Insights } from '../../models/insights.model';
 import { TicketComment } from '../../models/workspace.model';
+import { RefinementAnalysis, RefinementAnalysisResponse } from '../../models/refinement.model';
 import { InsightsService } from '../../services/insights.service';
 import { AiService } from '../../services/ai.service';
 import { WorkspaceService } from '../../services/workspace.service';
@@ -44,6 +45,12 @@ export class InsightsPanelComponent implements OnDestroy {
   activeTab = signal('summary');
   comments = signal<TicketComment[]>([]);
 
+  refinementRawJson = signal('');
+  refinementData = signal<RefinementAnalysis | null>(null);
+  refinementIsDone = signal(false);
+  refinementIsStreaming = signal(false);
+  refinementIsError = signal(false);
+
   readonly commentAuthorMap = computed(() =>
     new Map(this.comments().map(comment => [comment.id, comment.authorName || comment.authorEmail]))
   );
@@ -55,6 +62,7 @@ export class InsightsPanelComponent implements OnDestroy {
 
   private destroy$ = new Subject<void>();
   private cancel$ = new Subject<void>();
+  private cancelRefinement$ = new Subject<void>();
 
   constructor() {
     this.insightsService.getInsights('').subscribe(data => this.insights.set(data));
@@ -95,6 +103,42 @@ export class InsightsPanelComponent implements OnDestroy {
       });
   }
 
+  startRefinementStream() {
+    const workspaceId = this.workspaceId();
+    const ticketKey = this.ticketKey();
+    if (!workspaceId || !ticketKey) return;
+
+    this.cancelRefinement$.next();
+    this.refinementRawJson.set('');
+    this.refinementData.set(null);
+    this.refinementIsDone.set(false);
+    this.refinementIsError.set(false);
+    this.refinementIsStreaming.set(true);
+
+    const stop$ = merge(this.destroy$, this.cancelRefinement$);
+
+    this.aiService.streamRefinement(workspaceId, ticketKey)
+      .pipe(takeUntil(stop$))
+      .subscribe({
+        next: raw => this.refinementRawJson.set(raw),
+        error: () => {
+          this.refinementIsError.set(true);
+          this.refinementIsDone.set(true);
+          this.refinementIsStreaming.set(false);
+        },
+        complete: () => {
+          try {
+            const parsed = JSON.parse(this.refinementRawJson()) as RefinementAnalysisResponse;
+            this.refinementData.set(parsed.refinementAnalysis);
+          } catch {
+            this.refinementIsError.set(true);
+          }
+          this.refinementIsDone.set(true);
+          this.refinementIsStreaming.set(false);
+        },
+      });
+  }
+
   onTldrClick(event: MouseEvent) {
     const listItem = (event.target as Element).closest('li[data-comment-id]');
     if (!listItem) return;
@@ -109,5 +153,6 @@ export class InsightsPanelComponent implements OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+    this.cancelRefinement$.complete();
   }
 }

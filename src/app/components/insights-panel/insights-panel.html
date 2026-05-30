@@ -23,33 +23,159 @@
 
   <!-- Body -->
   <div class="panel-body">
-    @if (insights(); as data) {
-      <div class="summary-card">
-        <!-- Card head -->
-        <div class="card-head">
-          <div class="card-icon">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
-            </svg>
-          </div>
-          <h3 class="card-title">TL;DR</h3>
-          <div class="spacer"></div>
-          <span class="card-meta">{{ data.model }} · {{ data.latency }}</span>
-        </div>
 
-        <!-- TL;DR quote -->
-        <div class="tldr-block">
-          @if (isDone()) {
-            <div class="tldr-markdown" [innerHTML]="tldrHtml() | safeHtml" (click)="onTldrClick($event)"></div>
-          } @else {
-            <blockquote class="tldr-quote">
-              {{ streamedText() }}<span class="caret"></span>
-            </blockquote>
-          }
+    @if (activeTab() === 'summary') {
+      @if (insights(); as data) {
+        <div class="summary-card">
+          <!-- Card head -->
+          <div class="card-head">
+            <div class="card-icon">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+              </svg>
+            </div>
+            <h3 class="card-title">TL;DR</h3>
+            <div class="spacer"></div>
+            <span class="card-meta">{{ data.model }} · {{ data.latency }}</span>
+          </div>
+
+          <!-- TL;DR quote -->
+          <div class="tldr-block">
+            @if (isDone()) {
+              <div class="tldr-markdown" [innerHTML]="tldrHtml() | safeHtml" (click)="onTldrClick($event)"></div>
+            } @else {
+              <blockquote class="tldr-quote">
+                {{ streamedText() }}<span class="caret"></span>
+              </blockquote>
+            }
+          </div>
         </div>
+      }
+    }
+
+    @if (activeTab() === 'refinement') {
+      <div class="refinement-tab">
+
+        @if (!refinementIsStreaming() && !refinementIsDone()) {
+          <!-- Idle state -->
+          <div class="refinement-idle">
+            <div class="refinement-idle-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+            </div>
+            <p class="refinement-idle-text">Run a refinement analysis to surface open questions, scope gaps, risks, and missing acceptance criteria.</p>
+            <button class="run-refinement-btn" (click)="startRefinementStream()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+              </svg>
+              Run Refinement Analysis
+            </button>
+          </div>
+        }
+
+        @if (refinementIsStreaming() || refinementIsDone()) {
+          <div class="refinement-card">
+            <!-- Card head -->
+            <div class="card-head">
+              <div class="card-icon">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                </svg>
+              </div>
+              <h3 class="card-title">Refinement Analysis</h3>
+              <div class="spacer"></div>
+              @if (refinementIsStreaming()) {
+                <span class="streaming-indicator">
+                  <span class="live-dot"></span>
+                  <span class="live-text">generating</span>
+                </span>
+              }
+              @if (refinementIsDone() && !refinementIsError()) {
+                <button class="regenerate-btn" (click)="startRefinementStream()">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                    <path d="M21 3v5h-5"/>
+                  </svg>
+                  Regenerate
+                </button>
+              }
+            </div>
+
+            <!-- Content -->
+            <div class="refinement-body">
+              @if (refinementIsStreaming() && !refinementData()) {
+                <div class="refinement-loading">
+                  <span class="caret"></span>
+                </div>
+              }
+              @if (refinementIsError()) {
+                <p class="refinement-error">Something went wrong. Please try again.</p>
+              }
+              @if (refinementData(); as data) {
+                @if (data.summary) {
+                  <p class="refinement-summary">{{ data.summary }}</p>
+                }
+                @if (data.openQuestions.length) {
+                  <div class="refinement-section">
+                    <h4 class="refinement-section-title">Open Questions</h4>
+                    <ul class="refinement-items">
+                      @for (item of data.openQuestions; track item.title) {
+                        <li class="refinement-item">
+                          <span class="item-title">{{ item.title }}</span>
+                          <span class="item-description">{{ item.description }}</span>
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+                @if (data.scopeClarifications.length) {
+                  <div class="refinement-section">
+                    <h4 class="refinement-section-title">Scope Clarifications</h4>
+                    <ul class="refinement-items">
+                      @for (item of data.scopeClarifications; track item.title) {
+                        <li class="refinement-item">
+                          <span class="item-title">{{ item.title }}</span>
+                          <span class="item-description">{{ item.description }}</span>
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+                @if (data.risksAndEdgeCases.length) {
+                  <div class="refinement-section">
+                    <h4 class="refinement-section-title">Risks &amp; Edge Cases</h4>
+                    <ul class="refinement-items">
+                      @for (item of data.risksAndEdgeCases; track item.title) {
+                        <li class="refinement-item">
+                          <span class="item-title">{{ item.title }}</span>
+                          <span class="item-description">{{ item.description }}</span>
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+                @if (data.acceptanceCriteriaGaps.length) {
+                  <div class="refinement-section">
+                    <h4 class="refinement-section-title">Acceptance Criteria Gaps</h4>
+                    <ul class="refinement-items">
+                      @for (item of data.acceptanceCriteriaGaps; track item.title) {
+                        <li class="refinement-item">
+                          <span class="item-title">{{ item.title }}</span>
+                          <span class="item-description">{{ item.description }}</span>
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
+              }
+            </div>
+          </div>
+        }
 
       </div>
     }
+
   </div>
 
   <!-- Footer -->
