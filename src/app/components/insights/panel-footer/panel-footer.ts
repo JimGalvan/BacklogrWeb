@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { IconComponent } from '../../ui/common/icon/icon';
 
 @Component({
@@ -8,6 +8,5 @@ import { IconComponent } from '../../ui/common/icon/icon';
   styleUrl: './panel-footer.css',
 })
 export class PanelFooterComponent {
-  contextTokens = input<string | undefined>(undefined);
   reanalyze = output<void>();
 }

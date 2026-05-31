@@ -40,16 +40,6 @@
   margin: 0;
 }
 
-.spacer {
-  flex: 1;
-}
-
-.card-meta {
-  font-family: 'Geist Mono', monospace;
-  font-size: 10.5px;
-  color: var(--muted);
-}
-
 /* TL;DR block */
 .tldr-block {
   padding: 12px 14px;

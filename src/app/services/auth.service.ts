@@ -12,10 +12,10 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  private _token = signal<string | null>(null);
+  private token = signal<string | null>(null);
 
-  readonly isAuthenticated = computed(() => !!this._token());
-  getToken = () => this._token();
+  readonly isAuthenticated = computed(() => !!this.token());
+  getToken = () => this.token();
 
   login(body: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${BASE}/auth/login`, body).pipe(
@@ -45,13 +45,13 @@ export class AuthService {
   }
 
   clearSession(): void {
-    this._token.set(null);
+    this.token.set(null);
     localStorage.removeItem('refreshToken');
     this.router.navigate(['/login']);
   }
 
   private storeTokens(response: AuthResponse): void {
-    this._token.set(response.token);
+    this.token.set(response.token);
     localStorage.setItem('refreshToken', response.refreshToken);
   }
 }

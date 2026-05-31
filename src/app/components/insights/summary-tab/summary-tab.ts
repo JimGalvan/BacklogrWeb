@@ -1,9 +1,7 @@
 import { Component, DestroyRef, computed, effect, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject, takeUntil } from 'rxjs';
-import { Insights } from '../../../models/insights.model';
 import { TicketComment } from '../../../models/workspace.model';
-import { InsightsService } from '../../../services/insights.service';
 import { AiService } from '../../../services/ai.service';
 import { WorkspaceService } from '../../../services/workspace.service';
 import { SafeHtmlPipe } from '../../../core/pipes/safe-html.pipe';
@@ -34,12 +32,10 @@ export class SummaryTabComponent {
   workspaceId = input<string>('');
   ticketKey = input<string>('');
 
-  private insightsService = inject(InsightsService);
   private aiService = inject(AiService);
   private workspaceService = inject(WorkspaceService);
   private destroyRef = inject(DestroyRef);
 
-  readonly insights = signal<Insights | null>(null);
   readonly streamedText = signal('');
   readonly isDone = signal(false);
   readonly isError = signal(false);
@@ -57,8 +53,6 @@ export class SummaryTabComponent {
   });
 
   constructor() {
-    this.insightsService.getInsights('').subscribe(data => this.insights.set(data));
-
     effect(() => {
       const workspaceId = this.workspaceId();
       const ticketKey = this.ticketKey();

@@ -1,24 +1,20 @@
-@if (insights(); as data) {
-  <div class="summary-card">
-    <!-- Card head -->
-    <div class="card-head">
-      <div class="card-icon">
-        <app-icon name="document" [size]="11" />
-      </div>
-      <h3 class="card-title">TL;DR</h3>
-      <div class="spacer"></div>
-      <span class="card-meta">{{ data.model }} · {{ data.latency }}</span>
+<div class="summary-card">
+  <!-- Card head -->
+  <div class="card-head">
+    <div class="card-icon">
+      <app-icon name="document" [size]="11" />
     </div>
-
-    <!-- TL;DR quote -->
-    <div class="tldr-block">
-      @if (isDone()) {
-        <div class="tldr-markdown" [innerHTML]="tldrHtml() | safeHtml" (click)="onTldrClick($event)"></div>
-      } @else {
-        <blockquote class="tldr-quote">
-          {{ streamedText() }}<span class="caret"></span>
-        </blockquote>
-      }
-    </div>
+    <h3 class="card-title">TL;DR</h3>
   </div>
-}
+
+  <!-- TL;DR quote -->
+  <div class="tldr-block">
+    @if (isDone()) {
+      <div class="tldr-markdown" [innerHTML]="tldrHtml() | safeHtml" (click)="onTldrClick($event)"></div>
+    } @else {
+      <blockquote class="tldr-quote">
+        {{ streamedText() }}<span class="caret"></span>
+      </blockquote>
+    }
+  </div>
+</div>

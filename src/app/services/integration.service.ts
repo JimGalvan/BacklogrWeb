@@ -11,12 +11,12 @@ const STORAGE_KEY = 'connectedProviders';
 export class IntegrationService {
   private http = inject(HttpClient);
 
-  private _connected = signal<Set<string>>(
+  private connected = signal<Set<string>>(
     new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]'))
   );
 
   isConnected(provider: string): boolean {
-    return this._connected().has(provider);
+    return this.connected().has(provider);
   }
 
   getConnectUrl(provider: string): Observable<ConnectUrlResponse> {
@@ -38,7 +38,7 @@ export class IntegrationService {
   }
 
   markConnected(provider: string): void {
-    this._connected.update(prev => {
+    this.connected.update(prev => {
       const next = new Set(prev);
       next.add(provider);
       localStorage.setItem(STORAGE_KEY, JSON.stringify([...next]));
