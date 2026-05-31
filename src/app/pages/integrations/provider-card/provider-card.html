@@ -1,0 +1,22 @@
+<div class="provider-card" [class.coming-soon]="provider().comingSoon">
+  <div class="provider-logo {{ provider().logoClass }}">{{ provider().logoInitial }}</div>
+
+  <div class="provider-info">
+    <div class="provider-name">{{ provider().name }}</div>
+    <div class="provider-description">{{ provider().description }}</div>
+  </div>
+
+  <div class="provider-actions">
+    @if (provider().comingSoon) {
+      <span class="badge-coming-soon">Coming soon</span>
+    } @else if (connected()) {
+      <div class="status-connected">
+        <app-icon name="check" [size]="13" [strokeWidth]="2.5" />
+        Connected
+      </div>
+      <button class="btn-reconnect" (click)="connect.emit()">Reconnect</button>
+    } @else {
+      <button class="btn-connect" (click)="connect.emit()">Connect</button>
+    }
+  </div>
+</div>

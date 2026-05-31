@@ -1,0 +1,116 @@
+:host { display: block; }
+
+.provider-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  background: var(--panel);
+  border: 1px solid var(--line-soft);
+  border-radius: 10px;
+  transition: border-color 0.15s;
+}
+
+.provider-card:hover {
+  border-color: var(--line);
+}
+
+.provider-card.coming-soon {
+  opacity: 0.6;
+}
+
+.provider-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.logo-jira   { background: linear-gradient(135deg, oklch(0.55 0.13 200), oklch(0.40 0.10 240)); }
+.logo-linear { background: linear-gradient(135deg, oklch(0.50 0.12 280), oklch(0.36 0.10 320)); }
+.logo-github { background: linear-gradient(135deg, oklch(0.35 0.01 250), oklch(0.25 0.01 250)); }
+
+.provider-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.provider-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.provider-description {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.provider-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.status-connected {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ok);
+}
+
+.btn-connect,
+.btn-reconnect {
+  height: 30px;
+  padding: 0 14px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, filter 0.15s;
+}
+
+.btn-connect {
+  background: var(--accent);
+  border: none;
+  color: oklch(0.18 0.01 80);
+  font-weight: 600;
+}
+
+.btn-connect:hover {
+  filter: brightness(1.08);
+}
+
+.btn-reconnect {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.btn-reconnect:hover {
+  background: var(--panel-2);
+  color: var(--text-2);
+}
+
+.badge-coming-soon {
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 99px;
+  border: 1px solid var(--line);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  letter-spacing: 0.02em;
+}

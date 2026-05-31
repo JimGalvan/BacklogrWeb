@@ -6,30 +6,11 @@
 
   <div class="provider-list">
     @for (provider of providers; track provider.id) {
-      <div class="provider-card" [class.coming-soon]="provider.comingSoon">
-        <div class="provider-logo {{ provider.logoClass }}">{{ provider.logoInitial }}</div>
-
-        <div class="provider-info">
-          <div class="provider-name">{{ provider.name }}</div>
-          <div class="provider-description">{{ provider.description }}</div>
-        </div>
-
-        <div class="provider-actions">
-          @if (provider.comingSoon) {
-            <span class="badge-coming-soon">Coming soon</span>
-          } @else if (isConnected(provider.id)) {
-            <div class="status-connected">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"/>
-              </svg>
-              Connected
-            </div>
-            <button class="btn-reconnect" (click)="connect(provider.id)">Reconnect</button>
-          } @else {
-            <button class="btn-connect" (click)="connect(provider.id)">Connect</button>
-          }
-        </div>
-      </div>
+      <app-provider-card
+        [provider]="provider"
+        [connected]="isConnected(provider.id)"
+        (connect)="connect(provider.id)"
+      />
     }
   </div>
 

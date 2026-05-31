@@ -1,6 +1,13 @@
 // Atlassian Document Format (ADF) type definitions.
-// We define these locally instead of pulling in @atlaskit/adf-schema, which
-// adds ~1.4 MB of ProseMirror dependencies. This covers the nodes Jira sends.
+//
+// Jira sends ticket descriptions and comments as ADF (a structured JSON tree),
+// not HTML. We render it ourselves via core/utils/adf-to-html.ts rather than
+// using Atlassian's packages, because:
+//   1. Their renderer (@atlaskit/renderer) is React — unusable in this Angular app.
+//   2. Even just @atlaskit/adf-schema pulls in ~1.4 MB of ProseMirror, which we
+//      don't need: we only read/display ADF, never edit it.
+//   3. We only need the subset of nodes Jira emits for descriptions/comments,
+//      covered below. Unsupported nodes degrade gracefully (rendered as empty).
 
 export interface AdfMark {
   type: 'strong' | 'em' | 'code' | 'underline' | 'strike' | 'subsup' | 'link' | 'textColor' | 'backgroundColor';
