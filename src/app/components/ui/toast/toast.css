@@ -1,0 +1,24 @@
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  box-shadow: 0 4px 16px color-mix(in oklch, black 15%, transparent);
+  z-index: 200;
+  animation: slide-up 0.2s ease;
+}
+
+.toast--err { border-color: var(--danger); }
+.toast-ico { display: flex; align-items: center; }
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

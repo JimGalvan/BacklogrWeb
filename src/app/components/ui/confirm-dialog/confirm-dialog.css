@@ -1,0 +1,97 @@
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  background: color-mix(in oklch, var(--bg) 60%, transparent);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  width: 480px;
+  box-shadow: 0 8px 32px color-mix(in oklch, black 20%, transparent);
+}
+
+.modal--sm { width: 360px; }
+
+.modal-body { padding: 16px 20px; }
+
+.modal-body--confirm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.modal-body--confirm h3 { margin: 0; font-size: 15px; }
+.modal-body--confirm p { margin: 0; font-size: 13px; color: var(--muted); }
+
+.confirm-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--hover);
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirm-icon--danger {
+  background: var(--danger-2);
+  color: var(--danger);
+}
+
+.modal-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.modal-foot-spacer { flex: 1; }
+
+.btn {
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid var(--line-soft);
+  background: var(--surface);
+  color: var(--fg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s;
+}
+
+.btn:hover { background: var(--hover); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn--danger {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+}
+
+.btn--danger:hover { filter: brightness(1.1); }
+
+.spin {
+  width: 12px;
+  height: 12px;
+  border: 2px solid color-mix(in oklch, currentColor 30%, transparent);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }

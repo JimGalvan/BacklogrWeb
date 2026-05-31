@@ -1,0 +1,28 @@
+<div class="modal-bg" (click)="cancel.emit()">
+  <div class="modal modal--sm" (click)="$event.stopPropagation()">
+    <div class="modal-body modal-body--confirm">
+      @if (icon(); as iconName) {
+        <div class="confirm-icon" [class.confirm-icon--danger]="danger()">
+          <app-icon [name]="iconName" [size]="18" [strokeWidth]="1.8" />
+        </div>
+      }
+      <h3>{{ title() }}</h3>
+      @if (message()) {
+        <p>{{ message() }}</p>
+      }
+    </div>
+    <div class="modal-foot">
+      <div class="modal-foot-spacer"></div>
+      <button class="btn" (click)="cancel.emit()">{{ cancelLabel() }}</button>
+      <button
+        class="btn"
+        [class.btn--danger]="danger()"
+        [disabled]="loading()"
+        (click)="confirm.emit()"
+      >
+        @if (loading()) { <span class="spin"></span> }
+        {{ confirmLabel() }}
+      </button>
+    </div>
+  </div>
+</div>

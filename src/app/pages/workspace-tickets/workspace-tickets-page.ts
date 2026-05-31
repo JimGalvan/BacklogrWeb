@@ -1,22 +1,31 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { WorkspaceService } from '../../services/workspace.service';
 import { Ticket } from '../../models/workspace.model';
-import { FormsModule } from '@angular/forms';
 import { ImportModalComponent } from '../../components/modals/import-modal/import-modal';
+import { ConfirmDialogComponent } from '../../components/ui/confirm-dialog/confirm-dialog';
+import { ToastComponent, Toast } from '../../components/ui/toast/toast';
+import { WtHeaderComponent } from './wt-header/wt-header';
+import { WtToolbarComponent } from './wt-toolbar/wt-toolbar';
+import { WtTableComponent } from './wt-table/wt-table';
 
 function errorMessage(err: unknown): string {
   if (err instanceof HttpErrorResponse && err.error?.message) return err.error.message;
   return 'Something went wrong. Please try again.';
 }
 
-interface Toast { type: 'ok' | 'err'; msg: string; }
-
 @Component({
   selector: 'app-workspace-tickets-page',
-  imports: [FormsModule, RouterLink, ImportModalComponent],
+  imports: [
+    ImportModalComponent,
+    ConfirmDialogComponent,
+    ToastComponent,
+    WtHeaderComponent,
+    WtToolbarComponent,
+    WtTableComponent,
+  ],
   templateUrl: './workspace-tickets-page.html',
   styleUrl: './workspace-tickets-page.css',
 })
@@ -106,10 +115,6 @@ export class TicketsPageComponent implements OnInit {
         this.showToast('err', errorMessage(err));
       },
     });
-  }
-
-  formatDate(iso: string): string {
-    return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   }
 
   private toastTimer: ReturnType<typeof setTimeout> | null = null;

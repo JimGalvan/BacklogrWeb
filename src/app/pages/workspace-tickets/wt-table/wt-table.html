@@ -1,0 +1,46 @@
+<div class="tickets-card">
+  <table>
+    <thead>
+      <tr>
+        <th class="col-key">Key</th>
+        <th class="col-project">Project</th>
+        <th class="col-summary">Summary</th>
+        <th class="col-date">Imported</th>
+        <th class="col-actions"></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (ticket of tickets(); track ticket.id) {
+        <tr>
+          <td><span class="ticket-key">{{ ticket.ticketKey }}</span></td>
+          <td><span class="project-key">{{ ticket.projectKey }}</span></td>
+          <td class="summary-cell">{{ ticket.title }}</td>
+          <td class="date-cell">{{ formatDate(ticket.importedAt) }}</td>
+          <td>
+            <div class="row-actions">
+              <a
+                class="icon-btn"
+                title="View ticket"
+                [routerLink]="['/workspaces', workspaceId(), 'tickets', ticket.ticketKey]">
+                <app-icon name="eye" [size]="14" [strokeWidth]="1.8" />
+              </a>
+              <button
+                class="icon-btn icon-btn--danger"
+                title="Remove from workspace"
+                (click)="remove.emit(ticket)">
+                <app-icon name="trash" [size]="14" [strokeWidth]="1.8" />
+              </button>
+            </div>
+          </td>
+        </tr>
+      }
+      @if (tickets().length === 0) {
+        <tr>
+          <td colspan="5" class="table-empty">
+            {{ search() ? 'No tickets match.' : 'No tickets yet — import one to get started.' }}
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

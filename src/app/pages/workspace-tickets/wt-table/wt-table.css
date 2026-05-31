@@ -1,0 +1,87 @@
+:host { display: block; }
+
+.tickets-card {
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+table { width: 100%; border-collapse: collapse; }
+
+thead th {
+  padding: 9px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  background: var(--bg);
+  border-bottom: 1px solid var(--line-soft);
+  text-align: left;
+}
+
+tbody tr { border-bottom: 1px solid var(--line-soft); }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--hover); }
+
+tbody td { padding: 11px 14px; font-size: 13px; color: var(--fg); vertical-align: middle; }
+
+.col-key     { width: 100px; }
+.col-project { width: 90px; }
+.col-summary { }
+.col-date    { width: 120px; white-space: nowrap; }
+.col-actions { width: 48px; }
+
+.ticket-key {
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  background: color-mix(in oklch, var(--accent) 12%, transparent);
+  border-radius: 4px;
+  padding: 2px 6px;
+  white-space: nowrap;
+}
+
+.project-key {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  background: var(--bg);
+  border: 1px solid var(--line-soft);
+  border-radius: 4px;
+  padding: 2px 6px;
+  white-space: nowrap;
+}
+
+.summary-cell {
+  max-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.date-cell { color: var(--muted); font-size: 12px; }
+
+.table-empty { text-align: center; color: var(--muted); padding: 40px 14px !important; font-size: 13px; }
+
+.row-actions { display: flex; align-items: center; justify-content: flex-end; }
+
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--muted);
+  transition: background 0.15s, color 0.15s;
+}
+
+.icon-btn:hover { background: var(--hover); color: var(--fg); }
+.icon-btn--danger:hover { background: var(--danger-2); color: var(--danger); }

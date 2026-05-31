@@ -1,0 +1,14 @@
+<header class="wt-header">
+  <div class="crumbs">
+    <a class="crumb-link" routerLink="/workspaces">Workspaces</a>
+    <span class="crumb-sep">/</span>
+    <a class="crumb-link" routerLink="/workspaces">{{ workspaceName() }}</a>
+    <span class="crumb-sep">/</span>
+    <span class="crumb-here">Tickets</span>
+  </div>
+  <div class="header-spacer"></div>
+  <button class="pill pill--primary" (click)="importTicket.emit()">
+    <app-icon name="plus" [size]="13" />
+    Import ticket
+  </button>
+</header>
