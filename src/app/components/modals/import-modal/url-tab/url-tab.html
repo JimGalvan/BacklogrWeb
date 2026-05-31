@@ -10,16 +10,3 @@
   />
 </div>
 <p class="input-hint">⌘V · accepts Jira</p>
-
-<div class="recents-section">
-  <div class="recents-label">RECENTLY IMPORTED</div>
-  <div class="recents-list">
-    @for (ticket of recentTickets; track ticket.key) {
-      <button class="recent-row" (click)="importTicket.emit(ticket.key)">
-        <span class="recent-key">{{ ticket.key }}</span>
-        <span class="recent-title">{{ ticket.title }}</span>
-        <app-icon name="arrow-right" [size]="14" class="recent-arrow" />
-      </button>
-    }
-  </div>
-</div>

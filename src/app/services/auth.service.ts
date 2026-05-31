@@ -19,7 +19,7 @@ export class AuthService {
 
   login(body: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${BASE}/auth/login`, body).pipe(
-      tap(r => this.storeTokens(r))
+      tap(response => this.storeTokens(response))
     );
   }
 
@@ -30,7 +30,7 @@ export class AuthService {
   refresh(): Observable<AuthResponse> {
     const refreshToken = localStorage.getItem('refreshToken');
     return this.http.post<AuthResponse>(`${BASE}/auth/refresh`, { refreshToken }).pipe(
-      tap(r => this.storeTokens(r))
+      tap(response => this.storeTokens(response))
     );
   }
 
@@ -50,8 +50,8 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-  private storeTokens(r: AuthResponse): void {
-    this._token.set(r.token);
-    localStorage.setItem('refreshToken', r.refreshToken);
+  private storeTokens(response: AuthResponse): void {
+    this._token.set(response.token);
+    localStorage.setItem('refreshToken', response.refreshToken);
   }
 }

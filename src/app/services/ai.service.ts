@@ -21,6 +21,7 @@ export class AiService {
     return this.streamEndpoint(`${BASE}/workspaces/${workspaceId}/ai/tickets/${ticketKey}/tldr`);
   }
 
+  // TODO: simplify this method
   private streamEndpoint(url: string): Observable<string> {
     return new Observable<string>(observer => {
       const token = this.authService.getToken();

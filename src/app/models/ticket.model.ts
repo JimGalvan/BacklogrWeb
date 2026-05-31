@@ -1,5 +1,3 @@
-import { RichTextDoc } from './rich-text.model';
-
 export type AvatarVariant = 'a' | 'b' | 'c';
 
 export interface PersonAvatar {
@@ -15,25 +13,3 @@ export interface TicketComment {
   bodyHtml: string;
 }
 
-export interface MockTicket {
-  key: string;
-  project: string;
-  title: string;
-  priority: 'P1' | 'P2' | 'P3';
-  status: string;
-  assignee: { name: string; avatar: PersonAvatar };
-  reporter: { name: string; avatar: PersonAvatar };
-  sprint: string;
-  affects: string;
-  labels: string[];
-  description: RichTextDoc;
-  stackTraceLabel: string;
-  stackTraceHtml: string;
-  comments: TicketComment[];
-}
-
-export interface WorkspaceTicketSummary {
-  key: string;
-  title: string;
-  project: string;
-}
