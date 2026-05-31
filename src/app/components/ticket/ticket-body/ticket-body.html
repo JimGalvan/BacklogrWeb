@@ -1,0 +1,31 @@
+@if (status() === 'loading') {
+  <app-ticket-body-skeleton/>
+} @else if (status() === 'error') {
+  <div class="ticket-error">
+    <app-empty-state
+      heading="Could not load ticket"
+      [subtext]="ticketKey() + ' could not be retrieved. Try refreshing the page.'"
+    >
+      <span icon class="error-glyph">&#9888;</span>
+    </app-empty-state>
+  </div>
+} @else if (status() === 'loaded' && ticket(); as ticket) {
+  <div class="ticket-body">
+    <div class="title-block">
+      <h1 class="ticket-title">{{ ticket.title }}</h1>
+    </div>
+
+    <app-meta-row [ticket]="ticket"/>
+
+    <div class="section-label">DESCRIPTION</div>
+    <div class="description">
+      @if (ticket.description) {
+        <app-rich-text [doc]="{ format: 'adf', content: ticket.description }"/>
+      } @else {
+        <span class="placeholder">No description provided.</span>
+      }
+    </div>
+
+    <app-comments-section [workspaceId]="workspaceId()" [ticketKey]="ticketKey()"/>
+  </div>
+}

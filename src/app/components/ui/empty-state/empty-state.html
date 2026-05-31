@@ -1,0 +1,8 @@
+<div class="empty-state">
+  <ng-content select="[icon]" />
+  <p class="empty-heading">{{ heading() }}</p>
+  @if (subtext()) {
+    <p class="empty-subtext">{{ subtext() }}</p>
+  }
+  <ng-content />
+</div>

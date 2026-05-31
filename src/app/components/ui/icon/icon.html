@@ -1,0 +1,61 @@
+<svg
+  [attr.width]="size()"
+  [attr.height]="size()"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  [attr.stroke-width]="strokeWidth()"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  @switch (name()) {
+    @case ('sparkle') {
+      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+    }
+    @case ('lightning') {
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+    }
+    @case ('refresh') {
+      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+      <path d="M21 3v5h-5"/>
+      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+      <path d="M8 16H3v5"/>
+    }
+    @case ('refresh-cw') {
+      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+      <path d="M21 3v5h-5"/>
+    }
+    @case ('play') {
+      <polygon points="5 3 19 12 5 21 5 3"/>
+    }
+    @case ('search') {
+      <circle cx="11" cy="11" r="8"/>
+      <path d="m21 21-4.35-4.35"/>
+    }
+    @case ('checklist') {
+      <polyline points="9 11 12 14 22 4"/>
+      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+    }
+    @case ('document') {
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+    }
+    @case ('plus') {
+      <path d="M12 5v14M5 12h14"/>
+    }
+    @case ('eye') {
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+      <circle cx="12" cy="12" r="3"/>
+    }
+    @case ('trash') {
+      <path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/>
+    }
+    @case ('warning') {
+      <path d="M12 3l10 18H2L12 3z"/>
+      <path d="M12 10v4M12 18h.01"/>
+    }
+    @case ('check') {
+      <path d="M5 12l5 5L20 7"/>
+    }
+  }
+</svg>

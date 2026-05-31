@@ -22,7 +22,8 @@
       "Bash(Select-Object -ExpandProperty FullName)",
       "Bash(npx rg *)",
       "Bash(findstr /i \"mark\")",
-      "Bash(findstr /i \"mark\\\\|ngx\\\\|md\")"
+      "Bash(findstr /i \"mark\\\\|ngx\\\\|md\")",
+      "Bash(npx vitest *)"
     ]
   }
 }

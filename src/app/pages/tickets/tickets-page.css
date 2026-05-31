@@ -13,29 +13,6 @@
   height: 100%;
 }
 
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  max-width: 320px;
-  text-align: center;
-}
-
-.empty-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--fg);
-  margin: 0;
-}
-
-.empty-sub {
-  font-size: 13px;
-  color: var(--muted);
-  margin: 0;
-  line-height: 1.5;
-}
-
 .btn-go {
   margin-top: 8px;
   display: inline-flex;

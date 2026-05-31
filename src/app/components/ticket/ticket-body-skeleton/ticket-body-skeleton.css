@@ -1,0 +1,62 @@
+:host {
+  display: block;
+}
+
+.ticket-body {
+  padding: 28px 40px 80px;
+}
+
+@keyframes shimmer {
+  from { background-position: -400px 0; }
+  to   { background-position:  400px 0; }
+}
+
+.skeleton-title,
+.skeleton-chip,
+.skeleton-label,
+.skeleton-line {
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--surface-2, #2a2a2a) 25%,
+    var(--surface-3, #333)    50%,
+    var(--surface-2, #2a2a2a) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+.skeleton-title {
+  height: 28px;
+  width: 62%;
+  margin-bottom: 24px;
+}
+
+.skeleton-meta {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.skeleton-chip {
+  height: 22px;
+  width: 80px;
+  border-radius: 999px;
+}
+
+.skeleton-label {
+  height: 10px;
+  width: 88px;
+  margin-bottom: 14px;
+}
+
+.skeleton-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 72ch;
+}
+
+.skeleton-line {
+  height: 13px;
+}

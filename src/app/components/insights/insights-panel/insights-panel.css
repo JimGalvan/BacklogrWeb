@@ -1,0 +1,23 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-2);
+  border-left: 1px solid var(--line-soft);
+  overflow: hidden;
+}
+
+.insights-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

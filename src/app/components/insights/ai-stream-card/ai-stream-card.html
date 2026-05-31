@@ -1,0 +1,47 @@
+@if (!isStreaming() && !isDone()) {
+  <!-- Idle state -->
+  <div class="ai-idle">
+    <div class="ai-idle-icon">
+      <ng-content select="[idleIcon]" />
+    </div>
+    <p class="ai-idle-text">{{ idleText() }}</p>
+    <button class="ai-run-btn" (click)="run.emit()">
+      <app-icon name="play" [size]="12" />
+      {{ runLabel() }}
+    </button>
+  </div>
+} @else {
+  <div class="ai-card">
+    <!-- Card head -->
+    <div class="card-head">
+      <div class="card-icon">
+        <ng-content select="[headIcon]" />
+      </div>
+      <h3 class="card-title">{{ title() }}</h3>
+      <div class="spacer"></div>
+      @if (isStreaming()) {
+        <span class="streaming-indicator">
+          <span class="live-dot"></span>
+          <span class="live-text">generating</span>
+        </span>
+      }
+      @if (isDone() && !isError()) {
+        <button class="regenerate-btn" (click)="run.emit()">
+          <app-icon name="refresh-cw" [size]="11" />
+          Regenerate
+        </button>
+      }
+    </div>
+
+    <!-- Content -->
+    <div class="ai-body">
+      @if (isStreaming() && !hasContent()) {
+        <div class="ai-loading"><span class="caret"></span></div>
+      }
+      @if (isError()) {
+        <p class="ai-error">Something went wrong. Please try again.</p>
+      }
+      <ng-content />
+    </div>
+  </div>
+}

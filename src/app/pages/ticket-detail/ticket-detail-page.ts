@@ -2,10 +2,10 @@ import { Component, inject, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
-import { TopbarComponent } from '../../components/topbar/topbar';
-import { TicketBodyComponent } from '../../components/ticket-body/ticket-body';
-import { InsightsPanelComponent } from '../../components/insights-panel/insights-panel';
-import { ImportModalComponent } from '../../components/import-modal/import-modal';
+import { TopbarComponent } from '../../components/layout/topbar/topbar';
+import { TicketBodyComponent } from '../../components/ticket/ticket-body/ticket-body';
+import { InsightsPanelComponent } from '../../components/insights/insights-panel/insights-panel';
+import { ImportModalComponent } from '../../components/modals/import-modal/import-modal';
 
 @Component({
   selector: 'app-ticket-detail-page',
@@ -33,6 +33,6 @@ export class TicketDetailPageComponent {
 
   onImported() {
     this.showModal.set(false);
-    this.insightsPanel?.startStream();
+    this.insightsPanel?.reanalyze();
   }
 }

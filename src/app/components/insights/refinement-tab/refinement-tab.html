@@ -1,0 +1,22 @@
+<app-ai-stream-card
+  title="Refinement Analysis"
+  idleText="Run a refinement analysis to surface open questions, scope gaps, risks, and missing acceptance criteria."
+  runLabel="Run Refinement Analysis"
+  [isStreaming]="stream.isStreaming()"
+  [isDone]="stream.isDone()"
+  [isError]="stream.isError()"
+  [hasContent]="!!stream.data()"
+  (run)="run()"
+>
+  <app-icon idleIcon name="search" [size]="18" [strokeWidth]="1.5" />
+  <app-icon headIcon name="search" [size]="11" />
+
+  @if (stream.data(); as data) {
+    @if (data.summary) {
+      <p class="refinement-summary">{{ data.summary }}</p>
+    }
+    @for (section of sections; track section.key) {
+      <app-refinement-section [title]="section.title" [items]="data[section.key]" />
+    }
+  }
+</app-ai-stream-card>

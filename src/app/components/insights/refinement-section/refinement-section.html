@@ -1,0 +1,13 @@
+@if (items().length) {
+  <div class="refinement-section">
+    <h4 class="refinement-section-title">{{ title() }}</h4>
+    <ul class="refinement-items">
+      @for (item of items(); track item.title) {
+        <li class="refinement-item">
+          <span class="item-title">{{ item.title }}</span>
+          <span class="item-description">{{ item.description }}</span>
+        </li>
+      }
+    </ul>
+  </div>
+}

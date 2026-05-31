@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { ShellComponent } from './components/shell/shell';
+import { ShellComponent } from './components/layout/shell/shell';
 import { LoginPageComponent } from './pages/login/login-page';
 import { RegisterPageComponent } from './pages/register/register-page';
 import { TicketsPageComponent } from './pages/tickets/tickets-page';

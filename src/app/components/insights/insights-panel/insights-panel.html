@@ -1,0 +1,30 @@
+<div class="insights-panel">
+  <app-panel-header
+    [activeTab]="activeTab()"
+    (tabChange)="activeTab.set($event)"
+  />
+
+  <!-- Body: tabs stay mounted so generated analysis survives tab switches -->
+  <div class="panel-body">
+    <app-summary-tab
+      [hidden]="activeTab() !== 'summary'"
+      [workspaceId]="workspaceId()"
+      [ticketKey]="ticketKey()"
+    />
+    <app-refinement-tab
+      [hidden]="activeTab() !== 'refinement'"
+      [workspaceId]="workspaceId()"
+      [ticketKey]="ticketKey()"
+    />
+    <app-test-cases-tab
+      [hidden]="activeTab() !== 'tests'"
+      [workspaceId]="workspaceId()"
+      [ticketKey]="ticketKey()"
+    />
+  </div>
+
+  <app-panel-footer
+    [contextTokens]="summaryTab()?.insights()?.contextTokens"
+    (reanalyze)="summaryTab()?.reanalyze()"
+  />
+</div>

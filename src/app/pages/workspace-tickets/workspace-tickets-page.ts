@@ -5,7 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { WorkspaceService } from '../../services/workspace.service';
 import { Ticket } from '../../models/workspace.model';
 import { FormsModule } from '@angular/forms';
-import { ImportModalComponent } from '../../components/import-modal/import-modal';
+import { ImportModalComponent } from '../../components/modals/import-modal/import-modal';
 
 function errorMessage(err: unknown): string {
   if (err instanceof HttpErrorResponse && err.error?.message) return err.error.message;

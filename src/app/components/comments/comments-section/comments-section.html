@@ -1,0 +1,15 @@
+<div class="section-label">COMMENTS</div>
+
+@if (status() === 'loading') {
+  <div class="comments-message">Loading comments…</div>
+} @else if (status() === 'error') {
+  <div class="comments-message comments-message--error">Could not load comments.</div>
+} @else if (comments().length === 0) {
+  <div class="comments-message">No comments yet.</div>
+} @else {
+  <div class="comments-list">
+    @for (comment of comments(); track comment.id) {
+      <app-comment [comment]="comment" />
+    }
+  </div>
+}

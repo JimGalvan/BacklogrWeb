@@ -1,0 +1,121 @@
+:host {
+  display: block;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.summary-card {
+  background: var(--panel);
+  border: 1px solid var(--line-soft);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.card-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  background: var(--accent-2);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.card-meta {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10.5px;
+  color: var(--muted);
+}
+
+/* TL;DR block */
+.tldr-block {
+  padding: 12px 14px;
+  background: linear-gradient(180deg, var(--accent-2) 0%, transparent 100%);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.tldr-quote {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--text);
+  text-wrap: pretty;
+  line-height: 1.45;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Blinking caret */
+.caret {
+  display: inline-block;
+  width: 7px;
+  height: 13px;
+  background: var(--accent);
+  vertical-align: -2px;
+  margin-left: 1px;
+  animation: blink-caret 1s steps(2) infinite;
+}
+
+@keyframes blink-caret {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Rendered markdown */
+.tldr-markdown {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+.tldr-markdown ul.tldr-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tldr-markdown ul.tldr-list > li {
+  padding-left: 0;
+}
+
+.tldr-markdown ul.tldr-sublist {
+  list-style: disc;
+  padding-left: 18px;
+  margin: 5px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  color: var(--text-2);
+}
+
+.tldr-markdown strong {
+  color: var(--text);
+  font-weight: 600;
+}

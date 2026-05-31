@@ -1,0 +1,19 @@
+<app-ai-stream-card
+  title="Test Cases"
+  idleText="Generate test cases across integration, system, end-to-end, regression, negative, and security testing layers."
+  runLabel="Generate Test Cases"
+  [isStreaming]="stream.isStreaming()"
+  [isDone]="stream.isDone()"
+  [isError]="stream.isError()"
+  [hasContent]="!!stream.data()"
+  (run)="run()"
+>
+  <app-icon idleIcon name="checklist" [size]="18" [strokeWidth]="1.5" />
+  <app-icon headIcon name="checklist" [size]="11" />
+
+  @if (stream.data(); as data) {
+    @for (category of categories; track category.key) {
+      <app-test-case-section [title]="category.title" [testCases]="data[category.key]" />
+    }
+  }
+</app-ai-stream-card>

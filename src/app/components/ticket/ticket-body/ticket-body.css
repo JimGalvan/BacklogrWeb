@@ -1,0 +1,57 @@
+:host {
+  display: block;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.ticket-body {
+  padding: 28px 40px 80px;
+}
+
+/* Title block */
+.title-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ticket-title {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  text-wrap: pretty;
+  max-width: 56ch;
+  color: var(--text);
+}
+
+/* Section labels */
+.section-label {
+  font-size: 10.5px;
+  color: var(--muted-2);
+  letter-spacing: 0.09em;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 22px 0 10px;
+}
+
+/* Description */
+.description {
+  max-width: 72ch;
+  font-size: 13.5px;
+  color: var(--text-2);
+  line-height: 1.65;
+}
+
+/* Error state */
+.ticket-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.error-glyph {
+  font-size: 28px;
+  color: var(--muted-2);
+}

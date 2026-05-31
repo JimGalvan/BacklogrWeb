@@ -1,0 +1,30 @@
+:host {
+  display: block;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  max-width: 340px;
+  margin: 0 auto;
+  padding: 40px;
+  color: var(--muted-2);
+}
+
+.empty-heading {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-2);
+  margin: 0;
+}
+
+.empty-subtext {
+  font-size: 13px;
+  color: var(--muted-2);
+  margin: 0;
+  line-height: 1.5;
+  max-width: 40ch;
+}
