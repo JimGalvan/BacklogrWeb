@@ -1,0 +1,13 @@
+<div class="field">
+  <label class="field-label" [for]="fieldId()">{{ label() }}</label>
+  <div class="input-wrap" [class.invalid]="control().touched && control().invalid">
+    <input
+      [id]="fieldId()"
+      [type]="type()"
+      [formControl]="control()"
+      class="field-input"
+      [placeholder]="placeholder()"
+      [attr.autocomplete]="autocomplete()"
+    />
+  </div>
+</div>

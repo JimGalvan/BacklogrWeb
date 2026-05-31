@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { EmptyStateComponent } from '../../components/ui/empty-state/empty-state';
+import { EmptyStateComponent } from '../../components/ui/common/empty-state/empty-state';
 
 @Component({
   selector: 'app-tickets-page',

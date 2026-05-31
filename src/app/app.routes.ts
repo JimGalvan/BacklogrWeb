@@ -8,7 +8,7 @@ import { IntegrationsPageComponent } from './pages/integrations/integrations-pag
 import { IntegrationCallbackPageComponent } from './pages/integrations/callback/integration-callback-page';
 import { WorkspacesPageComponent } from './pages/workspaces/workspaces-page';
 import { TicketsPageComponent as WorkspaceTicketsPageComponent } from './pages/workspace-tickets/workspace-tickets-page';
-import { authGuard } from './guards/auth.guard';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   { path: 'login',    component: LoginPageComponent },

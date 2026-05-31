@@ -1,9 +1,9 @@
 import { Component, input } from '@angular/core';
 import { Ticket } from '../../../models/workspace.model';
 import { AvatarVariant } from '../../../models/ticket.model';
-import { AvatarComponent } from '../../ui/avatar/avatar';
-import { StatusChipComponent } from '../../ui/status-chip/status-chip';
-import { TagComponent } from '../../ui/tag/tag';
+import { AvatarComponent } from '../../ui/profile/avatar/avatar';
+import { StatusChipComponent } from '../../ui/common/status-chip/status-chip';
+import { TagComponent } from '../../ui/common/tag/tag';
 
 @Component({
   selector: 'app-meta-row',

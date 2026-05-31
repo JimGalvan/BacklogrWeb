@@ -1,6 +1,6 @@
 import { Component, input, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IconComponent } from '../../../components/ui/icon/icon';
+import { IconComponent } from '../../../components/ui/common/icon/icon';
 
 @Component({
   selector: 'app-wt-toolbar',

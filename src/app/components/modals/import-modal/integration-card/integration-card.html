@@ -1,0 +1,17 @@
+<div class="integration-card" [class.faded]="!connected()">
+  <div class="integration-logo {{ provider().logoClass }}">{{ provider().logoInitial }}</div>
+  <div class="integration-info">
+    <div class="integration-name">{{ provider().name }}</div>
+    <div class="integration-sub">
+      {{ connected() ? 'Connected · OAuth' : 'Not connected · OAuth required' }}
+    </div>
+  </div>
+  @if (connected()) {
+    <button class="integration-btn connected">
+      <app-icon name="check" [size]="14" [strokeWidth]="2.5" />
+      Connected
+    </button>
+  } @else {
+    <button class="integration-btn" (click)="connect.emit()">Connect</button>
+  }
+</div>

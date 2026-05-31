@@ -1,121 +1,62 @@
-<!--TODO: decompose into smaller components -->
-<div class="modal-backdrop" (click)="onBackdropClick($event)">
-  <div class="modal-card">
-    <!-- Modal head -->
-    <div class="modal-head">
-      <h3 class="modal-heading">Import a ticket</h3>
-      <p class="modal-subheading">Paste a link, connect an integration, or pick from recents.</p>
-    </div>
+<app-modal-shell (dismiss)="close.emit()">
+  <!-- Head -->
+  <div class="modal-head">
+    <h3 class="modal-heading">Import a ticket</h3>
+    <p class="modal-subheading">Paste a link, connect an integration, or pick from recents.</p>
+  </div>
 
-    <!-- Tab strip -->
-    <div class="modal-tabs">
-      <button
-        class="modal-tab"
-        [class.active]="activeTab() === 'url'"
-        (click)="activeTab.set('url')"
-      >Paste URL</button>
-      <button
-        class="modal-tab"
-        [class.active]="activeTab() === 'connect'"
-        (click)="activeTab.set('connect')"
-      >Connect integration</button>
-    </div>
+  <!-- Tab strip -->
+  <div class="modal-tabs">
+    <button
+      class="modal-tab"
+      [class.active]="activeTab() === 'url'"
+      (click)="activeTab.set('url')"
+    >Paste URL</button>
+    <button
+      class="modal-tab"
+      [class.active]="activeTab() === 'connect'"
+      (click)="activeTab.set('connect')"
+    >Connect integration</button>
+  </div>
 
-    <!-- Body -->
-    <div class="modal-body">
-      @if (activeTab() === 'url') {
-        <!-- URL input -->
-        <div class="input-wrapper" [class.focused]="false">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" class="input-icon">
-            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-          </svg>
-          <input
-            class="url-input"
-            type="url"
-            placeholder="https://acme.atlassian.net/browse/PAY-4827"
-            [value]="urlValue()"
-            (input)="onUrlInput($event)"
-            (keydown.enter)="importFromUrl()"
-          />
-        </div>
-        <p class="input-hint">⌘V · accepts Jira</p>
-
-        <!-- Recents -->
-        <div class="recents-section">
-          <div class="recents-label">RECENTLY IMPORTED</div>
-          <div class="recents-list">
-            @for (ticket of recentTickets; track ticket.key) {
-              <button class="recent-row" (click)="importFromUrl(ticket.key)">
-                <span class="recent-key">{{ ticket.key }}</span>
-                <span class="recent-title">{{ ticket.title }}</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="recent-arrow">
-                  <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-              </button>
-            }
-          </div>
-        </div>
-      }
-
-      @if (activeTab() === 'connect') {
-        <!-- Workspace cards -->
-        <div class="integration-cards">
-          @for (provider of providers; track provider.id) {
-            <div class="integration-card" [class.faded]="!isConnected(provider.id)">
-              <div class="integration-logo {{ provider.logoClass }}">{{ provider.logoInitial }}</div>
-              <div class="integration-info">
-                <div class="integration-name">{{ provider.name }}</div>
-                <div class="integration-sub">
-                  {{ isConnected(provider.id) ? 'Connected · OAuth' : 'Not connected · OAuth required' }}
-                </div>
-              </div>
-              @if (isConnected(provider.id)) {
-                <button class="integration-btn connected">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"/>
-                  </svg>
-                  Connected
-                </button>
-              } @else {
-                <button class="integration-btn" (click)="connect(provider.id)">Connect</button>
-              }
-            </div>
-          }
-        </div>
-        <p class="integration-hint">Read-only. We never write back to your tracker.</p>
-      }
-    </div>
-
-    <!-- Error message -->
-    @if (errorMessage()) {
-      <div class="error-message">
-        {{ errorMessage() }}
-        @if (showConnectHint()) {
-          <button class="error-connect-link" (click)="activeTab.set('connect')">Connect an integration →</button>
-        }
-      </div>
+  <!-- Body -->
+  <div class="modal-body">
+    @if (activeTab() === 'url') {
+      <app-import-url-tab [(url)]="urlValue" (importTicket)="importFromUrl($event)" />
     }
+    @if (activeTab() === 'connect') {
+      <app-import-connect-tab />
+    }
+  </div>
 
-    <!-- Footer -->
-    <div class="modal-footer">
-      <span class="footer-hint">⌥ Enter to import</span>
-      <div class="spacer"></div>
-      <div class="footer-actions">
-        <button class="btn-cancel" (click)="close.emit()">Cancel</button>
-        <button
-          class="btn-import"
-          [disabled]="!urlValue() || isLoading()"
-          (click)="importFromUrl()"
-        >
-          @if (isLoading()) {
-            <span class="spinner"></span>
-            Importing…
-          } @else {
-            Import ticket
-          }
-        </button>
-      </div>
+  <!-- Error message -->
+  @if (errorMessage()) {
+    <div class="error-message">
+      {{ errorMessage() }}
+      @if (showConnectHint()) {
+        <button class="error-connect-link" (click)="activeTab.set('connect')">Connect an integration →</button>
+      }
+    </div>
+  }
+
+  <!-- Footer -->
+  <div class="modal-footer">
+    <span class="footer-hint">⌥ Enter to import</span>
+    <div class="spacer"></div>
+    <div class="footer-actions">
+      <button class="btn-cancel" (click)="close.emit()">Cancel</button>
+      <button
+        class="btn-import"
+        [disabled]="!urlValue() || isLoading()"
+        (click)="importFromUrl()"
+      >
+        @if (isLoading()) {
+          <span class="spinner"></span>
+          Importing…
+        } @else {
+          Import ticket
+        }
+      </button>
     </div>
   </div>
-</div>
+</app-modal-shell>

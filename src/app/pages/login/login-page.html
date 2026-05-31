@@ -1,61 +1,32 @@
-<div class="auth-card">
-  <div class="auth-logo">
-    <span class="logo-mark">B</span>
-    <span class="logo-text">Backlogr</span>
-  </div>
-
-  <div class="auth-header">
-    <h1 class="auth-title">Sign in</h1>
-    <p class="auth-subtitle">Welcome back</p>
-  </div>
-
-  @if (successMessage()) {
-    <div class="success-banner">{{ successMessage() }}</div>
-  }
-
-  @if (error()) {
-    <div class="error-banner">{{ error() }}</div>
-  }
-
+<app-auth-card
+  title="Sign in"
+  subtitle="Welcome back"
+  [error]="error()"
+  [success]="successMessage()"
+>
   <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
-    <div class="field">
-      <label class="field-label" for="email">Email</label>
-      <div class="input-wrap" [class.invalid]="form.get('email')?.touched && form.get('email')?.invalid">
-        <input
-          id="email"
-          type="email"
-          formControlName="email"
-          class="field-input"
-          placeholder="jane@example.com"
-          autocomplete="email"
-        />
-      </div>
-    </div>
-
-    <div class="field">
-      <label class="field-label" for="password">Password</label>
-      <div class="input-wrap" [class.invalid]="form.get('password')?.touched && form.get('password')?.invalid">
-        <input
-          id="password"
-          type="password"
-          formControlName="password"
-          class="field-input"
-          placeholder="········"
-          autocomplete="current-password"
-        />
-      </div>
-    </div>
-
-    <button type="submit" class="btn-primary" [disabled]="loading()">
-      @if (loading()) {
-        <span class="spinner"></span>
-      }
-      Sign in
-    </button>
+    <app-auth-field
+      label="Email"
+      fieldId="email"
+      type="email"
+      placeholder="jane@example.com"
+      autocomplete="email"
+      [control]="form.controls.email"
+    />
+    <app-auth-field
+      label="Password"
+      fieldId="password"
+      type="password"
+      placeholder="········"
+      autocomplete="current-password"
+      [control]="form.controls.password"
+    />
+    <app-auth-submit-button label="Sign in" [loading]="loading()" />
   </form>
 
-  <p class="auth-switch">
-    Don't have an account?
-    <a routerLink="/register" class="auth-link">Create one</a>
-  </p>
-</div>
+  <app-auth-switch
+    prompt="Don't have an account?"
+    linkText="Create one"
+    link="/register"
+  />
+</app-auth-card>

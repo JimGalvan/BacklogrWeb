@@ -1,22 +1,19 @@
 import { Component, inject, Input, output, signal } from '@angular/core';
-import { TicketService } from '../../../services/ticket.service';
 import { WorkspaceService } from '../../../services/workspace.service';
-import { IntegrationService } from '../../../services/integration.service';
-import { WorkspaceTicketSummary } from '../../../models/ticket.model';
-import { INTEGRATION_PROVIDERS, IntegrationProvider } from '../../../models/integration.model';
+import { ModalShellComponent } from '../../ui/common/modal-shell/modal-shell';
+import { ImportUrlTabComponent } from './url-tab/url-tab';
+import { ImportConnectTabComponent } from './connect-tab/connect-tab';
 
 type ModalTab = 'url' | 'connect';
 
 @Component({
   selector: 'app-import-modal',
-  imports: [],
+  imports: [ModalShellComponent, ImportUrlTabComponent, ImportConnectTabComponent],
   templateUrl: './import-modal.html',
   styleUrl: './import-modal.css',
 })
 export class ImportModalComponent {
-  private ticketService = inject(TicketService);
   private workspaceService = inject(WorkspaceService);
-  private integrationService = inject(IntegrationService);
 
   @Input() workspaceId = '';
   close = output<void>();
@@ -27,31 +24,6 @@ export class ImportModalComponent {
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
   showConnectHint = signal(false);
-
-  readonly providers: IntegrationProvider[] = INTEGRATION_PROVIDERS.filter(p => !p.comingSoon);
-  recentTickets: WorkspaceTicketSummary[] = [];
-
-  constructor() {
-    this.ticketService.getRecentTickets().subscribe(t => (this.recentTickets = t));
-  }
-
-  isConnected(id: string): boolean {
-    return this.integrationService.isConnected(id);
-  }
-
-  connect(id: string): void {
-    this.integrationService.connect(id);
-  }
-
-  onUrlInput(event: Event) {
-    this.urlValue.set((event.target as HTMLInputElement).value);
-  }
-
-  onBackdropClick(event: MouseEvent) {
-    if ((event.target as HTMLElement).classList.contains('modal-backdrop')) {
-      this.close.emit();
-    }
-  }
 
   importFromUrl(url?: string) {
     const target = url ?? this.urlValue();

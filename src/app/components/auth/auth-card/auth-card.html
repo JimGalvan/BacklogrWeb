@@ -1,0 +1,23 @@
+<div class="auth-card">
+  <div class="auth-logo">
+    <span class="logo-mark">B</span>
+    <span class="logo-text">Backlogr</span>
+  </div>
+
+  <div class="auth-header">
+    <h1 class="auth-title">{{ title() }}</h1>
+    @if (subtitle()) {
+      <p class="auth-subtitle">{{ subtitle() }}</p>
+    }
+  </div>
+
+  @if (success()) {
+    <div class="success-banner">{{ success() }}</div>
+  }
+
+  @if (error()) {
+    <div class="error-banner">{{ error() }}</div>
+  }
+
+  <ng-content />
+</div>

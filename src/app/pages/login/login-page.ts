@@ -1,12 +1,22 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { LoginRequest } from '../../models/auth.model';
+import { AuthCardComponent } from '../../components/auth/auth-card/auth-card';
+import { AuthFieldComponent } from '../../components/auth/auth-field/auth-field';
+import { AuthSubmitButtonComponent } from '../../components/auth/auth-submit-button/auth-submit-button';
+import { AuthSwitchComponent } from '../../components/auth/auth-switch/auth-switch';
 
 @Component({
   selector: 'app-login-page',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [
+    ReactiveFormsModule,
+    AuthCardComponent,
+    AuthFieldComponent,
+    AuthSubmitButtonComponent,
+    AuthSwitchComponent,
+  ],
   templateUrl: './login-page.html',
   styleUrl: './login-page.css',
 })

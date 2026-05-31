@@ -1,0 +1,10 @@
+<div class="integration-cards">
+  @for (provider of providers; track provider.id) {
+    <app-integration-card
+      [provider]="provider"
+      [connected]="isConnected(provider.id)"
+      (connect)="connect(provider.id)"
+    />
+  }
+</div>
+<p class="integration-hint">Read-only. We never write back to your tracker.</p>

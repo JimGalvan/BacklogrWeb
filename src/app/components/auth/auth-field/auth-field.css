@@ -1,0 +1,45 @@
+:host { display: block; }
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+.input-wrap {
+  display: flex;
+  align-items: center;
+  height: 38px;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  transition: border-color 0.15s;
+}
+
+.input-wrap:focus-within {
+  border-color: var(--accent);
+}
+
+.input-wrap.invalid {
+  border-color: var(--danger);
+}
+
+.field-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+}
+
+.field-input::placeholder {
+  color: var(--muted-2);
+}

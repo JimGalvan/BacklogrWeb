@@ -1,7 +1,7 @@
 import { Component, input, computed } from '@angular/core';
 import { TicketComment } from '../../../models/workspace.model';
-import { AvatarComponent } from '../../ui/avatar/avatar';
-import { RichTextComponent } from '../../ui/rich-text/rich-text';
+import { AvatarComponent } from '../../ui/profile/avatar/avatar';
+import { RichTextComponent } from '../../ui/common/rich-text/rich-text';
 import { AvatarVariant } from '../../../models/ticket.model';
 
 @Component({

@@ -1,0 +1,13 @@
+:host { display: block; }
+
+.integration-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.integration-hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 14px;
+}

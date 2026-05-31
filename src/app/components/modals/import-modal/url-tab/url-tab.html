@@ -1,0 +1,25 @@
+<div class="input-wrapper">
+  <app-icon name="link" [size]="14" [strokeWidth]="1.8" class="input-icon" />
+  <input
+    class="url-input"
+    type="url"
+    placeholder="https://acme.atlassian.net/browse/PAY-4827"
+    [value]="url()"
+    (input)="onInput($event)"
+    (keydown.enter)="importTicket.emit(undefined)"
+  />
+</div>
+<p class="input-hint">⌘V · accepts Jira</p>
+
+<div class="recents-section">
+  <div class="recents-label">RECENTLY IMPORTED</div>
+  <div class="recents-list">
+    @for (ticket of recentTickets; track ticket.key) {
+      <button class="recent-row" (click)="importTicket.emit(ticket.key)">
+        <span class="recent-key">{{ ticket.key }}</span>
+        <span class="recent-title">{{ ticket.title }}</span>
+        <app-icon name="arrow-right" [size]="14" class="recent-arrow" />
+      </button>
+    }
+  </div>
+</div>

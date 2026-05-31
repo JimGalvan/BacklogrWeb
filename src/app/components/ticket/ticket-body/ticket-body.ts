@@ -2,10 +2,10 @@ import { Component, effect, inject, input, signal } from '@angular/core';
 import { Ticket } from '../../../models/workspace.model';
 import { WorkspaceService } from '../../../services/workspace.service';
 import { MetaRowComponent } from '../meta-row/meta-row';
-import { RichTextComponent } from '../../ui/rich-text/rich-text';
+import { RichTextComponent } from '../../ui/common/rich-text/rich-text';
 import { CommentsSectionComponent } from '../../comments/comments-section/comments-section';
 import { TicketBodySkeletonComponent } from '../ticket-body-skeleton/ticket-body-skeleton';
-import { EmptyStateComponent } from '../../ui/empty-state/empty-state';
+import { EmptyStateComponent } from '../../ui/common/empty-state/empty-state';
 
 @Component({
   selector: 'app-ticket-body',

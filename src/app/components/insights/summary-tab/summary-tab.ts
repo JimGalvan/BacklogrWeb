@@ -6,8 +6,8 @@ import { TicketComment } from '../../../models/workspace.model';
 import { InsightsService } from '../../../services/insights.service';
 import { AiService } from '../../../services/ai.service';
 import { WorkspaceService } from '../../../services/workspace.service';
-import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
-import { IconComponent } from '../../ui/icon/icon';
+import { SafeHtmlPipe } from '../../../core/pipes/safe-html.pipe';
+import { IconComponent } from '../../ui/common/icon/icon';
 
 function parseTldr(text: string, authorMap: Map<string, string>): string {
   const match = text.match(/<tldr>([\s\S]*?)<\/tldr>/);

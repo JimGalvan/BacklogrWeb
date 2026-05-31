@@ -1,0 +1,6 @@
+<button type="submit" class="btn-primary" [disabled]="loading()">
+  @if (loading()) {
+    <span class="spinner"></span>
+  }
+  {{ label() }}
+</button>

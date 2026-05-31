@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { ToolTabsComponent } from '../tool-tabs/tool-tabs';
-import { IconComponent } from '../../ui/icon/icon';
+import { IconComponent } from '../../ui/common/icon/icon';
 
 @Component({
   selector: 'app-panel-header',
