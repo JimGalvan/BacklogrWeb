@@ -34,12 +34,6 @@
   flex: 1;
 }
 
-.analyzing-indicator {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
 .live-dot {
   width: 6px;
   height: 6px;
