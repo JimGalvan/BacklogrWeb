@@ -24,9 +24,14 @@ export class InsightsPanelComponent {
   activeTab = signal('summary');
 
   readonly summaryTab = viewChild(SummaryTabComponent);
+  readonly refinementTab = viewChild(RefinementTabComponent);
+  readonly testCasesTab = viewChild(TestCasesTabComponent);
 
-  /** Re-runs the TL;DR summary analysis (e.g. after a fresh import). */
   reanalyze(): void {
-    this.summaryTab()?.reanalyze();
+    switch (this.activeTab()) {
+      case 'summary':    this.summaryTab()?.reanalyze(); break;
+      case 'refinement': this.refinementTab()?.run(); break;
+      case 'tests':      this.testCasesTab()?.run(); break;
+    }
   }
 }

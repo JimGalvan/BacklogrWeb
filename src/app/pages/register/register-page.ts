@@ -38,7 +38,7 @@ export class RegisterPageComponent {
     this.loading.set(true);
     this.error.set(null);
     this.authService.register(this.form.getRawValue() as RegisterRequest).subscribe({
-      next: () => this.router.navigate(['/login'], { state: { registered: true } }),
+      next: () => this.router.navigate(['/onboarding']),
       error: (err) => {
         this.error.set(err.error?.message ?? 'Registration failed. Please try again.');
         this.loading.set(false);

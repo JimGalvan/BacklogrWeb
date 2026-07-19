@@ -19,6 +19,6 @@ export class IntegrationsPageComponent {
   }
 
   connect(id: string): void {
-    this.integrationService.connect(id);
+    this.integrationService.connect(id).subscribe();
   }
 }

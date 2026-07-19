@@ -1,19 +1,11 @@
-import { Component, DestroyRef, inject, input } from '@angular/core';
-import { AiService } from '../../../services/ai.service';
-import { TestCases, TestCasesResponse } from '../../../models/test-cases.model';
-import { AiStreamController } from '../../../core/shared/ai-stream-controller';
-import { AiStreamCardComponent } from '../ai-stream-card/ai-stream-card';
-import { TestCaseSectionComponent } from '../test-case-section/test-case-section';
-import { IconComponent } from '../../ui/common/icon/icon';
+import {Component, computed, DestroyRef, inject, input} from '@angular/core';
+import {AiService} from '../../../services/ai.service';
+import {TestCase, TestCasesResponse} from '../../../models/test-cases.model';
+import {AiStreamController} from '../../../core/shared/ai-stream-controller';
+import {AiStreamCardComponent} from '../ai-stream-card/ai-stream-card';
+import {TestCaseSectionComponent} from '../test-case-section/test-case-section';
+import {IconComponent} from '../../ui/common/icon/icon';
 
-const TEST_CASE_CATEGORIES: { title: string; key: keyof TestCases }[] = [
-  { title: 'Integration Testing', key: 'integrationTesting' },
-  { title: 'System Testing',      key: 'systemTesting' },
-  { title: 'End-to-End Testing',  key: 'endToEndTesting' },
-  { title: 'Regression Testing',  key: 'regressionTesting' },
-  { title: 'Negative Testing',    key: 'negativeTesting' },
-  { title: 'Security Testing',    key: 'securityTesting' },
-];
 
 @Component({
   selector: 'app-test-cases-tab',
@@ -27,12 +19,21 @@ export class TestCasesTabComponent {
 
   private aiService = inject(AiService);
 
-  readonly categories = TEST_CASE_CATEGORIES;
-  readonly stream = new AiStreamController<TestCases>(
+  readonly stream = new AiStreamController<TestCase[]>(
     (workspaceId, ticketKey) => this.aiService.streamTestCases(workspaceId, ticketKey),
     raw => (JSON.parse(raw) as TestCasesResponse).testCases,
     inject(DestroyRef),
   );
+
+  readonly testCaseGroups = computed(() => {
+    const groups = new Map<string, TestCase[]>();
+    for (const testCase of this.stream.data() ?? []) {
+      const group = groups.get(testCase.category) ?? [];
+      group.push(testCase);
+      groups.set(testCase.category, group);
+    }
+    return [...groups.entries()].map(([category, testCases]) => ({category, testCases}));
+  });
 
   run(): void {
     this.stream.start(this.workspaceId(), this.ticketKey());

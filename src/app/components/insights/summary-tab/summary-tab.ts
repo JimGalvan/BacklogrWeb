@@ -60,7 +60,7 @@ export class SummaryTabComponent {
         this.workspaceService.getTicketComments(workspaceId, ticketKey)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(comments => this.comments.set(comments));
-        this.reanalyze();
+        // this.reanalyze();
       }
     });
   }
@@ -74,6 +74,8 @@ export class SummaryTabComponent {
     this.streamedText.set('');
     this.isDone.set(false);
     this.isError.set(false);
+
+    return;
 
     this.aiService.streamTldr(workspaceId, ticketKey)
       .pipe(takeUntil(this.cancel$), takeUntilDestroyed(this.destroyRef))

@@ -1,21 +1,35 @@
-@if (isPopup) {
-  <div class="callback-page">
-    <div class="callback-card">
-      <div class="spinner"></div>
-      <p class="callback-msg">Finishing connection…</p>
-    </div>
-  </div>
-} @else {
-  <div class="callback-page">
-    <div class="callback-card">
-      <div class="success-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<main class="callback-page">
+  <section class="callback-card" [class.error-card]="status === 'error'">
+    @if (status === 'connected') {
+      <div class="result-icon success-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="20 6 9 17 4 12"/>
         </svg>
       </div>
-      <h1 class="callback-title">{{ providerName }} connected</h1>
-      <p class="callback-subtitle">You can now import tickets from this workspace.</p>
-      <a routerLink="/integrations" class="btn-back">Go to integrations</a>
-    </div>
-  </div>
-}
+      <p class="eyebrow">Connection verified</p>
+      <h1>{{ providerName }} is connected</h1>
+      <p class="callback-subtitle">
+        @if (isPopup) {
+          Returning you to Backlogr&hellip;
+        } @else {
+          Repository access is ready for Backlogr.
+        }
+      </p>
+    } @else {
+      <div class="result-icon error-icon" aria-hidden="true">!</div>
+      <p class="eyebrow">Connection incomplete</p>
+      <h1>GitHub was not connected</h1>
+      <p class="callback-subtitle">{{ message }}</p>
+    }
+
+    @if (!isPopup) {
+      <a [routerLink]="returnPath" class="btn-back">
+        {{ status === 'connected' ? 'Return to Backlogr' : 'Try again' }}
+      </a>
+    } @else {
+      <div class="close-progress" aria-label="Closing this window">
+        <span></span><span></span><span></span>
+      </div>
+    }
+  </section>
+</main>

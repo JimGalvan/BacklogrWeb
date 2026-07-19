@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap, finalize } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { LoginRequest, RegisterRequest, AuthResponse, UserProfile } from '../models/auth.model';
+import { LoginRequest, RegisterRequest, AuthResponse, RegistrationResponse, UserProfile } from '../models/auth.model';
 
 const BASE = `${environment.apiBaseUrl}/api/${environment.apiVersion}`;
 
@@ -23,8 +23,10 @@ export class AuthService {
     );
   }
 
-  register(body: RegisterRequest): Observable<UserProfile> {
-    return this.http.post<UserProfile>(`${BASE}/users`, body);
+  register(body: RegisterRequest): Observable<RegistrationResponse> {
+    return this.http.post<RegistrationResponse>(`${BASE}/auth/register`, body).pipe(
+      tap(response => this.storeTokens(response))
+    );
   }
 
   refresh(): Observable<AuthResponse> {

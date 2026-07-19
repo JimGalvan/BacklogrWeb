@@ -1,8 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ConnectionResult, INTEGRATION_PROVIDERS } from '../../../models/integration.model';
 import { IntegrationService } from '../../../services/integration.service';
-import { INTEGRATION_PROVIDERS } from '../../../models/integration.model';
 
 @Component({
   selector: 'app-integration-callback-page',
@@ -15,16 +14,39 @@ export class IntegrationCallbackPageComponent implements OnInit {
   private integrationService = inject(IntegrationService);
 
   readonly isPopup = !!window.opener;
-  readonly provider = this.route.snapshot.queryParamMap.get('provider') ?? '';
+  readonly provider = this.route.snapshot.queryParamMap.get('provider')?.toLowerCase() ?? '';
+  readonly status = this.route.snapshot.queryParamMap.get('status') === 'connected'
+    ? 'connected'
+    : 'error';
+  readonly message = this.route.snapshot.queryParamMap.get('message')
+    || 'GitHub did not complete the connection.';
+  readonly returnPath = this.safeReturnPath(
+    this.route.snapshot.queryParamMap.get('returnPath')
+  );
   readonly providerName =
-    INTEGRATION_PROVIDERS.find(p => p.id === this.provider)?.name ?? 'Your workspace';
+    INTEGRATION_PROVIDERS.find(provider => provider.id === this.provider)?.name ?? 'Connection';
 
-  ngOnInit() {
-    if (this.provider) {
+  ngOnInit(): void {
+    const result: ConnectionResult = {
+      type: 'backlogr:connection-result',
+      provider: this.provider,
+      status: this.status,
+      message: this.status === 'connected' ? undefined : this.message,
+      returnPath: this.returnPath,
+    };
+
+    if (this.status === 'connected') {
       this.integrationService.markConnected(this.provider);
     }
-    if (this.isPopup) {
-      setTimeout(() => window.close(), 300);
+
+    if (window.opener) {
+      window.opener.postMessage(result, window.location.origin);
+      window.setTimeout(() => window.close(), 650);
     }
+  }
+
+  private safeReturnPath(value: string | null): string {
+    if (!value || !value.startsWith('/') || value.startsWith('//')) return '/onboarding';
+    return value;
   }
 }

@@ -8,12 +8,12 @@
   [hasContent]="!!stream.data()"
   (run)="run()"
 >
-  <app-icon idleIcon name="checklist" [size]="18" [strokeWidth]="1.5" />
-  <app-icon headIcon name="checklist" [size]="11" />
+  <app-icon idleIcon name="checklist" [size]="18" [strokeWidth]="1.5"/>
+  <app-icon headIcon name="checklist" [size]="11"/>
 
-  @if (stream.data(); as data) {
-    @for (category of categories; track category.key) {
-      <app-test-case-section [title]="category.title" [testCases]="data[category.key]" />
+  @if (stream.data();) {
+    @for (group of testCaseGroups(); track group.category) {
+      <app-test-case-section [title]="group.category" [testCases]="group.testCases"/>
     }
   }
 </app-ai-stream-card>
