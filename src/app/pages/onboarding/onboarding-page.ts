@@ -79,7 +79,7 @@ export class OnboardingPageComponent implements OnInit {
           this.load();
         },
         error: error => this.actionError.set(
-          error?.error?.message ?? 'We could not add that source. Check the URL and GitHub access.'
+          error?.error?.message ?? 'We could not add that source. Check the URL and provider access.'
         ),
       });
   }

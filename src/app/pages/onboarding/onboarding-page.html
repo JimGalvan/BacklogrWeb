@@ -22,15 +22,15 @@
         </li>
         <li [class.ready]="connected()" [class.current]="!connected()">
           <span class="step-number">02</span>
-          <span><strong>Connect GitHub</strong><small>{{ connected() ? 'Connected' : 'Current step' }}</small></span>
+          <span><strong>Connect a provider</strong><small>{{ connected() ? 'Connected' : 'Current step' }}</small></span>
         </li>
         <li [class.ready]="sourceConnected()" [class.current]="connected() && !sourceConnected()">
           <span class="step-number">03</span>
-          <span><strong>Choose source</strong><small>{{ sourceConnected() ? 'Connected' : connected() ? 'Current step' : 'Waiting for GitHub' }}</small></span>
+          <span><strong>Add a source</strong><small>{{ sourceConnected() ? 'Connected' : connected() ? 'Current step' : 'Waiting for connection' }}</small></span>
         </li>
         <li [class.current]="sourceConnected()">
           <span class="step-number">04</span>
-          <span><strong>Open a ticket</strong><small>{{ sourceConnected() ? 'Ready' : 'After setup' }}</small></span>
+          <span><strong>Import your first ticket</strong><small>{{ sourceConnected() ? 'Ready' : 'After source' }}</small></span>
         </li>
       </ol>
     </aside>
@@ -48,12 +48,12 @@
         <button type="button" class="secondary" (click)="load()">Try again</button>
       } @else {
         <p class="section-label">{{ connected() ? 'Connection ready' : 'Step 2 of 4' }}</p>
-        <h1>{{ connected() ? 'GitHub is in the loop.' : 'Connect the code behind your backlog.' }}</h1>
+        <h1>{{ connected() ? 'Your connection is ready.' : 'Connect your first provider.' }}</h1>
         <p class="lede">
           @if (connected()) {
-            Backlogr can now use repository context when you refine tickets.
+            Add a source next so Backlogr can connect ticket intent with the work behind it.
           } @else {
-            Choose the repositories Backlogr can read. Access stays read-only and can be revoked from GitHub.
+            Connect the tools that hold your sources and tickets. Backlogr keeps access read-only.
           }
         </p>
 
@@ -66,15 +66,15 @@
           <span class="workspace-ready"><i></i> Ready</span>
         </div>
 
-        <section class="github-card" [class.connected-card]="connected()">
-          <div class="github-heading">
-            <span class="github-mark" aria-hidden="true">
+        <section class="connection-card" [class.connected-card]="connected()">
+          <div class="connection-heading">
+            <span class="provider-mark" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 .7A11.3 11.3 0 0 0 8.4 22.8c.6.1.8-.3.8-.6v-2.2c-3.4.7-4.1-1.4-4.1-1.4-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.9 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .4.2.7.8.6A11.3 11.3 0 0 0 12 .7Z"/>
               </svg>
             </span>
             <span>
-              <small>Code connection</small>
+              <small>Connected provider</small>
               <strong>GitHub</strong>
             </span>
             @if (connected()) {
@@ -88,32 +88,39 @@
               <strong>{{ state()?.connection?.displayName }}</strong>
             </div>
           } @else {
-            <p class="github-copy">GitHub will open in a separate window so you can choose your demo repository.</p>
+            <p class="connection-copy">GitHub opens in a separate window so you can choose what Backlogr may read.</p>
           }
 
-          <div class="permission-list" aria-label="Requested access">
-            <span>Repository contents</span>
-            <span>Issues</span>
+          <div class="permission-list" aria-label="Connection capabilities">
+            <span>Sources</span>
+            <span>Tickets</span>
             <span>Read-only</span>
           </div>
 
           <button type="button" class="connect-button" (click)="connectGitHub()" [disabled]="connecting()">
             @if (connecting()) {
               <span class="button-pulse" aria-hidden="true"></span>
-              Waiting for GitHub&hellip;
+              Waiting for provider&hellip;
             } @else {
-              {{ connected() ? 'Change GitHub access' : 'Connect GitHub' }}
+              {{ connected() ? 'Manage connections' : 'Connect provider' }}
               <span aria-hidden="true">&nearr;</span>
             }
           </button>
         </section>
 
+        <div class="provider-horizon" aria-label="More providers coming soon">
+          <article><span class="provider-initial azure">A</span><strong>Azure DevOps</strong><small>Coming soon</small></article>
+          <article><span class="provider-initial figma">F</span><strong>Figma</strong><small>Coming soon</small></article>
+          <article><span class="provider-initial jira">J</span><strong>Jira</strong><small>Coming soon</small></article>
+          <article><span class="provider-initial linear">L</span><strong>Linear</strong><small>Coming soon</small></article>
+        </div>
+
         @if (connected() && !sourceConnected()) {
           <section class="source-card">
             <p class="source-label">Workspace source</p>
-            <h2>Add the repository Backlogr should use for context.</h2>
-            <p>Paste a repository URL included in this GitHub App installation.</p>
-            <label for="source-url">GitHub repository URL</label>
+            <h2>Add the source Backlogr should use for context.</h2>
+            <p>Paste a source URL that is available through your connected provider.</p>
+            <label for="source-url">Source URL</label>
             <div class="source-entry">
               <input
                 id="source-url"
@@ -165,5 +172,5 @@
     </article>
   </section>
 
-  <footer>GitHub App connection &middot; Read-only repository access</footer>
+  <footer>Provider connections &middot; Sources &middot; Tickets &middot; Read-only</footer>
 </main>

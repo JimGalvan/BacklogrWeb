@@ -33,6 +33,7 @@ export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
     description: 'Atlassian · project tracking & issue management',
     logoInitial: 'J',
     logoClass: 'logo-jira',
+    comingSoon: true,
   },
   {
     id: 'linear',
