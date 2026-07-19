@@ -17,4 +17,8 @@ export class OnboardingService {
   complete(): Observable<OnboardingState> {
     return this.http.post<OnboardingState>(`${BASE}/onboarding/complete`, null);
   }
+
+  addSource(workspaceId: string, url: string): Observable<unknown> {
+    return this.http.post(`${BASE}/workspaces/${workspaceId}/sources`, { url });
+  }
 }

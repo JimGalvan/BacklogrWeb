@@ -18,11 +18,14 @@ export class OnboardingPageComponent implements OnInit {
   state = signal<OnboardingState | null>(null);
   loading = signal(true);
   connecting = signal(false);
+  addingSource = signal(false);
   saving = signal(false);
+  sourceUrl = signal('');
   loadError = signal<string | null>(null);
   actionError = signal<string | null>(null);
 
   connected = computed(() => this.state()?.connection?.status === 'ACTIVE');
+  sourceConnected = computed(() => !!this.state()?.source);
 
   ngOnInit(): void {
     this.load();
@@ -58,6 +61,26 @@ export class OnboardingPageComponent implements OnInit {
           this.actionError.set(result.message ?? 'GitHub setup did not finish.');
         },
         error: (error: Error) => this.actionError.set(error.message),
+      });
+  }
+
+  addSource(): void {
+    const workspaceId = this.state()?.defaultWorkspace.id;
+    const url = this.sourceUrl().trim();
+    if (!workspaceId || !url || this.addingSource()) return;
+
+    this.addingSource.set(true);
+    this.actionError.set(null);
+    this.onboardingService.addSource(workspaceId, url)
+      .pipe(finalize(() => this.addingSource.set(false)))
+      .subscribe({
+        next: () => {
+          this.sourceUrl.set('');
+          this.load();
+        },
+        error: error => this.actionError.set(
+          error?.error?.message ?? 'We could not add that source. Check the URL and GitHub access.'
+        ),
       });
   }
 

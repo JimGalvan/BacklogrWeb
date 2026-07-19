@@ -24,13 +24,13 @@
           <span class="step-number">02</span>
           <span><strong>Connect GitHub</strong><small>{{ connected() ? 'Connected' : 'Current step' }}</small></span>
         </li>
-        <li [class.current]="connected()">
+        <li [class.ready]="sourceConnected()" [class.current]="connected() && !sourceConnected()">
           <span class="step-number">03</span>
-          <span><strong>Choose source</strong><small>{{ connected() ? 'Coming next' : 'Waiting for GitHub' }}</small></span>
+          <span><strong>Choose source</strong><small>{{ sourceConnected() ? 'Connected' : connected() ? 'Current step' : 'Waiting for GitHub' }}</small></span>
         </li>
-        <li>
+        <li [class.current]="sourceConnected()">
           <span class="step-number">04</span>
-          <span><strong>Open a ticket</strong><small>After setup</small></span>
+          <span><strong>Open a ticket</strong><small>{{ sourceConnected() ? 'Ready' : 'After setup' }}</small></span>
         </li>
       </ol>
     </aside>
@@ -108,6 +108,40 @@
           </button>
         </section>
 
+        @if (connected() && !sourceConnected()) {
+          <section class="source-card">
+            <p class="source-label">Workspace source</p>
+            <h2>Add the repository Backlogr should use for context.</h2>
+            <p>Paste a repository URL included in this GitHub App installation.</p>
+            <label for="source-url">GitHub repository URL</label>
+            <div class="source-entry">
+              <input
+                id="source-url"
+                type="url"
+                autocomplete="url"
+                placeholder="https://github.com/owner/repository"
+                [value]="sourceUrl()"
+                (input)="sourceUrl.set($any($event.target).value)"
+                (keyup.enter)="addSource()"
+              />
+              <button
+                type="button"
+                class="source-button"
+                (click)="addSource()"
+                [disabled]="addingSource() || !sourceUrl().trim()"
+              >
+                {{ addingSource() ? 'Adding...' : 'Add source' }}
+              </button>
+            </div>
+          </section>
+        } @else if (sourceConnected()) {
+          <section class="source-card source-ready">
+            <p class="source-label">Source connected</p>
+            <h2>{{ state()?.source?.displayName }}</h2>
+            <p>{{ state()?.source?.status }} · Ready for workspace context.</p>
+          </section>
+        }
+
         @if (actionError()) {
           <div class="action-error" role="alert">
             <span aria-hidden="true">!</span>
@@ -116,7 +150,7 @@
         }
 
         <div class="page-actions">
-          @if (connected()) {
+          @if (sourceConnected()) {
             <button type="button" class="primary" (click)="complete()" [disabled]="saving()">
               {{ saving() ? 'Opening workspace...' : 'Continue to workspace' }}
               @if (!saving()) { <span aria-hidden="true">&rarr;</span> }
