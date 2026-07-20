@@ -38,6 +38,7 @@ describe('TopbarComponent', () => {
       title: 'Provider action',
       provider,
       externalUrl,
+      media: [],
       createdAt: '2026-07-20T00:00:00Z',
       importedAt: '2026-07-20T00:00:00Z',
     };

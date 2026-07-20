@@ -1,4 +1,5 @@
 import { RichTextDoc } from './rich-text.model';
+import { TicketMedia } from './ticket-media.model';
 
 export interface Workspace {
   id: string;
@@ -35,6 +36,7 @@ export interface TicketComment {
   authorEmail: string;
   authorName: string;
   body: RichTextDoc;
+  media: TicketMedia[];
   createdAt: string;
   updatedAt: string;
 }
@@ -60,6 +62,7 @@ export interface Ticket {
   affects?: string;
   labels?: string[];
   description?: RichTextDoc | null;
+  media: TicketMedia[];
   stackTrace?: TicketStackTrace;
   comments?: TicketComment[];
   provider?: string;
