@@ -16,6 +16,37 @@
 .crumb-sep { color: var(--muted-2); }
 .crumb-here { color: var(--fg); font-weight: 500; }
 
+.workspace-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.workspace-picker span {
+  color: var(--muted-2);
+  font: 600 9.5px 'Geist Mono', monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.workspace-picker select {
+  width: 200px;
+  height: 32px;
+  padding: 0 32px 0 10px;
+  border: 1px solid var(--line-soft);
+  border-radius: 7px;
+  outline: none;
+  color: var(--fg);
+  background: var(--surface);
+  font: 12px 'Geist', sans-serif;
+}
+
+.workspace-picker select:focus-visible,
+.pill:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .pill {
   display: inline-flex;
   align-items: center;
@@ -38,3 +69,12 @@
 }
 
 .pill--primary:hover { filter: brightness(1.1); }
+.pill:disabled { opacity: .45; cursor: default; }
+
+@media (max-width: 720px) {
+  .wt-header { align-items: flex-start; flex-wrap: wrap; }
+  .header-spacer { display: none; }
+  .workspace-picker { width: 100%; order: 2; }
+  .workspace-picker select { flex: 1; width: auto; }
+  .pill { margin-left: auto; }
+}

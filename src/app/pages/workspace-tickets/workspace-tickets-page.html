@@ -1,6 +1,9 @@
 <div class="wt-layout">
   <app-wt-header
-    [workspaceName]="workspaceName()"
+    [workspaces]="workspaces()"
+    [workspaceId]="workspaceId()"
+    [workspaceName]="selectedWorkspace()?.name || 'Workspace'"
+    (workspaceChange)="selectWorkspace($event)"
     (importTicket)="showImport.set(true)"
   />
 

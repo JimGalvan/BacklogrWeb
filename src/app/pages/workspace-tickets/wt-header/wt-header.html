@@ -7,7 +7,19 @@
     <span class="crumb-here">Tickets</span>
   </div>
   <div class="header-spacer"></div>
-  <button class="pill pill--primary" (click)="importTicket.emit()">
+  <label class="workspace-picker">
+    <span>Workspace</span>
+    <select
+      [value]="workspaceId()"
+      [disabled]="workspaces().length === 0"
+      (change)="onWorkspaceChange($event)"
+    >
+      @for (workspace of workspaces(); track workspace.id) {
+        <option [value]="workspace.id">{{ workspace.name }}</option>
+      }
+    </select>
+  </label>
+  <button class="pill pill--primary" [disabled]="!workspaceId()" (click)="importTicket.emit()">
     <app-icon name="plus" [size]="13" />
     Import ticket
   </button>
