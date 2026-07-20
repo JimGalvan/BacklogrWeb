@@ -4,6 +4,7 @@ import { PanelFooterComponent } from '../panel-footer/panel-footer';
 import { SummaryTabComponent } from '../summary-tab/summary-tab';
 import { RefinementTabComponent } from '../refinement-tab/refinement-tab';
 import { TestCasesTabComponent } from '../test-cases-tab/test-cases-tab';
+import { SourceContextBarComponent } from '../source-context-bar/source-context-bar';
 
 @Component({
   selector: 'app-insights-panel',
@@ -13,6 +14,7 @@ import { TestCasesTabComponent } from '../test-cases-tab/test-cases-tab';
     SummaryTabComponent,
     RefinementTabComponent,
     TestCasesTabComponent,
+    SourceContextBarComponent,
   ],
   templateUrl: './insights-panel.html',
   styleUrl: './insights-panel.css',

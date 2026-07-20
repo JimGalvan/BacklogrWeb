@@ -3,6 +3,15 @@ import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { API_BASE as BASE } from '../core/api/api-base';
 
+const STATUS_FALLBACK_MESSAGES = new Map<number, string>([
+  [401, 'Your session expired. Sign in and try again.'],
+  [403, 'You do not have access to run AI insights for this workspace.'],
+  [404, 'The ticket or its provider connection is no longer available.'],
+  [429, 'The AI service is busy. Wait a moment and try again.'],
+  [503, 'The AI service is currently unavailable. Please try again later.'],
+]);
+const DEFAULT_FALLBACK_MESSAGE = 'The AI request failed. Please try again.';
+
 
 @Injectable({ providedIn: 'root' })
 export class AiService {
@@ -90,13 +99,7 @@ export class AiService {
       // The status-specific fallback below remains actionable when the body is not JSON.
     }
 
-    const fallback = new Map<number, string>([
-      [401, 'Your session expired. Sign in and try again.'],
-      [403, 'You do not have access to run AI insights for this workspace.'],
-      [404, 'The ticket or its provider connection is no longer available.'],
-      [429, 'The AI service is busy. Wait a moment and try again.'],
-      [503, 'The AI service is currently unavailable. Please try again later.'],
-    ]).get(response.status) ?? 'The AI request failed. Please try again.';
+    const fallback = STATUS_FALLBACK_MESSAGES.get(response.status) ?? DEFAULT_FALLBACK_MESSAGE;
 
     return new Error(serverMessage || fallback);
   }

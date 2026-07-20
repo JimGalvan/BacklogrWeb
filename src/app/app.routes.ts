@@ -26,6 +26,10 @@ export const routes: Routes = [
       { path: 'tickets',                 component: TicketsPageComponent },
       { path: 'tickets/:key',            component: TicketDetailPageComponent },
       { path: 'integrations',            component: IntegrationsPageComponent },
+      {
+        path: 'sources',
+        loadComponent: () => import('./pages/sources/sources-page').then(module => module.SourcesPageComponent),
+      },
       { path: 'workspaces',                              component: WorkspacesPageComponent },
       { path: 'workspaces/:workspaceId/tickets',                    component: WorkspaceTicketsPageComponent },
       { path: 'workspaces/:workspaceId/tickets/:ticketKey',         component: TicketDetailPageComponent },

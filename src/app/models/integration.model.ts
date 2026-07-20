@@ -9,8 +9,11 @@ export interface ConnectionAuthorizationResponse extends ConnectUrlResponse {
 
 export type ConnectionResultStatus = 'connected' | 'error' | 'cancelled';
 
+/** postMessage type used between the OAuth callback popup and the opener window. */
+export const CONNECTION_RESULT_MESSAGE_TYPE = 'backlogr:connection-result';
+
 export interface ConnectionResult {
-  type: 'backlogr:connection-result';
+  type: typeof CONNECTION_RESULT_MESSAGE_TYPE;
   provider: string;
   status: ConnectionResultStatus;
   message?: string;

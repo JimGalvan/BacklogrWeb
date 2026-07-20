@@ -1,0 +1,188 @@
+<main class="sources-page">
+  <header class="sources-header">
+    <div>
+      <div class="eyebrow">Workspace context</div>
+      <h1>Sources</h1>
+      <p>Manage the external context available to every ticket in this workspace.</p>
+    </div>
+
+    <div class="header-actions">
+      <label class="workspace-picker">
+        <span>Workspace</span>
+        <select
+          [ngModel]="selectedWorkspaceId()"
+          (ngModelChange)="selectWorkspace($event)"
+          [disabled]="workspaces().length === 0"
+        >
+          @for (workspace of workspaces(); track workspace.id) {
+            <option [value]="workspace.id">{{ workspace.name }}</option>
+          }
+        </select>
+      </label>
+      <app-button variant="primary" [disabled]="!selectedWorkspaceId()" (clicked)="openAdd()">
+        <app-icon name="plus" [size]="13" />
+        Add source
+      </app-button>
+    </div>
+  </header>
+
+  <section class="source-register" aria-label="Workspace sources">
+    <div class="register-head">
+      <span>{{ selectedWorkspace()?.name || 'Workspace' }}</span>
+      <span class="source-count">{{ sources().length }} {{ sources().length === 1 ? 'source' : 'sources' }}</span>
+    </div>
+
+    @if (loading()) {
+      <div class="loading-state">
+        <span class="spinner" aria-hidden="true"></span>
+        Loading sources
+      </div>
+    } @else if (sources().length === 0) {
+      <div class="empty-state">
+        <div class="empty-mark">
+          <span></span><span></span><span></span>
+        </div>
+        <h2>No sources in this workspace</h2>
+        <p>Add a code repository to give ticket insights implementation context.</p>
+        <app-button variant="primary" (clicked)="openAdd()">Add your first source</app-button>
+      </div>
+    } @else {
+      <div class="source-columns" aria-hidden="true">
+        <span>Source</span>
+        <span>Type</span>
+        <span>Status</span>
+        <span>Revision</span>
+        <span>Actions</span>
+      </div>
+
+      <div class="source-list">
+        @for (source of sources(); track source.id) {
+          <article class="source-row" [class]="'source-row source-row--' + source.status.toLowerCase()">
+            <div class="lifecycle-rail" aria-hidden="true"></div>
+
+            <div class="source-identity">
+              <div class="provider-mark">{{ source.provider.slice(0, 2) }}</div>
+              <div class="source-copy">
+                @if (source.webUrl) {
+                  <a [href]="source.webUrl" target="_blank" rel="noopener noreferrer">{{ source.name }}</a>
+                } @else {
+                  <strong>{{ source.name }}</strong>
+                }
+                <span>{{ source.organization || source.provider }}</span>
+              </div>
+            </div>
+
+            <div class="type-cell">
+              <span class="type-chip">
+                <app-icon name="document" [size]="11" />
+                {{ sourceTypeLabel(source.sourceType) }}
+              </span>
+            </div>
+
+            <div class="status-cell">
+              <span class="status-chip" [class]="'status-chip status-chip--' + source.status.toLowerCase()">
+                @if (source.status === 'PROFILING') {
+                  <span class="spinner" aria-hidden="true"></span>
+                } @else {
+                  <span class="status-dot" aria-hidden="true"></span>
+                }
+                {{ statusLabel(source.status) }}
+              </span>
+            </div>
+
+            <div class="revision-cell">
+              @if (shortRevision(source); as revision) {
+                <code>{{ revision }}</code>
+                <span>{{ source.defaultBranch || 'default branch' }}</span>
+              } @else {
+                <span class="not-indexed">Not indexed</span>
+              }
+            </div>
+
+            <div class="row-actions">
+              <button
+                type="button"
+                title="Re-index source"
+                [disabled]="!!actionSourceId() || source.status === 'PROFILING'"
+                (click)="reindex(source)"
+              >
+                <app-icon name="refresh-cw" [size]="14" />
+                <span>Re-index</span>
+              </button>
+              <button class="remove-button" type="button" title="Remove source" (click)="askRemove(source)">
+                <app-icon name="trash" [size]="14" />
+                <span>Remove</span>
+              </button>
+            </div>
+
+            @if (source.status === 'FAILED' && source.failure) {
+              <div class="failure-detail">
+                <app-icon name="warning" [size]="13" />
+                <span>{{ source.failure.message }}</span>
+                <code>{{ source.failure.code }}</code>
+              </div>
+            }
+          </article>
+        }
+      </div>
+    }
+  </section>
+</main>
+
+@if (addOpen()) {
+  <app-modal-shell [width]="500" (dismiss)="closeAdd()">
+    <form class="add-form" (submit)="addSource($event)">
+      <div class="modal-head">
+        <div class="modal-source-type">Source type · Code repository</div>
+        <h2>Add a source</h2>
+        <p>Add repository context to {{ selectedWorkspace()?.name }}.</p>
+      </div>
+      <div class="modal-body">
+        <label for="source-page-url">Repository URL</label>
+        <div class="url-control">
+          <app-icon name="link" [size]="14" />
+          <input
+            id="source-page-url"
+            type="url"
+            autocomplete="url"
+            placeholder="https://github.com/owner/repository"
+            [ngModel]="sourceUrl()"
+            (ngModelChange)="sourceUrl.set($event)"
+            name="sourceUrl"
+            autofocus
+          />
+        </div>
+        <div class="source-note">Backlogr indexes the repository’s default branch.</div>
+        @if (addError()) {
+          <p class="form-error" role="alert">{{ addError() }}</p>
+        }
+      </div>
+      <div class="modal-foot">
+        <app-button (clicked)="closeAdd()">Cancel</app-button>
+        <app-button
+          variant="primary"
+          type="submit"
+          [loading]="addLoading()"
+          [disabled]="!sourceUrl().trim()"
+        >
+          {{ addLoading() ? 'Adding source' : 'Add source' }}
+        </app-button>
+      </div>
+    </form>
+  </app-modal-shell>
+}
+
+@if (removeTarget(); as source) {
+  <app-confirm-dialog
+    title="Remove source?"
+    [message]="source.name + ' will stop providing context to tickets in ' + (selectedWorkspace()?.name ?? 'this workspace') + '. You can add it again later.'"
+    icon="trash"
+    confirmLabel="Remove source"
+    [danger]="true"
+    [loading]="removeLoading()"
+    (confirm)="removeSource()"
+    (cancel)="removeTarget.set(null)"
+  />
+}
+
+<app-toast [toast]="toastService.toast()" />

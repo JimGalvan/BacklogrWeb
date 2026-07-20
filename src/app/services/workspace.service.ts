@@ -48,4 +48,5 @@ export class WorkspaceService {
   getTicketComments(workspaceId: string, ticketKey: string): Observable<TicketComment[]> {
     return this.http.get<TicketComment[]>(`${BASE}/workspaces/${workspaceId}/tickets/${encodeURIComponent(ticketKey)}/comments`);
   }
+
 }

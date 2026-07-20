@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { ConnectionResult, INTEGRATION_PROVIDERS } from '../../../models/integration.model';
+import { CONNECTION_RESULT_MESSAGE_TYPE, ConnectionResult, INTEGRATION_PROVIDERS } from '../../../models/integration.model';
 import { IntegrationService } from '../../../services/integration.service';
 
 @Component({
@@ -28,7 +28,7 @@ export class IntegrationCallbackPageComponent implements OnInit {
 
   ngOnInit(): void {
     const result: ConnectionResult = {
-      type: 'backlogr:connection-result',
+      type: CONNECTION_RESULT_MESSAGE_TYPE,
       provider: this.provider,
       status: this.status,
       message: this.status === 'connected' ? undefined : this.message,

@@ -1,0 +1,97 @@
+<section class="context-bar" aria-label="Ticket source context">
+  <span class="context-label">Context</span>
+
+  <div class="context-status" aria-live="polite">
+    @if (loading()) {
+      <span class="context-chip context-chip--muted">
+        <span class="spinner" aria-hidden="true"></span>
+        Checking context
+      </span>
+    } @else if (onlySource(); as source) {
+      <span class="context-chip" [class]="'context-chip context-chip--' + source.status.toLowerCase()">
+        @if (source.status === 'PROFILING') {
+          <span class="spinner" aria-hidden="true"></span>
+        } @else {
+          <span class="status-dot" aria-hidden="true"></span>
+        }
+        <span class="source-name">{{ source.name }}</span>
+        <span class="source-type">{{ sourceTypeLabel(source.sourceType) }}</span>
+      </span>
+    } @else if (selectedSources().length > 1) {
+      <span class="context-chip context-chip--multiple">
+        <span class="source-stack" aria-hidden="true"><i></i><i></i><i></i></span>
+        {{ selectedSources().length }} sources
+        <span class="source-type">{{ readyCount() }} ready</span>
+      </span>
+    } @else {
+      <span class="context-chip context-chip--empty">Ticket only</span>
+    }
+  </div>
+
+  <button class="edit-button" type="button" (click)="openEditor()">
+    <app-icon name="checklist" [size]="11" [strokeWidth]="2" />
+    Edit ticket context
+  </button>
+
+  @if (actionError() && !modalOpen()) {
+    <span class="bar-error" role="status">{{ actionError() }}</span>
+  }
+</section>
+
+@if (modalOpen()) {
+  <app-modal-shell [width]="560" (dismiss)="closeEditor()">
+    <div class="context-modal">
+      <header class="modal-head">
+        <div class="modal-eyebrow">Ticket context</div>
+        <h2>Select sources</h2>
+        <p>Selected sources can ground TL;DR, refinement, and test generation for this ticket.</p>
+      </header>
+
+      <div class="context-manifest">
+        @if (availableSources().length === 0) {
+          <div class="manifest-empty">
+            <strong>No workspace sources available</strong>
+            <span>Add a source to the workspace before selecting ticket context.</span>
+          </div>
+        } @else {
+          @for (source of availableSources(); track source.id) {
+            <label class="manifest-row" [class.manifest-row--selected]="isSelected(source.id)">
+              <input
+                type="checkbox"
+                [checked]="isSelected(source.id)"
+                (change)="toggleSource(source.id)"
+              />
+              <span class="selection-box" aria-hidden="true">
+                @if (isSelected(source.id)) { <app-icon name="check" [size]="11" /> }
+              </span>
+              <span class="provider-mark">{{ source.provider.slice(0, 2) }}</span>
+              <span class="manifest-copy">
+                <strong>{{ source.name }}</strong>
+                <span>{{ sourceTypeLabel(source.sourceType) }} · {{ source.organization || source.provider }}</span>
+              </span>
+              <span class="manifest-status" [class]="'manifest-status manifest-status--' + source.status.toLowerCase()">
+                <i aria-hidden="true"></i>
+                {{ statusLabel(source.status) }}
+              </span>
+            </label>
+          }
+        }
+      </div>
+
+      @if (actionError()) {
+        <p class="modal-error" role="alert">{{ actionError() }}</p>
+      }
+
+      <footer class="modal-foot">
+        <a routerLink="/sources" [queryParams]="{ workspaceId: workspaceId() }" (click)="closeEditor()">
+          Manage workspace sources
+          <app-icon name="arrow-right" [size]="11" />
+        </a>
+        <app-button (clicked)="closeEditor()">Cancel</app-button>
+        <app-button variant="primary" [loading]="saving()" (clicked)="saveContext()">
+          {{ saving() ? 'Saving' : 'Save context' }}
+        </app-button>
+      </footer>
+    </div>
+  </app-modal-shell>
+}

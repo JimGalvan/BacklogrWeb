@@ -36,4 +36,5 @@ describe('WorkspaceService ticket URLs', () => {
       url: `${BASE}/workspaces/workspace-1/tickets/${encodedKey}`,
     }).flush(null);
   });
+
 });

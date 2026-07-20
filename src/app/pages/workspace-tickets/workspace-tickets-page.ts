@@ -2,11 +2,12 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { errorMessage } from '../../core/utils/http-error';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 import { WorkspaceService } from '../../services/workspace.service';
 import { Ticket } from '../../models/workspace.model';
 import { ImportModalComponent } from '../../components/modals/import-modal/import-modal';
 import { ConfirmDialogComponent } from '../../components/ui/common/confirm-dialog/confirm-dialog';
-import { ToastComponent, Toast } from '../../components/ui/common/toast/toast';
+import { ToastComponent } from '../../components/ui/common/toast/toast';
 import { WtHeaderComponent } from './wt-header/wt-header';
 import { WtToolbarComponent } from './wt-toolbar/wt-toolbar';
 import { WtTableComponent } from './wt-table/wt-table';
@@ -28,6 +29,7 @@ export class TicketsPageComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
   private workspaceService = inject(WorkspaceService);
+  protected toastService = inject(ToastService);
 
   workspaceId = signal('');
   workspaceName = signal('');
@@ -37,7 +39,6 @@ export class TicketsPageComponent implements OnInit {
   search = signal('');
   loading = signal(true);
   showImport = signal(false);
-  toast = signal<Toast | null>(null);
 
   confirmRemove = signal<Ticket | null>(null);
   removeLoading = signal(false);
@@ -80,7 +81,7 @@ export class TicketsPageComponent implements OnInit {
       },
       error: err => {
         this.loading.set(false);
-        this.showToast('err', errorMessage(err));
+        this.toastService.err(errorMessage(err));
       },
     });
   }
@@ -102,20 +103,13 @@ export class TicketsPageComponent implements OnInit {
         this.tickets.update(ts => ts.filter(t => t.ticketKey !== ticket.ticketKey));
         this.confirmRemove.set(null);
         this.removeLoading.set(false);
-        this.showToast('ok', `Ticket ${ticket.ticketKey} removed`);
+        this.toastService.ok(`Ticket ${ticket.ticketKey} removed`);
       },
       error: err => {
         this.removeLoading.set(false);
         this.confirmRemove.set(null);
-        this.showToast('err', errorMessage(err));
+        this.toastService.err(errorMessage(err));
       },
     });
-  }
-
-  private toastTimer: ReturnType<typeof setTimeout> | null = null;
-  private showToast(type: 'ok' | 'err', msg: string) {
-    if (this.toastTimer) clearTimeout(this.toastTimer);
-    this.toast.set({ type, msg });
-    this.toastTimer = setTimeout(() => this.toast.set(null), 3200);
   }
 }

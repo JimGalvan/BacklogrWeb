@@ -1,9 +1,11 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, tap, finalize } from 'rxjs';
+import { Observable, tap, finalize, throwError } from 'rxjs';
 import { API_BASE as BASE } from '../core/api/api-base';
 import { LoginRequest, RegisterRequest, AuthResponse, RegistrationResponse, UserProfile } from '../models/auth.model';
+
+const REFRESH_TOKEN_KEY = 'refreshToken';
 
 
 @Injectable({ providedIn: 'root' })
@@ -29,7 +31,10 @@ export class AuthService {
   }
 
   refresh(): Observable<AuthResponse> {
-    const refreshToken = localStorage.getItem('refreshToken');
+    const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+    if (!refreshToken) {
+      return throwError(() => new Error('No refresh token available.'));
+    }
     return this.http.post<AuthResponse>(`${BASE}/auth/refresh`, { refreshToken }).pipe(
       tap(response => this.storeTokens(response))
     );
@@ -47,12 +52,12 @@ export class AuthService {
 
   clearSession(): void {
     this.token.set(null);
-    localStorage.removeItem('refreshToken');
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
     this.router.navigate(['/login']);
   }
 
   private storeTokens(response: AuthResponse): void {
     this.token.set(response.token);
-    localStorage.setItem('refreshToken', response.refreshToken);
+    localStorage.setItem(REFRESH_TOKEN_KEY, response.refreshToken);
   }
 }

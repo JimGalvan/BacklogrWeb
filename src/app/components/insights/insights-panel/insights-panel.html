@@ -4,6 +4,8 @@
     (tabChange)="activeTab.set($event)"
   />
 
+  <app-source-context-bar [workspaceId]="workspaceId()" [ticketKey]="ticketKey()" />
+
   <!-- Body: tabs stay mounted so generated analysis survives tab switches -->
   <div class="panel-body">
     <app-summary-tab
