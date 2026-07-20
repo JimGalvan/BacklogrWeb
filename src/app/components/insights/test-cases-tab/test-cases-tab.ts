@@ -1,7 +1,8 @@
 import {Component, computed, DestroyRef, inject, input} from '@angular/core';
 import {AiService} from '../../../services/ai.service';
-import {TestCase, TestCasesResponse} from '../../../models/test-cases.model';
+import {TestCase} from '../../../models/test-cases.model';
 import {AiStreamController} from '../../../core/shared/ai-stream-controller';
+import {parseTestCasesResponse} from '../../../core/shared/ai-response-parser';
 import {AiStreamCardComponent} from '../ai-stream-card/ai-stream-card';
 import {TestCaseSectionComponent} from '../test-case-section/test-case-section';
 import {IconComponent} from '../../ui/common/icon/icon';
@@ -21,7 +22,7 @@ export class TestCasesTabComponent {
 
   readonly stream = new AiStreamController<TestCase[]>(
     (workspaceId, ticketKey) => this.aiService.streamTestCases(workspaceId, ticketKey),
-    raw => (JSON.parse(raw) as TestCasesResponse).testCases,
+    parseTestCasesResponse,
     inject(DestroyRef),
   );
 

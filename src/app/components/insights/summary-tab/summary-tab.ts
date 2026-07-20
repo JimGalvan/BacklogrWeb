@@ -5,12 +5,11 @@ import { TicketComment } from '../../../models/workspace.model';
 import { AiService } from '../../../services/ai.service';
 import { WorkspaceService } from '../../../services/workspace.service';
 import { SafeHtmlPipe } from '../../../core/pipes/safe-html.pipe';
+import { parseTldrResponse } from '../../../core/shared/ai-response-parser';
 import { IconComponent } from '../../ui/common/icon/icon';
 
 function parseTldr(text: string, authorMap: Map<string, string>): string {
-  const match = text.match(/<tldr>([\s\S]*?)<\/tldr>/);
-  if (!match) return '';
-  return match[1]
+  return parseTldrResponse(text)
     .trim()
     .replace(/<ul>/, '<ul class="tldr-list">')
     .replace(
@@ -39,6 +38,7 @@ export class SummaryTabComponent {
   readonly streamedText = signal('');
   readonly isDone = signal(false);
   readonly isError = signal(false);
+  readonly errorMessage = signal<string | null>(null);
 
   private comments = signal<TicketComment[]>([]);
   private cancel$ = new Subject<void>();
@@ -48,7 +48,7 @@ export class SummaryTabComponent {
   );
 
   readonly tldrHtml = computed(() => {
-    if (!this.isDone()) return '';
+    if (!this.isDone() || this.isError()) return '';
     return parseTldr(this.streamedText(), this.commentAuthorMap());
   });
 
@@ -74,6 +74,7 @@ export class SummaryTabComponent {
     this.streamedText.set('');
     this.isDone.set(false);
     this.isError.set(false);
+    this.errorMessage.set(null);
 
     return;
 
@@ -81,11 +82,20 @@ export class SummaryTabComponent {
       .pipe(takeUntil(this.cancel$), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: text => this.streamedText.set(text),
-        error: () => {
+        error: error => {
+          this.errorMessage.set(error instanceof Error ? error.message : 'The AI request failed. Please try again.');
           this.isError.set(true);
           this.isDone.set(true);
         },
-        complete: () => this.isDone.set(true),
+        complete: () => {
+          try {
+            parseTldrResponse(this.streamedText());
+          } catch (error) {
+            this.errorMessage.set(error instanceof Error ? error.message : 'The AI returned an unreadable response.');
+            this.isError.set(true);
+          }
+          this.isDone.set(true);
+        },
       });
   }
 

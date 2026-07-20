@@ -9,7 +9,12 @@
 
   <!-- TL;DR quote -->
   <div class="tldr-block">
-    @if (isDone()) {
+    @if (isError()) {
+      <div class="tldr-error">
+        <p>{{ errorMessage() || 'The AI request failed. Please try again.' }}</p>
+        <button type="button" (click)="reanalyze()">Try again</button>
+      </div>
+    } @else if (isDone()) {
       <div class="tldr-markdown" [innerHTML]="tldrHtml() | safeHtml" (click)="onTldrClick($event)"></div>
     } @else {
       <blockquote class="tldr-quote">

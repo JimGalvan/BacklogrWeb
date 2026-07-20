@@ -1,7 +1,8 @@
 import { Component, DestroyRef, inject, input } from '@angular/core';
 import { AiService } from '../../../services/ai.service';
-import { RefinementAnalysis, RefinementAnalysisResponse } from '../../../models/refinement.model';
+import { RefinementAnalysis } from '../../../models/refinement.model';
 import { AiStreamController } from '../../../core/shared/ai-stream-controller';
+import { parseRefinementResponse } from '../../../core/shared/ai-response-parser';
 import { AiStreamCardComponent } from '../ai-stream-card/ai-stream-card';
 import { RefinementSectionComponent } from '../refinement-section/refinement-section';
 import { IconComponent } from '../../ui/common/icon/icon';
@@ -30,7 +31,7 @@ export class RefinementTabComponent {
   readonly sections = REFINEMENT_SECTIONS;
   readonly stream = new AiStreamController<RefinementAnalysis>(
     (workspaceId, ticketKey) => this.aiService.streamRefinement(workspaceId, ticketKey),
-    raw => (JSON.parse(raw) as RefinementAnalysisResponse).refinementAnalysis,
+    parseRefinementResponse,
     inject(DestroyRef),
   );
 

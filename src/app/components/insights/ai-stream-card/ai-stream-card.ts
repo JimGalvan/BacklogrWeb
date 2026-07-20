@@ -14,6 +14,7 @@ export class AiStreamCardComponent {
   isStreaming = input(false);
   isDone = input(false);
   isError = input(false);
+  errorMessage = input<string | null>(null);
   hasContent = input(false);
 
   run = output<void>();

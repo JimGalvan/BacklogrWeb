@@ -109,3 +109,25 @@
   color: var(--text);
   font-weight: 600;
 }
+
+.tldr-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--danger, #e05a5a);
+  font-size: 12.5px;
+}
+
+.tldr-error p {
+  margin: 0;
+}
+
+.tldr-error button {
+  border: 1px solid var(--line-soft);
+  border-radius: 5px;
+  background: transparent;
+  color: var(--muted);
+  padding: 4px 8px;
+  cursor: pointer;
+}

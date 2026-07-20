@@ -39,7 +39,13 @@
         <div class="ai-loading"><span class="caret"></span></div>
       }
       @if (isError()) {
-        <p class="ai-error">Something went wrong. Please try again.</p>
+        <div class="ai-error-state">
+          <p class="ai-error">{{ errorMessage() || 'The AI request failed. Please try again.' }}</p>
+          <button class="regenerate-btn" (click)="run.emit()">
+            <app-icon name="refresh-cw" [size]="11" />
+            Try again
+          </button>
+        </div>
       }
       <ng-content />
     </div>
