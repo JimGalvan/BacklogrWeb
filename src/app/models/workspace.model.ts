@@ -51,6 +51,7 @@ export interface Ticket {
   importedBy: string;
   projectKey: string;
   title: string;
+  externalUrl: string | null;
   priority?: 'P1' | 'P2' | 'P3';
   status?: string;
   assignee?: TicketPerson;

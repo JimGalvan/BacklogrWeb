@@ -1,15 +1,15 @@
-import { Component, inject, signal, ViewChild } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { TopbarComponent } from '../../components/layout/topbar/topbar';
 import { TicketBodyComponent } from '../../components/ticket/ticket-body/ticket-body';
 import { InsightsPanelComponent } from '../../components/insights/insights-panel/insights-panel';
-import { ImportModalComponent } from '../../components/modals/import-modal/import-modal';
+import { Ticket } from '../../models/workspace.model';
 
 @Component({
   selector: 'app-ticket-detail-page',
-  imports: [TopbarComponent, TicketBodyComponent, InsightsPanelComponent, ImportModalComponent],
+  imports: [TopbarComponent, TicketBodyComponent, InsightsPanelComponent],
   templateUrl: './ticket-detail-page.html',
   styleUrl: './ticket-detail-page.css',
 })
@@ -26,13 +26,5 @@ export class TicketDetailPageComponent {
     { initialValue: '' }
   );
 
-  showModal = signal(false);
-
-  @ViewChild(InsightsPanelComponent)
-  insightsPanel?: InsightsPanelComponent;
-
-  onImported() {
-    this.showModal.set(false);
-    this.insightsPanel?.reanalyze();
-  }
+  ticket = signal<Ticket | null>(null);
 }

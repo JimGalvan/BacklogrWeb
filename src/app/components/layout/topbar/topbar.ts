@@ -1,4 +1,5 @@
-import { Component, output } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
+import { Ticket } from '../../../models/workspace.model';
 
 @Component({
   selector: 'app-topbar',
@@ -7,5 +8,17 @@ import { Component, output } from '@angular/core';
   styleUrl: './topbar.css',
 })
 export class TopbarComponent {
-  importClick = output<void>();
+  ticket = input<Ticket | null>(null);
+
+  readonly providerName = computed(() => {
+    const provider = this.ticket()?.provider;
+    if (!provider) return '';
+    const names: Record<string, string> = {
+      GITHUB: 'GitHub',
+      JIRA: 'Jira',
+      AZURE_DEVOPS: 'Azure DevOps',
+    };
+    return names[provider]
+      ?? provider.toLowerCase().replaceAll('_', ' ').replace(/^./, value => value.toUpperCase());
+  });
 }

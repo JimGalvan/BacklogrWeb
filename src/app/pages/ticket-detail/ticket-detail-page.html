@@ -1,14 +1,11 @@
 <div class="detail-grid">
   <div class="main-col">
-    <app-topbar (importClick)="showModal.set(true)" />
-    <app-ticket-body [ticketKey]="ticketKey()" [workspaceId]="workspaceId()" />
+    <app-topbar [ticket]="ticket()" />
+    <app-ticket-body
+      [ticketKey]="ticketKey()"
+      [workspaceId]="workspaceId()"
+      (ticketLoaded)="ticket.set($event)"
+    />
   </div>
   <app-insights-panel [workspaceId]="workspaceId()" [ticketKey]="ticketKey()" />
 </div>
-
-@if (showModal()) {
-  <app-import-modal
-    (close)="showModal.set(false)"
-    (imported)="onImported()"
-  />
-}

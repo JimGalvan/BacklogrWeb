@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, signal } from '@angular/core';
+import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { Ticket } from '../../../models/workspace.model';
 import { WorkspaceService } from '../../../services/workspace.service';
 import { MetaRowComponent } from '../meta-row/meta-row';
@@ -24,6 +24,7 @@ export class TicketBodyComponent {
 
   ticketKey = input<string>('');
   workspaceId = input<string>('');
+  ticketLoaded = output<Ticket | null>();
   ticket = signal<Ticket | null>(null);
   status = signal<'idle' | 'loading' | 'loaded' | 'error'>('idle');
 
@@ -37,14 +38,18 @@ export class TicketBodyComponent {
         this.workspaceService.getTicket(workspaceId, ticketKey).subscribe({
           next: (ticket: Ticket) => {
             this.ticket.set(ticket);
+            this.ticketLoaded.emit(ticket);
             this.status.set('loaded');
           },
           error: () => {
             this.ticket.set(null);
+            this.ticketLoaded.emit(null);
             this.status.set('error');
           },
         });
       } else {
+        this.ticket.set(null);
+        this.ticketLoaded.emit(null);
         this.status.set('idle');
       }
     });

@@ -40,12 +40,6 @@
   flex: 1;
 }
 
-.actions {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
 .pill-btn {
   display: inline-flex;
   align-items: center;
@@ -61,6 +55,7 @@
   color: var(--text-2);
   transition: background 0.15s, color 0.15s;
   white-space: nowrap;
+  text-decoration: none;
 }
 
 .pill-btn:hover {
@@ -74,13 +69,4 @@
 
 .pill-btn.ghost:hover {
   background: var(--panel);
-}
-
-.pill-btn.primary {
-  background: var(--panel);
-  color: var(--text);
-}
-
-.pill-btn.primary:hover {
-  background: var(--panel-2);
 }
