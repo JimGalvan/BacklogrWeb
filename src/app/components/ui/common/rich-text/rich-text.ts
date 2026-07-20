@@ -14,9 +14,10 @@ export class RichTextComponent {
   readonly html = computed(() => {
     const document = this.doc();
     switch (document.format) {
-      case 'adf':      return adfToHtml(document.content);
-      case 'html':     return document.content;
-      case 'markdown': return document.content;
+      case 'ADF':        return adfToHtml(document.content);
+      case 'HTML':       return document.content;
+      case 'MARKDOWN':   return document.content;
+      case 'PLAIN_TEXT': return document.content;
     }
   });
 }

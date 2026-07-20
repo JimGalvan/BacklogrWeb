@@ -1,4 +1,4 @@
-import { AdfDoc } from './adf.model';
+import { RichTextDoc } from './rich-text.model';
 
 export interface Workspace {
   id: string;
@@ -34,7 +34,7 @@ export interface TicketComment {
   id: string;
   authorEmail: string;
   authorName: string;
-  body: AdfDoc;
+  body: RichTextDoc;
   createdAt: string;
   updatedAt: string;
 }
@@ -59,7 +59,7 @@ export interface Ticket {
   sprint?: string;
   affects?: string;
   labels?: string[];
-  description?: AdfDoc | null;
+  description?: RichTextDoc | null;
   stackTrace?: TicketStackTrace;
   comments?: TicketComment[];
   provider?: string;

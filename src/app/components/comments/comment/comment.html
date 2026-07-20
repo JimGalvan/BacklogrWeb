@@ -10,7 +10,7 @@
       <span class="comment-time">{{ formattedDate() }}</span>
     </div>
     <div class="comment-text">
-      <app-rich-text [doc]="richTextDoc()" />
+      <app-rich-text [doc]="comment().body" />
     </div>
   </div>
 </div>

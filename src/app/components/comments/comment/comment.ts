@@ -31,9 +31,4 @@ export class CommentComponent {
       month: 'short', day: 'numeric', year: 'numeric',
     });
   });
-
-  richTextDoc = computed(() => ({
-    format: 'adf' as const,
-    content: this.comment().body,
-  }));
 }

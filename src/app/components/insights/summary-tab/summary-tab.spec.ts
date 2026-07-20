@@ -114,7 +114,7 @@ function comment(): TicketComment {
     id: '9001',
     authorEmail: 'reviewer@example.com',
     authorName: 'reviewer',
-    body: {type: 'doc', version: 1, content: []},
+    body: {format: 'ADF', content: {type: 'doc', version: 1, content: []}},
     createdAt: '2026-07-19T12:10:00Z',
     updatedAt: '2026-07-19T12:10:00Z',
   };

@@ -20,7 +20,7 @@
     <div class="section-label">DESCRIPTION</div>
     <div class="description">
       @if (ticket.description) {
-        <app-rich-text [doc]="{ format: 'adf', content: ticket.description }"/>
+        <app-rich-text [doc]="ticket.description"/>
       } @else {
         <span class="placeholder">No description provided.</span>
       }
