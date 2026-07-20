@@ -40,10 +40,11 @@ describe('AiService', () => {
   });
 
   it('preserves SSE events split across network chunks', async () => {
+    // The backend writes `data:<token>` with no space after the colon.
     fetchMock.mockResolvedValue(streamResponse([
       'da',
-      'ta: {"testCases":\n',
-      '\ndata: []}\n\n',
+      'ta:{"testCases":\n',
+      '\ndata:[]}\n\n',
     ]));
 
     const values = await lastValueFrom(
@@ -51,6 +52,23 @@ describe('AiService', () => {
     );
 
     expect(values).toEqual(['{"testCases":', '{"testCases":[]}']);
+  });
+
+  it('preserves leading spaces in tokens', async () => {
+    // Models emit leading-space tokens (" Alt", " duplication"); the space sits
+    // right after `data:` and must survive, or adjacent words run together.
+    fetchMock.mockResolvedValue(streamResponse([
+      'data:Fix\n\n',
+      'data: Alt\n\n',
+      'data:+drag\n\n',
+      'data: duplication\n\n',
+    ]));
+
+    const values = await lastValueFrom(
+      TestBed.inject(AiService).streamTldr('workspace-1', 'issue#1').pipe(toArray())
+    );
+
+    expect(values[values.length - 1]).toBe('Fix Alt+drag duplication');
   });
 
   it('surfaces the backend error message', async () => {

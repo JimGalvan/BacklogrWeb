@@ -36,10 +36,14 @@ export class AiService {
       let buffer = '';
 
       const consumeEvent = (event: string): void => {
+        // The backend (Quarkus) writes tokens as `data:<token>` with no separator
+        // space after the colon, so the token's own leading space — common in model
+        // output like " Alt" — sits right after `data:`. Strip only the prefix, never
+        // a following space, or adjacent words run together.
         const data = event
           .split(/\r?\n/)
           .filter(line => line.startsWith('data:'))
-          .map(line => line.slice(5).replace(/^ /, ''))
+          .map(line => line.slice(5))
           .join('\n');
         if (!data) return;
         accumulated += data;
