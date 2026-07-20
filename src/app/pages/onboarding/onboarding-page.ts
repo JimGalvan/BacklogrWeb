@@ -2,8 +2,10 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { OnboardingState } from '../../models/onboarding.model';
+import { Ticket } from '../../models/workspace.model';
 import { IntegrationService } from '../../services/integration.service';
 import { OnboardingService } from '../../services/onboarding.service';
+import { WorkspaceService } from '../../services/workspace.service';
 
 @Component({
   selector: 'app-onboarding-page',
@@ -13,19 +15,24 @@ import { OnboardingService } from '../../services/onboarding.service';
 export class OnboardingPageComponent implements OnInit {
   private onboardingService = inject(OnboardingService);
   private integrationService = inject(IntegrationService);
+  private workspaceService = inject(WorkspaceService);
   private router = inject(Router);
 
   state = signal<OnboardingState | null>(null);
   loading = signal(true);
   connecting = signal(false);
   addingSource = signal(false);
+  importingTicket = signal(false);
   saving = signal(false);
   sourceUrl = signal('');
+  ticketUrl = signal('');
+  importedTicket = signal<Ticket | null>(null);
   loadError = signal<string | null>(null);
   actionError = signal<string | null>(null);
 
   connected = computed(() => this.state()?.connection?.status === 'ACTIVE');
   sourceConnected = computed(() => !!this.state()?.source);
+  ticketImported = computed(() => !!this.importedTicket() || !!this.state()?.ticket);
 
   ngOnInit(): void {
     this.load();
@@ -84,14 +91,39 @@ export class OnboardingPageComponent implements OnInit {
       });
   }
 
-  complete(): void {
+  importTicket(): void {
+    const workspaceId = this.state()?.defaultWorkspace.id;
+    const url = this.ticketUrl().trim();
+    if (!workspaceId || !url || this.importingTicket()) return;
+
+    this.importingTicket.set(true);
+    this.actionError.set(null);
+    this.workspaceService.importTicket(workspaceId, { url })
+      .pipe(finalize(() => this.importingTicket.set(false)))
+      .subscribe({
+        next: ticket => {
+          this.importedTicket.set(ticket);
+          this.ticketUrl.set('');
+        },
+        error: error => this.actionError.set(
+          error?.error?.message ?? 'We could not import that ticket. Use a GitHub Issue URL you granted Backlogr access to.'
+        ),
+      });
+  }
+
+  complete(destination: 'workspace' | 'tickets'): void {
     if (this.saving()) return;
+    const workspaceId = this.state()?.defaultWorkspace.id;
+    if (!workspaceId) return;
+
     this.saving.set(true);
     this.actionError.set(null);
     this.onboardingService.complete()
       .pipe(finalize(() => this.saving.set(false)))
       .subscribe({
-        next: () => this.router.navigate(['/tickets']),
+        next: () => this.router.navigate(
+          destination === 'tickets' ? ['/workspaces', workspaceId, 'tickets'] : ['/workspaces']
+        ),
         error: () => this.actionError.set('We could not finish setup. Try again.'),
       });
   }

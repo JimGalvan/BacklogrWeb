@@ -28,9 +28,9 @@
           <span class="step-number">03</span>
           <span><strong>Add a source</strong><small>{{ sourceConnected() ? 'Connected' : connected() ? 'Current step' : 'Waiting for connection' }}</small></span>
         </li>
-        <li [class.current]="sourceConnected()">
+        <li [class.ready]="ticketImported()" [class.current]="sourceConnected() && !ticketImported()">
           <span class="step-number">04</span>
-          <span><strong>Import your first ticket</strong><small>{{ sourceConnected() ? 'Ready' : 'After source' }}</small></span>
+          <span><strong>Import your first ticket</strong><small>{{ ticketImported() ? 'Imported' : sourceConnected() ? 'Current step' : 'After source' }}</small></span>
         </li>
       </ol>
     </aside>
@@ -47,13 +47,19 @@
         <p class="error" role="alert">{{ loadError() }}</p>
         <button type="button" class="secondary" (click)="load()">Try again</button>
       } @else {
-        <p class="section-label">{{ connected() ? 'Connection ready' : 'Step 2 of 4' }}</p>
-        <h1>{{ connected() ? 'Your connection is ready.' : 'Connect your first provider.' }}</h1>
+        <p class="section-label">
+          {{ !connected() ? 'Step 2 of 4' : !sourceConnected() ? 'Step 3 of 4' : 'Step 4 of 4' }}
+        </p>
+        <h1>
+          {{ !connected() ? 'Connect your first provider.' : !sourceConnected() ? 'Your connection is ready.' : 'Import your first ticket.' }}
+        </h1>
         <p class="lede">
-          @if (connected()) {
-            Add a source next so Backlogr can connect ticket intent with the work behind it.
-          } @else {
+          @if (!connected()) {
             Connect the tools that hold your sources and tickets. Backlogr keeps access read-only.
+          } @else if (!sourceConnected()) {
+            Add a source so Backlogr can connect ticket intent with the work behind it.
+          } @else {
+            Bring in one real issue to see your workspace in action, or skip this optional step.
           }
         </p>
 
@@ -66,7 +72,8 @@
           <span class="workspace-ready"><i></i> Ready</span>
         </div>
 
-        <section class="connection-card" [class.connected-card]="connected()">
+        @if (!sourceConnected()) {
+          <section class="connection-card" [class.connected-card]="connected()">
           <div class="connection-heading">
             <span class="provider-mark" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="currentColor">
@@ -114,8 +121,10 @@
           <article><span class="provider-initial jira">J</span><strong>Jira</strong><small>Coming soon</small></article>
           <article><span class="provider-initial linear">L</span><strong>Linear</strong><small>Coming soon</small></article>
         </div>
+        }
 
         @if (connected() && !sourceConnected()) {
+
           <section class="source-card">
             <p class="source-label">Workspace source</p>
             <h2>Add the source Backlogr should use for context.</h2>
@@ -142,10 +151,49 @@
             </div>
           </section>
         } @else if (sourceConnected()) {
-          <section class="source-card source-ready">
+          <section class="source-card source-ready compact-ready">
             <p class="source-label">Source connected</p>
             <h2>{{ state()?.source?.displayName }}</h2>
             <p>{{ state()?.source?.status }} · Ready for workspace context.</p>
+          </section>
+
+          <section class="ticket-card" [class.ticket-ready]="ticketImported()">
+            @if (ticketImported()) {
+              <div class="ticket-receipt">
+                <span class="receipt-check" aria-hidden="true">✓</span>
+                <span>
+                  <small>Ticket imported</small>
+                  <strong>{{ importedTicket()?.title ?? state()?.ticket?.displayName }}</strong>
+                  <code>{{ importedTicket()?.ticketKey ?? state()?.ticket?.displayName }}</code>
+                </span>
+              </div>
+              <p>Your first ticket is ready in this workspace.</p>
+            } @else {
+              <p class="source-label">Optional ticket</p>
+              <h2>Paste a public GitHub Issue URL.</h2>
+              <p>Backlogr imports the issue title, description, status, assignee, and labels.</p>
+              <label for="ticket-url">GitHub Issue URL</label>
+              <div class="source-entry">
+                <input
+                  id="ticket-url"
+                  type="url"
+                  autocomplete="url"
+                  placeholder="https://github.com/owner/repository/issues/42"
+                  [value]="ticketUrl()"
+                  (input)="ticketUrl.set($any($event.target).value)"
+                  (keyup.enter)="importTicket()"
+                />
+                <button
+                  type="button"
+                  class="source-button"
+                  (click)="importTicket()"
+                  [disabled]="importingTicket() || !ticketUrl().trim()"
+                >
+                  {{ importingTicket() ? 'Importing...' : 'Import ticket' }}
+                </button>
+              </div>
+              <p class="ticket-hint">GitHub Issues only for the MVP. Jira support is coming soon.</p>
+            }
           </section>
         }
 
@@ -157,14 +205,18 @@
         }
 
         <div class="page-actions">
-          @if (sourceConnected()) {
-            <button type="button" class="primary" (click)="complete()" [disabled]="saving()">
-              {{ saving() ? 'Opening workspace...' : 'Continue to workspace' }}
+          @if (ticketImported()) {
+            <button type="button" class="primary" (click)="complete('tickets')" [disabled]="saving()">
+              {{ saving() ? 'Opening tickets...' : 'Continue to tickets' }}
               @if (!saving()) { <span aria-hidden="true">&rarr;</span> }
             </button>
-          } @else {
-            <button type="button" class="text-button" (click)="complete()" [disabled]="saving()">
+          } @else if (sourceConnected()) {
+            <button type="button" class="text-button" (click)="complete('workspace')" [disabled]="saving()">
               {{ saving() ? 'Opening workspace...' : 'Skip for now' }}
+            </button>
+          } @else {
+            <button type="button" class="text-button" (click)="complete('workspace')" [disabled]="saving()">
+              {{ saving() ? 'Opening workspace...' : 'Skip setup for now' }}
             </button>
           }
         </div>
