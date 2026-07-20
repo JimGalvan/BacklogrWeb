@@ -35,7 +35,7 @@ export class WorkspaceService {
   }
 
   getTicket(workspaceId: string, ticketKey: string): Observable<Ticket> {
-    return this.http.get<Ticket>(`${BASE}/workspaces/${workspaceId}/tickets/${ticketKey}`);
+    return this.http.get<Ticket>(`${BASE}/workspaces/${workspaceId}/tickets/${encodeURIComponent(ticketKey)}`);
   }
 
   importTicket(workspaceId: string, req: ImportTicketRequest): Observable<Ticket> {
@@ -43,10 +43,10 @@ export class WorkspaceService {
   }
 
   removeTicket(workspaceId: string, ticketKey: string): Observable<void> {
-    return this.http.delete<void>(`${BASE}/workspaces/${workspaceId}/tickets/${ticketKey}`);
+    return this.http.delete<void>(`${BASE}/workspaces/${workspaceId}/tickets/${encodeURIComponent(ticketKey)}`);
   }
 
   getTicketComments(workspaceId: string, ticketKey: string): Observable<TicketComment[]> {
-    return this.http.get<TicketComment[]>(`${BASE}/workspaces/${workspaceId}/tickets/${ticketKey}/comments`);
+    return this.http.get<TicketComment[]>(`${BASE}/workspaces/${workspaceId}/tickets/${encodeURIComponent(ticketKey)}/comments`);
   }
 }

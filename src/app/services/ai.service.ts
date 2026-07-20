@@ -10,15 +10,15 @@ export class AiService {
   private authService = inject(AuthService);
 
   streamRefinement(workspaceId: string, ticketKey: string): Observable<string> {
-    return this.streamEndpoint(`${BASE}/workspaces/${workspaceId}/ai/tickets/${ticketKey}/refinement`);
+    return this.streamEndpoint(`${BASE}/workspaces/${workspaceId}/ai/tickets/${encodeURIComponent(ticketKey)}/refinement`);
   }
 
   streamTestCases(workspaceId: string, ticketKey: string): Observable<string> {
-    return this.streamEndpoint(`${BASE}/workspaces/${workspaceId}/ai/tickets/${ticketKey}/test-cases`);
+    return this.streamEndpoint(`${BASE}/workspaces/${workspaceId}/ai/tickets/${encodeURIComponent(ticketKey)}/test-cases`);
   }
 
   streamTldr(workspaceId: string, ticketKey: string): Observable<string> {
-    return this.streamEndpoint(`${BASE}/workspaces/${workspaceId}/ai/tickets/${ticketKey}/tldr`);
+    return this.streamEndpoint(`${BASE}/workspaces/${workspaceId}/ai/tickets/${encodeURIComponent(ticketKey)}/tldr`);
   }
 
   // TODO: simplify this method
