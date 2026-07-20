@@ -6,6 +6,7 @@ import { AiService } from '../../../services/ai.service';
 import { WorkspaceService } from '../../../services/workspace.service';
 import { SafeHtmlPipe } from '../../../core/pipes/safe-html.pipe';
 import { parseTldrResponse } from '../../../core/shared/ai-response-parser';
+import { AiStreamCardComponent } from '../ai-stream-card/ai-stream-card';
 import { IconComponent } from '../../ui/common/icon/icon';
 
 export function formatTldrHtml(text: string, authorMap: Map<string, string>): string {
@@ -37,7 +38,7 @@ export function formatTldrHtml(text: string, authorMap: Map<string, string>): st
 }
 @Component({
   selector: 'app-summary-tab',
-  imports: [SafeHtmlPipe, IconComponent],
+  imports: [AiStreamCardComponent, SafeHtmlPipe, IconComponent],
   templateUrl: './summary-tab.html',
   styleUrl: './summary-tab.css',
 })
@@ -74,6 +75,7 @@ export class SummaryTabComponent {
       const ticketKey = this.ticketKey();
       if (!workspaceId || !ticketKey) return;
 
+      this.reset();
       this.comments.set([]);
       this.workspaceService.getTicketComments(workspaceId, ticketKey)
         .pipe(takeUntilDestroyed(this.destroyRef))
@@ -84,7 +86,6 @@ export class SummaryTabComponent {
             }
           },
         });
-      this.reanalyze();
     });
   }
 
@@ -141,5 +142,15 @@ export class SummaryTabComponent {
       () => commentElement.classList.remove('comment-highlight'),
       { once: true },
     );
+  }
+
+  private reset(): void {
+    this.activeRun++;
+    this.cancel$.next();
+    this.streamedText.set('');
+    this.isStreaming.set(false);
+    this.isDone.set(false);
+    this.isError.set(false);
+    this.errorMessage.set(null);
   }
 }

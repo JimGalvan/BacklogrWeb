@@ -6,45 +6,12 @@
   display: none;
 }
 
-.summary-card {
-  background: var(--panel);
-  border: 1px solid var(--line-soft);
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.card-head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 11px 14px;
-  border-bottom: 1px solid var(--line-soft);
-}
-
-.card-icon {
-  width: 18px;
-  height: 18px;
-  border-radius: 5px;
-  background: var(--accent-2);
-  color: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.card-title {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--text);
-  margin: 0;
-}
-
 /* TL;DR block */
 .tldr-block {
   padding: 12px 14px;
   background: linear-gradient(180deg, var(--accent-2) 0%, transparent 100%);
-  border-bottom: 1px solid var(--line-soft);
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
 }
 
 .tldr-quote {
@@ -110,37 +77,9 @@
   font-weight: 600;
 }
 
-.tldr-error {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  color: var(--danger, #e05a5a);
-  font-size: 12.5px;
-}
-
-.tldr-error p {
-  margin: 0;
-}
-
-.tldr-error button {
-  border: 1px solid var(--line-soft);
-  border-radius: 5px;
-  background: transparent;
-  color: var(--muted);
-  padding: 4px 8px;
-  cursor: pointer;
-}
-
 .tldr-scope {
-  margin: 10px 14px 0;
+  margin: 0;
   color: var(--muted);
   font-size: 10.5px;
   line-height: 1.4;
-}
-
-.tldr-empty {
-  margin: 0;
-  color: var(--muted);
-  font-size: 12.5px;
 }

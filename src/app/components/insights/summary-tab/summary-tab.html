@@ -1,27 +1,27 @@
-<div class="summary-card">
-  <div class="card-head">
-    <div class="card-icon">
-      <app-icon name="document" [size]="11" />
+<app-ai-stream-card
+  title="TL;DR"
+  idleText="Generate a concise summary of this ticket, its comments, and any selected source context."
+  runLabel="Generate TL;DR"
+  [isStreaming]="isStreaming()"
+  [isDone]="isDone()"
+  [isError]="isError()"
+  [errorMessage]="errorMessage()"
+  [hasContent]="!!streamedText()"
+  (run)="reanalyze()"
+>
+  <app-icon idleIcon name="document" [size]="18" [strokeWidth]="1.5" />
+  <app-icon headIcon name="document" [size]="11" />
+
+  @if (!isError() && (isStreaming() || isDone())) {
+    <p class="tldr-scope">Based on this ticket and its selected source context.</p>
+    <div class="tldr-block" aria-live="polite">
+      @if (isDone()) {
+        <div class="tldr-markdown" [innerHTML]="tldrHtml() | safeHtml" (click)="onTldrClick($event)"></div>
+      } @else {
+        <blockquote class="tldr-quote">
+          {{ streamedText() }}<span class="caret"></span>
+        </blockquote>
+      }
     </div>
-    <h3 class="card-title">TL;DR</h3>
-  </div>
-
-  <p class="tldr-scope">Based only on this ticket’s description and comments.</p>
-
-  <div class="tldr-block" aria-live="polite">
-    @if (isError()) {
-      <div class="tldr-error">
-        <p>{{ errorMessage() || 'The AI request failed. Please try again.' }}</p>
-        <button type="button" (click)="reanalyze()">Try again</button>
-      </div>
-    } @else if (isDone()) {
-      <div class="tldr-markdown" [innerHTML]="tldrHtml() | safeHtml" (click)="onTldrClick($event)"></div>
-    } @else if (isStreaming()) {
-      <blockquote class="tldr-quote">
-        {{ streamedText() }}<span class="caret"></span>
-      </blockquote>
-    } @else {
-      <p class="tldr-empty">Open a ticket to generate its summary.</p>
-    }
-  </div>
-</div>
+  }
+</app-ai-stream-card>

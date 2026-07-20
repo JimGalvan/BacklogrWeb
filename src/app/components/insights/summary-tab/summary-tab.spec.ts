@@ -28,9 +28,12 @@ describe('SummaryTabComponent', () => {
     }).compileComponents();
   });
 
-  it('runs automatically and renders comment references', () => {
+  it('waits for the user to generate and renders comment references', () => {
     const fixture = createComponent();
 
+    expect(aiService.streamTldr).not.toHaveBeenCalled();
+    expect(fixture.nativeElement.querySelector('.ai-run-btn')?.textContent).toContain('Generate TL;DR');
+    (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.ai-run-btn')?.click();
     expect(aiService.streamTldr).toHaveBeenCalledWith('workspace-1', 'owner:repo#42');
     streams[0].next('<tldr><p>Implement the import.</p><ul><li data-comment-id="9001">Keep it read-only.</li></ul></tldr>');
     streams[0].complete();
@@ -44,6 +47,7 @@ describe('SummaryTabComponent', () => {
 
   it('cancels the active stream before re-analysis', () => {
     const fixture = createComponent();
+    fixture.componentInstance.reanalyze();
     expect(streams[0].observed).toBe(true);
 
     fixture.componentInstance.reanalyze();
@@ -54,13 +58,14 @@ describe('SummaryTabComponent', () => {
 
   it('shows malformed model output as an actionable error', () => {
     const fixture = createComponent();
+    fixture.componentInstance.reanalyze();
     streams[0].next('missing tldr wrapper');
     streams[0].complete();
     fixture.detectChanges();
 
     expect(fixture.componentInstance.isError()).toBe(true);
-    expect(fixture.nativeElement.querySelector('.tldr-error')?.textContent).toContain('unreadable response');
-    expect(fixture.nativeElement.querySelector('.tldr-error button')?.textContent).toContain('Try again');
+    expect(fixture.nativeElement.querySelector('.ai-error-state')?.textContent).toContain('unreadable response');
+    expect(fixture.nativeElement.querySelector('.ai-error-state button')?.textContent).toContain('Try again');
   });
 
   it('scrolls to the comment referenced by a TLDR item', () => {
