@@ -106,8 +106,15 @@ body {
   color: var(--accent);
   text-decoration: underline;
   text-underline-offset: 2px;
+  overflow-wrap: anywhere;
 }
 .rich-text a:hover { opacity: 0.8; }
+
+.rich-text img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
 
 .rich-text ul, .rich-text ol {
   padding-left: 20px;
