@@ -8,19 +8,33 @@ import { SafeHtmlPipe } from '../../../core/pipes/safe-html.pipe';
 import { parseTldrResponse } from '../../../core/shared/ai-response-parser';
 import { IconComponent } from '../../ui/common/icon/icon';
 
-function parseTldr(text: string, authorMap: Map<string, string>): string {
-  return parseTldrResponse(text)
-    .trim()
-    .replace(/<ul>/, '<ul class="tldr-list">')
-    .replace(
-      /<li data-comment-id="([^"]+)">([\s\S]*?)<\/li>/g,
-      (_, commentId, content) => {
-        const label = authorMap.get(commentId) ?? `#${commentId}`;
-        return `<li data-comment-id="${commentId}">${content}<span class="comment-ref">${label}</span></li>`;
-      }
-    );
-}
+export function formatTldrHtml(text: string, authorMap: Map<string, string>): string {
+  const parsed = new DOMParser().parseFromString(parseTldrResponse(text), 'text/html');
+  const allowedTags = new Set(['P', 'UL', 'LI', 'STRONG', 'EM']);
 
+  for (const element of Array.from(parsed.body.querySelectorAll('*'))) {
+    if (!allowedTags.has(element.tagName)) {
+      element.replaceWith(...Array.from(element.childNodes));
+      continue;
+    }
+
+    const commentId = element.tagName === 'LI' ? element.getAttribute('data-comment-id') : null;
+    for (const attribute of Array.from(element.attributes)) {
+      element.removeAttribute(attribute.name);
+    }
+
+    if (element.tagName === 'UL') element.classList.add('tldr-list');
+    if (element.tagName === 'LI' && commentId) {
+      element.setAttribute('data-comment-id', commentId);
+      const reference = parsed.createElement('span');
+      reference.className = 'comment-ref';
+      reference.textContent = authorMap.get(commentId) ?? `#${commentId}`;
+      element.append(reference);
+    }
+  }
+
+  return parsed.body.innerHTML;
+}
 @Component({
   selector: 'app-summary-tab',
   imports: [SafeHtmlPipe, IconComponent],
@@ -36,12 +50,14 @@ export class SummaryTabComponent {
   private destroyRef = inject(DestroyRef);
 
   readonly streamedText = signal('');
+  readonly isStreaming = signal(false);
   readonly isDone = signal(false);
   readonly isError = signal(false);
   readonly errorMessage = signal<string | null>(null);
 
   private comments = signal<TicketComment[]>([]);
   private cancel$ = new Subject<void>();
+  private activeRun = 0;
 
   private readonly commentAuthorMap = computed(() =>
     new Map(this.comments().map(comment => [comment.id, comment.authorName || comment.authorEmail]))
@@ -49,19 +65,26 @@ export class SummaryTabComponent {
 
   readonly tldrHtml = computed(() => {
     if (!this.isDone() || this.isError()) return '';
-    return parseTldr(this.streamedText(), this.commentAuthorMap());
+    return formatTldrHtml(this.streamedText(), this.commentAuthorMap());
   });
 
   constructor() {
     effect(() => {
       const workspaceId = this.workspaceId();
       const ticketKey = this.ticketKey();
-      if (workspaceId && ticketKey) {
-        this.workspaceService.getTicketComments(workspaceId, ticketKey)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe(comments => this.comments.set(comments));
-        // this.reanalyze();
-      }
+      if (!workspaceId || !ticketKey) return;
+
+      this.comments.set([]);
+      this.workspaceService.getTicketComments(workspaceId, ticketKey)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: comments => {
+            if (workspaceId === this.workspaceId() && ticketKey === this.ticketKey()) {
+              this.comments.set(comments);
+            }
+          },
+        });
+      this.reanalyze();
     });
   }
 
@@ -70,30 +93,36 @@ export class SummaryTabComponent {
     const ticketKey = this.ticketKey();
     if (!workspaceId || !ticketKey) return;
 
+    const run = ++this.activeRun;
     this.cancel$.next();
     this.streamedText.set('');
+    this.isStreaming.set(true);
     this.isDone.set(false);
     this.isError.set(false);
     this.errorMessage.set(null);
 
-    return;
-
     this.aiService.streamTldr(workspaceId, ticketKey)
       .pipe(takeUntil(this.cancel$), takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: text => this.streamedText.set(text),
+        next: text => {
+          if (run === this.activeRun) this.streamedText.set(text);
+        },
         error: error => {
+          if (run !== this.activeRun) return;
           this.errorMessage.set(error instanceof Error ? error.message : 'The AI request failed. Please try again.');
+          this.isStreaming.set(false);
           this.isError.set(true);
           this.isDone.set(true);
         },
         complete: () => {
+          if (run !== this.activeRun) return;
           try {
             parseTldrResponse(this.streamedText());
           } catch (error) {
             this.errorMessage.set(error instanceof Error ? error.message : 'The AI returned an unreadable response.');
             this.isError.set(true);
           }
+          this.isStreaming.set(false);
           this.isDone.set(true);
         },
       });
@@ -107,6 +136,10 @@ export class SummaryTabComponent {
     if (!commentElement) return;
     commentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     commentElement.classList.add('comment-highlight');
-    commentElement.addEventListener('animationend', () => commentElement.classList.remove('comment-highlight'), { once: true });
+    commentElement.addEventListener(
+      'animationend',
+      () => commentElement.classList.remove('comment-highlight'),
+      { once: true },
+    );
   }
 }

@@ -1,5 +1,4 @@
 <div class="summary-card">
-  <!-- Card head -->
   <div class="card-head">
     <div class="card-icon">
       <app-icon name="document" [size]="11" />
@@ -7,8 +6,9 @@
     <h3 class="card-title">TL;DR</h3>
   </div>
 
-  <!-- TL;DR quote -->
-  <div class="tldr-block">
+  <p class="tldr-scope">Based only on this ticket’s description and comments.</p>
+
+  <div class="tldr-block" aria-live="polite">
     @if (isError()) {
       <div class="tldr-error">
         <p>{{ errorMessage() || 'The AI request failed. Please try again.' }}</p>
@@ -16,10 +16,12 @@
       </div>
     } @else if (isDone()) {
       <div class="tldr-markdown" [innerHTML]="tldrHtml() | safeHtml" (click)="onTldrClick($event)"></div>
-    } @else {
+    } @else if (isStreaming()) {
       <blockquote class="tldr-quote">
         {{ streamedText() }}<span class="caret"></span>
       </blockquote>
+    } @else {
+      <p class="tldr-empty">Open a ticket to generate its summary.</p>
     }
   </div>
 </div>

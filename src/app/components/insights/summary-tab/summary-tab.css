@@ -131,3 +131,16 @@
   padding: 4px 8px;
   cursor: pointer;
 }
+
+.tldr-scope {
+  margin: 10px 14px 0;
+  color: var(--muted);
+  font-size: 10.5px;
+  line-height: 1.4;
+}
+
+.tldr-empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12.5px;
+}
