@@ -1,14 +1,13 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { API_BASE as BASE } from '../core/api/api-base';
 import {
   ConnectUrlResponse,
   ConnectionAuthorizationResponse,
   ConnectionResult,
 } from '../models/integration.model';
 
-const BASE = `${environment.apiBaseUrl}/api/${environment.apiVersion}`;
 const STORAGE_KEY = 'connectedProviders';
 const CONNECTION_MESSAGE = 'backlogr:connection-result';
 

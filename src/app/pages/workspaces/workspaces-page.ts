@@ -1,55 +1,38 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
+import { switchMap, tap } from 'rxjs';
+import { errorMessage } from '../../core/utils/http-error';
+import { avOf, glyphOf, initialsOf } from '../../core/utils/avatar';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 import { WorkspaceService } from '../../services/workspace.service';
 import { Workspace, WorkspaceMember } from '../../models/workspace.model';
-
-function initialsOf(name: string | null, email: string): string {
-  if (!name) {
-    const local = email.split('@')[0];
-    const parts = local.split(/[._-]/);
-    return parts.length >= 2
-      ? (parts[0][0] + parts[1][0]).toUpperCase()
-      : local.slice(0, 2).toUpperCase();
-  }
-  const words = name.trim().split(/\s+/).filter(Boolean);
-  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
-  return (words[0][0] + words[words.length - 1][0]).toUpperCase();
-}
-
-function glyphOf(name: string): string {
-  let h = 0;
-  for (const c of name) h = ((h * 31) + c.charCodeAt(0)) | 0;
-  return ['g0', 'g1', 'g2', 'g3', 'g4', 'g5'][Math.abs(h) % 6];
-}
-
-function avOf(id: string): string {
-  let h = 0;
-  for (const c of id) h = ((h * 31) + c.charCodeAt(0)) | 0;
-  return ['a', 'b', 'c', 'd', 'e', 'f'][Math.abs(h) % 6];
-}
-
-function errorMessage(err: unknown): string {
-  if (err instanceof HttpErrorResponse && err.error?.message) return err.error.message;
-  return 'Something went wrong. Please try again.';
-}
-
-interface Toast {
-  type: 'ok' | 'err';
-  msg: string;
-}
+import { ButtonComponent } from '../../components/ui/common/button/button';
+import { ConfirmDialogComponent } from '../../components/ui/common/confirm-dialog/confirm-dialog';
+import { ModalShellComponent } from '../../components/ui/common/modal-shell/modal-shell';
+import { ToastComponent } from '../../components/ui/common/toast/toast';
 
 @Component({
   selector: 'app-workspaces-page',
-  imports: [FormsModule, RouterLink],
+  imports: [
+    FormsModule,
+    RouterLink,
+    ButtonComponent,
+    ConfirmDialogComponent,
+    ModalShellComponent,
+    ToastComponent,
+  ],
   templateUrl: './workspaces-page.html',
   styleUrl: './workspaces-page.css',
 })
 export class WorkspacesPageComponent implements OnInit {
   private authService = inject(AuthService);
   private workspaceService = inject(WorkspaceService);
+  private destroyRef = inject(DestroyRef);
+
+  protected toastService = inject(ToastService);
 
   currentUserId = signal('');
   currentUserEmail = signal('');
@@ -61,7 +44,6 @@ export class WorkspacesPageComponent implements OnInit {
   createOpen = signal(false);
   inviteOpen = signal(false);
   confirmRemove = signal<WorkspaceMember | null>(null);
-  toast = signal<Toast | null>(null);
 
   createName = signal('');
   createLoading = signal(false);
@@ -114,19 +96,22 @@ export class WorkspacesPageComponent implements OnInit {
   readonly createGlyph = computed(() => glyphOf(this.createName().trim() || 'new'));
 
   ngOnInit() {
-    this.authService.currentUser().subscribe(user => {
-      this.currentUserId.set(user.id);
-      this.currentUserEmail.set(user.email);
-      this.workspaceService.getUserWorkspaces(user.id).subscribe({
-        next: workspaces => {
-          this.workspaces.set(workspaces);
-          if (workspaces.length > 0) {
-            this.selectedId.set(workspaces[0].id);
-            this.loadMembers(workspaces[0].id);
-          }
-        },
-        error: err => this.showToast('err', errorMessage(err)),
-      });
+    this.authService.currentUser().pipe(
+      tap(user => {
+        this.currentUserId.set(user.id);
+        this.currentUserEmail.set(user.email);
+      }),
+      switchMap(user => this.workspaceService.getUserWorkspaces(user.id)),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+      next: workspaces => {
+        this.workspaces.set(workspaces);
+        if (workspaces.length > 0) {
+          this.selectedId.set(workspaces[0].id);
+          this.loadMembers(workspaces[0].id);
+        }
+      },
+      error: err => this.toastService.err(errorMessage(err)),
     });
   }
 
@@ -137,9 +122,9 @@ export class WorkspacesPageComponent implements OnInit {
   }
 
   private loadMembers(workspaceId: string) {
-    this.workspaceService.getWorkspaceMembers(workspaceId).subscribe({
+    this.workspaceService.getWorkspaceMembers(workspaceId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: m => this.members.set(m),
-      error: err => this.showToast('err', errorMessage(err)),
+      error: err => this.toastService.err(errorMessage(err)),
     });
   }
 
@@ -154,14 +139,14 @@ export class WorkspacesPageComponent implements OnInit {
     if (!name || this.createLoading()) return;
     this.createLoading.set(true);
     this.createError.set('');
-    this.workspaceService.createWorkspace({ name, ownerId: this.currentUserId() }).subscribe({
+    this.workspaceService.createWorkspace({ name, ownerId: this.currentUserId() }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: ws => {
         this.workspaces.update(list => [ws, ...list]);
         this.selectedId.set(ws.id);
         this.loadMembers(ws.id);
         this.createOpen.set(false);
         this.createLoading.set(false);
-        this.showToast('ok', `Workspace "${ws.name}" created — you've been added as owner`);
+        this.toastService.ok(`Workspace "${ws.name}" created — you've been added as owner`);
       },
       error: err => {
         this.createLoading.set(false);
@@ -182,12 +167,12 @@ export class WorkspacesPageComponent implements OnInit {
     this.inviteLoading.set(true);
     this.inviteError.set('');
     const workspaceId = this.selectedId();
-    this.workspaceService.inviteMember(workspaceId, email).subscribe({
+    this.workspaceService.inviteMember(workspaceId, email).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.inviteLoading.set(false);
         this.inviteOpen.set(false);
         this.loadMembers(workspaceId);
-        this.showToast('ok', `Invited ${email} to ${this.selectedWorkspace()?.name}`);
+        this.toastService.ok(`Invited ${email} to ${this.selectedWorkspace()?.name}`);
       },
       error: err => {
         this.inviteLoading.set(false);
@@ -206,26 +191,19 @@ export class WorkspacesPageComponent implements OnInit {
     this.removeLoading.set(true);
     const workspaceId = this.selectedId();
     const workspaceName = this.selectedWorkspace()?.name ?? '';
-    this.workspaceService.removeMember(workspaceId, member.userId).subscribe({
+    this.workspaceService.removeMember(workspaceId, member.userId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.members.update(members => members.filter(m => m.userId !== member.userId));
         this.confirmRemove.set(null);
         this.removeLoading.set(false);
-        this.showToast('ok', `Removed ${member.name ?? member.email} from ${workspaceName}`);
+        this.toastService.ok(`Removed ${member.name ?? member.email} from ${workspaceName}`);
       },
       error: err => {
         this.removeLoading.set(false);
-        this.showToast('err', errorMessage(err));
+        this.toastService.err(errorMessage(err));
         this.confirmRemove.set(null);
       },
     });
-  }
-
-  private toastTimer: ReturnType<typeof setTimeout> | null = null;
-  private showToast(type: 'ok' | 'err', msg: string) {
-    if (this.toastTimer) clearTimeout(this.toastTimer);
-    this.toast.set({ type, msg });
-    this.toastTimer = setTimeout(() => this.toast.set(null), 3200);
   }
 
   initialsOf = initialsOf;

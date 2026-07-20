@@ -1,6 +1,6 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
+import { errorMessage } from '../../core/utils/http-error';
 import { AuthService } from '../../services/auth.service';
 import { WorkspaceService } from '../../services/workspace.service';
 import { Ticket } from '../../models/workspace.model';
@@ -10,11 +10,6 @@ import { ToastComponent, Toast } from '../../components/ui/common/toast/toast';
 import { WtHeaderComponent } from './wt-header/wt-header';
 import { WtToolbarComponent } from './wt-toolbar/wt-toolbar';
 import { WtTableComponent } from './wt-table/wt-table';
-
-function errorMessage(err: unknown): string {
-  if (err instanceof HttpErrorResponse && err.error?.message) return err.error.message;
-  return 'Something went wrong. Please try again.';
-}
 
 @Component({
   selector: 'app-workspace-tickets-page',

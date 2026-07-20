@@ -547,45 +547,12 @@
   margin-bottom: 2px;
 }
 
-/* ── Modals ─────────────────────────────────────────────────────────────── */
-.modal-bg {
-  position: fixed;
-  inset: 0;
-  background: oklch(0.10 0.005 250 / .68);
-  backdrop-filter: blur(8px);
-  display: grid;
-  place-items: center;
-  z-index: 100;
-  animation: fade .25s ease-out;
-}
-
-@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-
-.modal {
-  width: 480px;
-  max-width: calc(100vw - 32px);
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, .5), 0 0 0 1px oklch(1 0 0 / .03) inset;
-  animation: rise .3s cubic-bezier(.2, .8, .2, 1);
-}
-
-.modal--sm { width: 400px; }
-
-@keyframes rise { from { transform: translateY(14px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
+/* ── Modals (backdrop/card come from app-modal-shell) ───────────────────── */
 .modal-head { padding: 18px 20px 6px; }
 .modal-head h3 { margin: 0; font-size: 15px; font-weight: 600; }
 .modal-head p { margin: 4px 0 0; color: var(--muted); font-size: 12.5px; }
 
 .modal-body { padding: 18px 20px 4px; }
-
-.modal-body--confirm { padding: 22px 20px 8px; }
-.modal-body--confirm h3 { margin: 0 0 6px; font-size: 15px; font-weight: 600; }
-.modal-body--confirm p { margin: 0; color: var(--text-2); font-size: 13px; line-height: 1.55; }
-.modal-body--confirm strong { color: var(--text); }
 
 .modal-foot {
   display: flex;
@@ -727,105 +694,4 @@
 
 .btn-invite:hover { background: oklch(0.85 0.155 75); }
 
-/* Confirm modal */
-.confirm-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: var(--danger-2);
-  color: var(--danger);
-  display: grid;
-  place-items: center;
-  margin-bottom: 14px;
-}
-
-/* Buttons */
-.btn {
-  height: 32px;
-  padding: 0 14px;
-  border-radius: 7px;
-  border: 1px solid var(--line);
-  background: var(--panel-2);
-  color: var(--text-2);
-  font: inherit;
-  font-size: 12px;
-  font-weight: 500;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: background .12s, color .12s;
-}
-
-.btn:hover { background: oklch(0.27 0.012 250); color: var(--text); }
-
-.btn--primary {
-  background: var(--accent);
-  color: oklch(0.18 0.01 80);
-  border-color: transparent;
-  font-weight: 600;
-}
-
-.btn--primary:hover { background: oklch(0.85 0.155 75); }
-
-.btn--danger {
-  color: var(--danger);
-  border-color: var(--danger-3);
-}
-
-.btn--danger:hover { background: var(--danger-2); }
-.btn:disabled { opacity: .5; cursor: default; }
-
-/* Spinner */
-.spin {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border: 1.5px solid currentColor;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin .8s linear infinite;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ── Toast ─────────────────────────────────────────────────────────────── */
-.toast {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--panel);
-  border: 1px solid var(--line);
-  padding: 10px 16px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 12px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, .4);
-  z-index: 200;
-  white-space: nowrap;
-  animation: toast-in .25s cubic-bezier(.2, .8, .2, 1);
-}
-
-@keyframes toast-in {
-  from { opacity: 0; transform: translate(-50%, 12px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
-}
-
-.toast-ico {
-  width: 18px;
-  height: 18px;
-  border-radius: 5px;
-  background: var(--ok-2);
-  color: var(--ok);
-  display: grid;
-  place-items: center;
-}
-
-.toast--err .toast-ico {
-  background: var(--danger-2);
-  color: var(--danger);
-}
+/* Buttons, spinner, toast, confirm styles now come from shared ui/common components. */

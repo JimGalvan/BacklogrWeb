@@ -1,10 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { API_BASE as BASE } from '../core/api/api-base';
 import { OnboardingState } from '../models/onboarding.model';
 
-const BASE = `${environment.apiBaseUrl}/api/${environment.apiVersion}`;
 
 @Injectable({ providedIn: 'root' })
 export class OnboardingService {

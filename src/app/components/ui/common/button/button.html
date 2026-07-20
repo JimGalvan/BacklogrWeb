@@ -1,0 +1,14 @@
+<button
+  class="btn"
+  [class.btn--primary]="variant() === 'primary'"
+  [class.btn--danger]="variant() === 'danger'"
+  [class.btn--text]="variant() === 'text'"
+  [type]="type()"
+  [disabled]="disabled() || loading()"
+  (click)="onClick()"
+>
+  @if (loading()) {
+    <span class="btn-spin" aria-hidden="true"></span>
+  }
+  <ng-content />
+</button>

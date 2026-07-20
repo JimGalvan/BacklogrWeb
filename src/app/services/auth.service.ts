@@ -2,10 +2,9 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap, finalize } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { API_BASE as BASE } from '../core/api/api-base';
 import { LoginRequest, RegisterRequest, AuthResponse, RegistrationResponse, UserProfile } from '../models/auth.model';
 
-const BASE = `${environment.apiBaseUrl}/api/${environment.apiVersion}`;
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

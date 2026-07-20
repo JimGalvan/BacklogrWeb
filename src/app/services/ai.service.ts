@@ -1,9 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
-import { environment } from '../../environments/environment';
+import { API_BASE as BASE } from '../core/api/api-base';
 
-const BASE = `${environment.apiBaseUrl}/api/${environment.apiVersion}`;
 
 @Injectable({ providedIn: 'root' })
 export class AiService {

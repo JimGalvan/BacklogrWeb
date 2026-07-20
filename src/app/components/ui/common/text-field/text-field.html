@@ -1,0 +1,18 @@
+<div class="field">
+  @if (label()) {
+    <label class="field-label" [for]="fieldId()">{{ label() }}</label>
+  }
+  <div class="input-wrap" [class.invalid]="invalid()">
+    <input
+      [id]="fieldId()"
+      [type]="type()"
+      class="field-input"
+      [placeholder]="placeholder()"
+      [attr.autocomplete]="autocomplete() || null"
+      [disabled]="disabled()"
+      [value]="value()"
+      (input)="value.set($any($event.target).value)"
+      (keyup.enter)="entered.emit()"
+    />
+  </div>
+</div>

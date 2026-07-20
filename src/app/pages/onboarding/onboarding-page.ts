@@ -1,7 +1,10 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
+import { errorMessage } from '../../core/utils/http-error';
 import { OnboardingState } from '../../models/onboarding.model';
+import { ButtonComponent } from '../../components/ui/common/button/button';
+import { TextFieldComponent } from '../../components/ui/common/text-field/text-field';
 import { Ticket } from '../../models/workspace.model';
 import { IntegrationService } from '../../services/integration.service';
 import { OnboardingService } from '../../services/onboarding.service';
@@ -9,6 +12,7 @@ import { WorkspaceService } from '../../services/workspace.service';
 
 @Component({
   selector: 'app-onboarding-page',
+  imports: [ButtonComponent, TextFieldComponent],
   templateUrl: './onboarding-page.html',
   styleUrl: './onboarding-page.css',
 })
@@ -86,7 +90,7 @@ export class OnboardingPageComponent implements OnInit {
           this.load();
         },
         error: error => this.actionError.set(
-          error?.error?.message ?? 'We could not add that source. Check the URL and provider access.'
+          errorMessage(error, 'We could not add that source. Check the URL and provider access.')
         ),
       });
   }
@@ -106,7 +110,7 @@ export class OnboardingPageComponent implements OnInit {
           this.ticketUrl.set('');
         },
         error: error => this.actionError.set(
-          error?.error?.message ?? 'We could not import that ticket. Use a GitHub Issue URL you granted Backlogr access to.'
+          errorMessage(error, 'We could not import that ticket. Use a GitHub Issue URL you granted Backlogr access to.')
         ),
       });
   }
