@@ -3,7 +3,7 @@
     <div>
       <div class="eyebrow">Indexed context</div>
       <h3 id="relevant-files-title">Relevant files</h3>
-      <p>Code excerpts matched to this ticket from its selected sources.</p>
+      <p>Files and excerpts reranked for this ticket from its selected sources.</p>
     </div>
 
     @if (result(); as data) {
@@ -68,7 +68,7 @@
                 <span class="file-path">{{ file.path }}</span>
                 <span class="file-meta">{{ file.sourceName }} · {{ revisionLabel(file.revision) }}</span>
               </span>
-              <span class="file-type">{{ fileType(file) }}</span>
+              <span class="file-type">{{ fileRole(file) }} · {{ fileType(file) }}</span>
               <span class="match-count">{{ file.matches.length }}</span>
               <app-icon class="chevron" name="arrow-right" [size]="14" />
             </summary>

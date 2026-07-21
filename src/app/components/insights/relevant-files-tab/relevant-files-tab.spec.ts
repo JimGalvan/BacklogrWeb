@@ -39,6 +39,7 @@ describe('RelevantFilesTabComponent', () => {
     expect(getRelevantFiles).toHaveBeenCalledOnce();
     expect(getRelevantFiles).toHaveBeenCalledWith('workspace-1', 'backlogr:demo#42', false);
     expect(fixture.nativeElement.textContent).toContain('src/main/java/TicketCore.java');
+    expect(fixture.nativeElement.textContent).toContain('Implementation · JAVA');
     expect(fixture.nativeElement.textContent).toContain('Lines 12–18');
     expect(fixture.nativeElement.querySelector('code')?.textContent).toBe('class TicketCore {}');
   });

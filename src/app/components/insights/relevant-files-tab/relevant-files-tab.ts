@@ -87,7 +87,7 @@ export class RelevantFilesTabComponent {
     } else {
       this.focusedPath.set(null);
       this.focusNotice.set(
-        'That file is not among the top relevant files for this ticket, so its excerpt is not shown here.',
+        'That file is not among the top 10 ranked files for this ticket, so its excerpt is not shown here.',
       );
     }
   }
@@ -96,6 +96,27 @@ export class RelevantFilesTabComponent {
     const name = file.path.split('/').pop() ?? file.path;
     const extension = name.includes('.') ? name.split('.').pop() : null;
     return extension?.toUpperCase() || 'FILE';
+  }
+
+  fileRole(file: RelevantFile): string {
+    const path = file.path.replaceAll('\\', '/').toLowerCase();
+    const segments = new Set(path.split('/'));
+    const filename = path.split('/').pop() ?? path;
+    if (filename.startsWith('readme') || filename.endsWith('.md') || segments.has('docs')) {
+      return 'Documentation';
+    }
+    if (['fixture', 'fixtures', 'mock', 'mocks', 'sample', 'samples'].some(part => segments.has(part))) {
+      return 'Fixture';
+    }
+    if (['test', 'tests', 'spec', 'specs', '__tests__'].some(part => segments.has(part))
+      || filename.includes('.spec.') || filename.includes('.test.')) {
+      return 'Test';
+    }
+    if (['dockerfile', 'makefile', 'procfile'].includes(filename)
+      || ['.properties', '.toml', '.yaml', '.yml'].some(extension => filename.endsWith(extension))) {
+      return 'Configuration';
+    }
+    return 'Implementation';
   }
 
   revisionLabel(revision: string | null): string {
