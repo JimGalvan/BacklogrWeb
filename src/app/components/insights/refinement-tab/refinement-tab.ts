@@ -77,13 +77,25 @@ export class RefinementTabComponent {
     }
   }
 
-  isNavigableSource(evidence: RefinementEvidence): boolean {
-    return evidence.type === 'SOURCE_FILE' && !!evidence.path;
+  isNavigable(evidence: RefinementEvidence): boolean {
+    return (evidence.type === 'SOURCE_FILE' && !!evidence.path)
+      || (evidence.type === 'COMMENT' && !!evidence.commentId);
   }
 
-  openInRelevantFiles(evidence: RefinementEvidence): void {
-    if (!this.isNavigableSource(evidence) || !evidence.path) return;
-    this.openSource.emit({ sourceId: evidence.sourceId, path: evidence.path });
+  openEvidence(evidence: RefinementEvidence): void {
+    if (evidence.type === 'SOURCE_FILE' && evidence.path) {
+      this.openSource.emit({ sourceId: evidence.sourceId, path: evidence.path });
+    } else if (evidence.type === 'COMMENT' && evidence.commentId) {
+      this.scrollToComment(evidence.commentId);
+    }
+  }
+
+  private scrollToComment(commentId: string): void {
+    const commentElement = document.getElementById(`comment-${commentId}`);
+    if (!commentElement) return;
+    commentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    commentElement.classList.add('comment-highlight');
+    setTimeout(() => commentElement.classList.remove('comment-highlight'), 3000);
   }
 
   proposedChangeLabel(finding: RefinementFinding): string {
