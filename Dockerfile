@@ -10,7 +10,5 @@ RUN npm run build -- --configuration production
 # Run stage
 FROM nginx:1.27-alpine
 COPY --from=build /app/dist/Backlogr/browser /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/templates/default.conf.template
-# nginx:alpine expands ${PORT} in templates/ at startup.
-ENV PORT=80
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80

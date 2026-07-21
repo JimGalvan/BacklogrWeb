@@ -83,7 +83,8 @@ npm test
 1. Set `apiBaseUrl` in `src/environments/environment.prod.ts` to your deployed backend
    URL and commit it — it is baked in at build time, not read at runtime.
 2. New service → deploy from this repository. Railway builds the included `Dockerfile`
-   (Angular build served by nginx) and injects `PORT` automatically.
+   and serves the Angular build with nginx on container port `80`. Generate the public
+   domain with target port `80`.
 3. On the **backend**, set `FRONTEND_URL` to this app's Railway URL so OAuth redirects
    land back here, and set `CORS_ORIGINS` to the same URL so the browser is allowed to
    call the API.
