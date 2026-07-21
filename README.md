@@ -54,7 +54,13 @@ The app is then on http://localhost:4200 and reloads on save.
 
 1. Open http://localhost:4200 — the sign-in screen loads.
 2. Sign in with GitHub. You are redirected back to the app with a workspace.
-3. Open a ticket, select **Refinement Findings**, and press **Run**.
+3. Add a repository Source and wait for its asynchronous indexing status to become
+   **Ready**. Indexing normally takes a short while and varies with repository size and
+   file mix.
+4. Open a ticket, attach the indexed Source as context, select **Refinement Findings**,
+   and press **Run**.
+5. Open **Relevant Files** and confirm that implementation files relevant to the ticket
+   appear before limited test, fixture, or documentation support.
 
 Expected output: Backlogr returns up to five atomic findings ordered by likely
 implementation impact. Each finding identifies a specific problem, its supporting
@@ -96,3 +102,8 @@ npm test
 `proxy.conf.json` forwards `/api` to the backend during `npm start`. It only takes effect
 if `apiBaseUrl` is changed to a relative path; with the default absolute URL, requests go
 straight to the backend and the proxy is bypassed.
+
+Repository indexing is asynchronous rather than immediate. The UI keeps the Source in
+an indexing state until its analysis context and Relevant Files catalog attempt is
+complete. The wait is generally modest for the MVP, but it depends on repository size,
+file mix, and the indexing-service limits.
