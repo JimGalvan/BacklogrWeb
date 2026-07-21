@@ -21,10 +21,6 @@ export class AiService {
     return this.streamEndpoint(`${BASE}/workspaces/${workspaceId}/ai/tickets/${encodeURIComponent(ticketKey)}/refinement`);
   }
 
-  streamTestCases(workspaceId: string, ticketKey: string): Observable<string> {
-    return this.streamEndpoint(`${BASE}/workspaces/${workspaceId}/ai/tickets/${encodeURIComponent(ticketKey)}/test-cases`);
-  }
-
   streamTldr(workspaceId: string, ticketKey: string): Observable<string> {
     return this.streamEndpoint(`${BASE}/workspaces/${workspaceId}/ai/tickets/${encodeURIComponent(ticketKey)}/tldr`);
   }

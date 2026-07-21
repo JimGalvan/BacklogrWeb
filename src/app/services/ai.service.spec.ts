@@ -24,7 +24,6 @@ describe('AiService', () => {
 
   it.each([
     ['refinement', (service: AiService) => service.streamRefinement('workspace-1', 'backlogr:demo#42')],
-    ['test-cases', (service: AiService) => service.streamTestCases('workspace-1', 'backlogr:demo#42')],
     ['tldr', (service: AiService) => service.streamTldr('workspace-1', 'backlogr:demo#42')],
   ])('encodes provider ticket keys and aborts cancelled %s streams', (suffix, request) => {
     const subscription = request(TestBed.inject(AiService)).subscribe();
@@ -43,15 +42,15 @@ describe('AiService', () => {
     // The backend writes `data:<token>` with no space after the colon.
     fetchMock.mockResolvedValue(streamResponse([
       'da',
-      'ta:{"testCases":\n',
-      '\ndata:[]}\n\n',
+      'ta:{"refinementAnalysis":\n',
+      '\ndata:{}}\n\n',
     ]));
 
     const values = await lastValueFrom(
-      TestBed.inject(AiService).streamTestCases('workspace-1', 'issue#1').pipe(toArray())
+      TestBed.inject(AiService).streamRefinement('workspace-1', 'issue#1').pipe(toArray())
     );
 
-    expect(values).toEqual(['{"testCases":', '{"testCases":[]}']);
+    expect(values).toEqual(['{"refinementAnalysis":', '{"refinementAnalysis":{}}']);
   });
 
   it('preserves leading spaces in tokens', async () => {

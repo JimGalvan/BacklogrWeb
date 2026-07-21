@@ -1,5 +1,4 @@
 import { RefinementAnalysis, RefinementAnalysisResponse, RefinementItem } from '../../models/refinement.model';
-import { TestCase, TestCasesResponse } from '../../models/test-cases.model';
 
 export class AiResponseFormatError extends Error {
   constructor(message = 'The AI returned an unreadable response. Please try again.') {
@@ -27,14 +26,6 @@ export function parseRefinementResponse(raw: string): RefinementAnalysis {
   return analysis as unknown as RefinementAnalysis;
 }
 
-export function parseTestCasesResponse(raw: string): TestCase[] {
-  const response = parseJson(raw) as Partial<TestCasesResponse>;
-  if (!Array.isArray(response.testCases) || !response.testCases.every(isTestCase)) {
-    throw new AiResponseFormatError();
-  }
-  return response.testCases;
-}
-
 export function parseTldrResponse(raw: string): string {
   const match = raw.match(/<tldr>([\s\S]*?)<\/tldr>/);
   if (!match || !match[1].trim()) throw new AiResponseFormatError();
@@ -59,12 +50,4 @@ function isRefinementItems(value: unknown): value is RefinementItem[] {
     && typeof item['title'] === 'string'
     && typeof item['description'] === 'string'
   );
-}
-
-function isTestCase(value: unknown): value is TestCase {
-  return isRecord(value)
-    && typeof value['id'] === 'string'
-    && typeof value['category'] === 'string'
-    && typeof value['scenario'] === 'string'
-    && typeof value['riskCovered'] === 'string';
 }

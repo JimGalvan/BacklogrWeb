@@ -1,7 +1,7 @@
 <div class="insights-panel">
   <app-panel-header
     [activeTab]="activeTab()"
-    (tabChange)="activeTab.set($event)"
+    (tabChange)="selectTab($event)"
   />
 
   <app-source-context-bar [workspaceId]="workspaceId()" [ticketKey]="ticketKey()" />
@@ -18,14 +18,15 @@
       [workspaceId]="workspaceId()"
       [ticketKey]="ticketKey()"
     />
-    <app-test-cases-tab
-      [hidden]="activeTab() !== 'tests'"
+    <app-relevant-files-tab
+      [hidden]="activeTab() !== 'files'"
       [workspaceId]="workspaceId()"
       [ticketKey]="ticketKey()"
     />
   </div>
 
   <app-panel-footer
+    [actionLabel]="footerActionLabel()"
     (reanalyze)="this.reanalyze()"
   />
 </div>

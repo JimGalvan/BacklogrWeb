@@ -1,0 +1,96 @@
+<section class="relevant-files" aria-labelledby="relevant-files-title">
+  <div class="section-heading">
+    <div>
+      <div class="eyebrow">Indexed context</div>
+      <h3 id="relevant-files-title">Relevant files</h3>
+      <p>Code excerpts matched to this ticket from its selected sources.</p>
+    </div>
+
+    @if (result(); as data) {
+      <span class="file-count">{{ data.files.length }} {{ data.files.length === 1 ? 'file' : 'files' }}</span>
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="state-card" aria-live="polite">
+      <span class="loading-mark"></span>
+      <div>
+        <strong>Finding relevant files</strong>
+        <p>Searching the indexed context selected for this ticket.</p>
+      </div>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="state-card error-state" role="alert">
+      <app-icon name="warning" [size]="18" />
+      <div>
+        <strong>Relevant files are unavailable</strong>
+        <p>{{ errorMessage() }}</p>
+      </div>
+      <button type="button" (click)="refresh()">Try again</button>
+    </div>
+  } @else if (result(); as data) {
+    @if (data.grounding === 'TICKET' && data.indexing) {
+      <div class="state-card" aria-live="polite">
+        <span class="loading-mark"></span>
+        <div>
+          <strong>Source is still indexing</strong>
+          <p>The selected code source is being indexed. Refresh once it is ready.</p>
+        </div>
+      </div>
+    } @else if (data.grounding === 'TICKET') {
+      <div class="state-card">
+        <app-icon name="link" [size]="18" />
+        <div>
+          <strong>No ready code source selected</strong>
+          <p>Choose an indexed code source above to find files relevant to this ticket.</p>
+        </div>
+      </div>
+    } @else if (data.files.length === 0) {
+      <div class="state-card">
+        <app-icon name="search" [size]="18" />
+        <div>
+          <strong>No relevant indexed files found</strong>
+          <p>The selected sources are ready, but no excerpts matched this ticket.</p>
+        </div>
+      </div>
+    } @else {
+      <div class="file-list">
+        @for (file of data.files; track file.sourceId + ':' + file.revision + ':' + file.path; let index = $index) {
+          <details class="file-card" [open]="index === 0">
+            <summary>
+              <span class="path-rail" aria-hidden="true"></span>
+              <span class="file-main">
+                <span class="file-path">{{ file.path }}</span>
+                <span class="file-meta">{{ file.sourceName }} · {{ revisionLabel(file.revision) }}</span>
+              </span>
+              <span class="file-type">{{ fileType(file) }}</span>
+              <span class="match-count">{{ file.matches.length }}</span>
+              <app-icon class="chevron" name="arrow-right" [size]="14" />
+            </summary>
+
+            <div class="matches">
+              @for (match of file.matches; track match.startLine + ':' + match.endLine + ':' + match.excerpt) {
+                <article class="match">
+                  <div class="match-label">{{ lineLabel(match.startLine, match.endLine) }}</div>
+                  <pre><code>{{ match.excerpt }}</code></pre>
+                </article>
+              }
+            </div>
+          </details>
+        }
+      </div>
+    }
+
+    @for (warning of data.warnings; track warning) {
+      <p class="warning"><app-icon name="warning" [size]="13" /> {{ warning }}</p>
+    }
+  } @else {
+    <div class="state-card">
+      <app-icon name="document" [size]="18" />
+      <div>
+        <strong>Explore relevant code</strong>
+        <p>Open this tab to find the indexed files that best match the ticket.</p>
+      </div>
+    </div>
+  }
+</section>

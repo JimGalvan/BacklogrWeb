@@ -1,4 +1,4 @@
-import { Component, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { IconComponent } from '../../ui/common/icon/icon';
 
 @Component({
@@ -8,5 +8,6 @@ import { IconComponent } from '../../ui/common/icon/icon';
   styleUrl: './panel-footer.css',
 })
 export class PanelFooterComponent {
+  actionLabel = input('Re-analyze');
   reanalyze = output<void>();
 }

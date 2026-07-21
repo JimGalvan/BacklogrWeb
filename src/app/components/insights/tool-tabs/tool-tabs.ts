@@ -1,4 +1,4 @@
-import { Component, input, output, signal } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 export interface ToolTab {
   id: string;
@@ -19,7 +19,7 @@ export class ToolTabsComponent {
   tabs: ToolTab[] = [
     { id: 'summary', label: 'Summary' },
     { id: 'refinement', label: 'Refinement Analysis' },
-    { id: 'tests', label: 'Test cases' },
+    { id: 'files', label: 'Relevant Files' },
     { id: 'hypotheses', label: 'Hypotheses', disabled: true },
     { id: 'risk', label: 'Risk', disabled: true },
     { id: 'similar', label: 'Similar', disabled: true },

@@ -1,0 +1,260 @@
+:host {
+  display: block;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.relevant-files {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 2px 2px 4px;
+}
+
+.eyebrow,
+.file-meta,
+.file-type,
+.match-label,
+.file-count {
+  font-family: 'Geist Mono', monospace;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 9px;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+h3 {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.section-heading p,
+.state-card p {
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.5;
+  margin: 3px 0 0;
+}
+
+.file-count {
+  flex-shrink: 0;
+  color: var(--muted);
+  font-size: 9.5px;
+  padding: 4px 7px;
+  border: 1px solid var(--line-soft);
+  border-radius: 5px;
+}
+
+.state-card {
+  min-height: 84px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  background: var(--panel);
+  border: 1px solid var(--line-soft);
+  border-radius: 9px;
+  padding: 16px;
+}
+
+.state-card strong {
+  color: var(--text-2);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.state-card button {
+  margin-left: auto;
+  flex-shrink: 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel-2);
+  color: var(--text-2);
+  font: inherit;
+  font-size: 11px;
+  padding: 5px 9px;
+  cursor: pointer;
+}
+
+.state-card button:hover,
+.state-card button:focus-visible {
+  border-color: var(--accent-3);
+  color: var(--text);
+}
+
+.error-state {
+  color: var(--danger);
+  border-color: var(--danger-3);
+}
+
+.loading-mark {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: rotate .8s linear infinite;
+}
+
+@keyframes rotate {
+  to { transform: rotate(360deg); }
+}
+
+.file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.file-card {
+  background: var(--panel);
+  border: 1px solid var(--line-soft);
+  border-radius: 9px;
+  overflow: hidden;
+}
+
+.file-card[open] {
+  border-color: var(--line);
+}
+
+.file-card summary {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 58px;
+  padding: 10px 12px 10px 16px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.file-card summary::-webkit-details-marker {
+  display: none;
+}
+
+.file-card summary:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.path-rail {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--accent);
+  opacity: .75;
+}
+
+.file-main {
+  min-width: 0;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.file-path {
+  color: var(--text);
+  font-size: 12.5px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.file-meta {
+  color: var(--muted);
+  font-size: 9.5px;
+}
+
+.file-type {
+  color: var(--accent);
+  background: var(--accent-2);
+  border: 1px solid var(--accent-3);
+  border-radius: 4px;
+  font-size: 8.5px;
+  padding: 2px 5px;
+}
+
+.match-count {
+  min-width: 19px;
+  height: 19px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  background: var(--panel-2);
+  border-radius: 5px;
+  font-size: 9.5px;
+}
+
+.chevron {
+  color: var(--muted);
+  transform: rotate(90deg);
+  transition: transform 150ms ease;
+}
+
+.file-card[open] .chevron {
+  transform: rotate(-90deg);
+}
+
+.matches {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 12px 12px 16px;
+}
+
+.match-label {
+  color: var(--muted);
+  font-size: 9px;
+  margin-bottom: 4px;
+}
+
+pre {
+  max-height: 250px;
+  overflow: auto;
+  margin: 0;
+  padding: 11px 12px;
+  background: var(--bg);
+  border: 1px solid var(--line-soft);
+  border-radius: 6px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+code {
+  color: var(--text-2);
+  font-family: 'Geist Mono', monospace;
+  font-size: 10.5px;
+  line-height: 1.55;
+}
+
+.warning {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--warn);
+  font-size: 10.5px;
+  margin: 0 2px;
+}
+
+@media (max-width: 620px) {
+  .file-type,
+  .match-count {
+    display: none;
+  }
+}
