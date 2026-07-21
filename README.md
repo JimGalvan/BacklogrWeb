@@ -1,8 +1,8 @@
 # Backlogr Frontend
 
-Angular single-page app for Backlogr. It handles sign-in, workspaces, tickets, and the
-insights panel where AI analyses (TL;DR, test cases, refinement) stream in token by
-token.
+Angular single-page app for Backlogr. It handles sign-in, provider connections,
+workspaces, Sources, imported tickets, and the ticket insights used to refine work before
+implementation: Summary, Refinement Findings, and Relevant Files.
 
 ## How it fits together
 
@@ -54,12 +54,13 @@ The app is then on http://localhost:4200 and reloads on save.
 
 1. Open http://localhost:4200 — the sign-in screen loads.
 2. Sign in with GitHub. You are redirected back to the app with a workspace.
-3. Open a ticket, then the **Insights** panel, choose **Refinement**, and press **Run**.
+3. Open a ticket, select **Refinement Findings**, and press **Run**.
 
-Expected output: the analysis streams in progressively and settles into four sections —
-Open Questions, Scope Clarifications, Risks & Edge Cases, and Acceptance Criteria Gaps.
-If a repository is connected and finished indexing, the findings reference actual files
-from it.
+Expected output: Backlogr returns up to five atomic findings ordered by likely
+implementation impact. Each finding identifies a specific problem, its supporting
+evidence, the decision the team still needs to make, a suggested clarification, and a
+verification rule. If an indexed Source is selected as ticket context, code-grounded
+findings reference validated files that can be inspected under **Relevant Files**.
 
 If insights fail while the rest of the app works, the backend is reachable but its AI
 provider is not — check `OPENAI_API_KEY` on the backend.
