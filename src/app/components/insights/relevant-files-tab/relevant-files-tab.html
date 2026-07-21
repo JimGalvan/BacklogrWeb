@@ -68,10 +68,21 @@
               <app-icon class="chevron" name="arrow-right" [size]="14" />
             </summary>
 
+            @if (file.webUrl) {
+              <a class="file-open" [href]="file.webUrl" target="_blank" rel="noopener noreferrer">
+                <app-icon name="link" [size]="13" /> View file at this revision
+              </a>
+            }
+
             <div class="matches">
               @for (match of file.matches; track match.startLine + ':' + match.endLine + ':' + match.excerpt) {
                 <article class="match">
-                  <div class="match-label">{{ lineLabel(match.startLine, match.endLine) }}</div>
+                  <div class="match-label">
+                    <span>{{ lineLabel(match.startLine, match.endLine) }}</span>
+                    @if (match.webUrl) {
+                      <a [href]="match.webUrl" target="_blank" rel="noopener noreferrer">Open lines</a>
+                    }
+                  </div>
                   <pre><code>{{ match.excerpt }}</code></pre>
                 </article>
               }

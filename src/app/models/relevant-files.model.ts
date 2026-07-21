@@ -4,6 +4,7 @@ export interface RelevantFileMatch {
   startLine: number | null;
   endLine: number | null;
   excerpt: string;
+  webUrl: string | null;
 }
 
 export interface RelevantFile {
@@ -11,6 +12,7 @@ export interface RelevantFile {
   sourceName: string;
   revision: string | null;
   path: string;
+  webUrl: string | null;
   matches: RelevantFileMatch[];
 }
 
