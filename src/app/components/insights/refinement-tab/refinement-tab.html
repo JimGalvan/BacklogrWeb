@@ -1,23 +1,112 @@
-<app-ai-stream-card
-  title="Refinement Analysis"
-  idleText="Run a refinement analysis to surface open questions, scope gaps, risks, and missing acceptance criteria."
-  runLabel="Run Refinement Analysis"
-  [isStreaming]="stream.isStreaming()"
-  [isDone]="stream.isDone()"
-  [isError]="stream.isError()"
-  [errorMessage]="stream.errorMessage()"
-  [hasContent]="!!stream.data()"
-  (run)="run()"
->
-  <app-icon idleIcon name="search" [size]="18" [strokeWidth]="1.5" />
-  <app-icon headIcon name="search" [size]="11" />
+<section class="findings" aria-labelledby="findings-title">
+  @if (!loading() && !result() && !errorMessage()) {
+    <div class="idle-state">
+      <div class="idle-icon"><app-icon name="search" [size]="18" [strokeWidth]="1.5" /></div>
+      <h3 id="findings-title">Find decisions that need attention</h3>
+      <p>Review the ticket and selected source context for unresolved behavior, scope, and testability gaps.</p>
+      <button type="button" class="primary-action" (click)="run()">
+        <app-icon name="play" [size]="12" />
+        Find refinement gaps
+      </button>
+    </div>
+  } @else if (loading()) {
+    <div class="status-card" aria-live="polite">
+      <span class="loading-mark"></span>
+      <div>
+        <strong>Reviewing the ticket</strong>
+        <p>Checking the supplied evidence and removing unsupported findings.</p>
+      </div>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="status-card error-state" role="alert">
+      <app-icon name="warning" [size]="18" />
+      <div>
+        <strong>Findings are unavailable</strong>
+        <p>{{ errorMessage() }}</p>
+      </div>
+      <button type="button" class="quiet-action" (click)="run()">Try again</button>
+    </div>
+  } @else if (result(); as data) {
+    <header class="result-heading">
+      <div>
+        <div class="eyebrow">Refinement findings</div>
+        <h3 id="findings-title">{{ data.summary }}</h3>
+      </div>
+      <span class="grounding" [class.code-grounded]="data.grounding === 'TICKET_AND_CODE'">
+        <span class="grounding-dot"></span>
+        {{ groundingLabel(data) }}
+      </span>
+    </header>
 
-  @if (stream.data(); as data) {
-    @if (data.summary) {
-      <p class="refinement-summary">{{ data.summary }}</p>
-    }
-    @for (section of sections; track section.key) {
-      <app-refinement-section [title]="section.title" [items]="data[section.key]" />
+    @if (data.findings.length === 0) {
+      <div class="status-card empty-state">
+        <app-icon name="check" [size]="18" />
+        <div>
+          <strong>No significant refinement gaps found</strong>
+          <p>The supplied ticket and selected context do not support a material unresolved finding.</p>
+        </div>
+      </div>
+    } @else {
+      <div class="finding-list">
+        @for (finding of data.findings; track finding.id) {
+          <article class="finding-card">
+            <div class="finding-head">
+              <span class="finding-id">{{ finding.id }}</span>
+              <span class="category">{{ categoryLabel(finding.category) }}</span>
+            </div>
+            <h4>{{ finding.title }}</h4>
+            <p class="problem">{{ finding.problem }}</p>
+
+            <div class="decision-trace">
+              <section class="trace-step evidence-step">
+                <span class="trace-node" aria-hidden="true"></span>
+                <div class="trace-label">Evidence</div>
+                <div class="evidence-list">
+                  @for (evidence of finding.evidence; track evidence.type + ':' + evidence.label + ':' + evidence.excerpt) {
+                    <div class="evidence-item"
+                         [attr.data-source-id]="evidence.sourceId"
+                         [attr.data-source-path]="evidence.path">
+                      <div class="evidence-head">
+                        <span>{{ evidence.label }}</span>
+                        @if (evidenceReference(evidence); as reference) {
+                          <code>{{ reference }}</code>
+                        }
+                      </div>
+                      <p>{{ evidence.excerpt }}</p>
+                    </div>
+                  }
+                </div>
+              </section>
+
+              <section class="trace-step">
+                <span class="trace-node" aria-hidden="true"></span>
+                <div class="trace-label">Decision needed</div>
+                <p>{{ finding.decisionNeeded }}</p>
+              </section>
+
+              <section class="trace-step proposed-step">
+                <span class="trace-node" aria-hidden="true"></span>
+                <div class="trace-row">
+                  <div>
+                    <div class="trace-label">Proposed ticket change</div>
+                    <span class="change-type">{{ proposedChangeLabel(finding) }}</span>
+                  </div>
+                  <button type="button" class="copy-action" (click)="copyProposedChange(finding)">
+                    <app-icon [name]="copiedFindingId() === finding.id ? 'check' : 'copy'" [size]="11" />
+                    {{ copiedFindingId() === finding.id ? 'Copied' : 'Copy proposed change' }}
+                  </button>
+                </div>
+                <p class="proposed-copy">{{ finding.recommendedChange.text }}</p>
+              </section>
+            </div>
+
+            <footer class="verification">
+              <span>Done when</span>
+              <p>{{ finding.verificationRule }}</p>
+            </footer>
+          </article>
+        }
+      </div>
     }
   }
-</app-ai-stream-card>
+</section>

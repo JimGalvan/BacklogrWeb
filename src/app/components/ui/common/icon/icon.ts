@@ -15,7 +15,8 @@ export type IconName =
   | 'warning'
   | 'check'
   | 'link'
-  | 'arrow-right';
+  | 'arrow-right'
+  | 'copy';
 
 @Component({
   selector: 'app-icon',

@@ -23,7 +23,6 @@ describe('AiService', () => {
   afterEach(() => vi.unstubAllGlobals());
 
   it.each([
-    ['refinement', (service: AiService) => service.streamRefinement('workspace-1', 'backlogr:demo#42')],
     ['tldr', (service: AiService) => service.streamTldr('workspace-1', 'backlogr:demo#42')],
   ])('encodes provider ticket keys and aborts cancelled %s streams', (suffix, request) => {
     const subscription = request(TestBed.inject(AiService)).subscribe();
@@ -42,15 +41,15 @@ describe('AiService', () => {
     // The backend writes `data:<token>` with no space after the colon.
     fetchMock.mockResolvedValue(streamResponse([
       'da',
-      'ta:{"refinementAnalysis":\n',
-      '\ndata:{}}\n\n',
+      'ta:<tldr>Summary\n',
+      '\ndata:</tldr>\n\n',
     ]));
 
     const values = await lastValueFrom(
-      TestBed.inject(AiService).streamRefinement('workspace-1', 'issue#1').pipe(toArray())
+      TestBed.inject(AiService).streamTldr('workspace-1', 'issue#1').pipe(toArray())
     );
 
-    expect(values).toEqual(['{"refinementAnalysis":', '{"refinementAnalysis":{}}']);
+    expect(values).toEqual(['<tldr>Summary', '<tldr>Summary</tldr>']);
   });
 
   it('preserves leading spaces in tokens', async () => {

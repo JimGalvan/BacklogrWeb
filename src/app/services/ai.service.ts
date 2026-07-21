@@ -17,10 +17,6 @@ const DEFAULT_FALLBACK_MESSAGE = 'The AI request failed. Please try again.';
 export class AiService {
   private authService = inject(AuthService);
 
-  streamRefinement(workspaceId: string, ticketKey: string): Observable<string> {
-    return this.streamEndpoint(`${BASE}/workspaces/${workspaceId}/ai/tickets/${encodeURIComponent(ticketKey)}/refinement`);
-  }
-
   streamTldr(workspaceId: string, ticketKey: string): Observable<string> {
     return this.streamEndpoint(`${BASE}/workspaces/${workspaceId}/ai/tickets/${encodeURIComponent(ticketKey)}/tldr`);
   }
