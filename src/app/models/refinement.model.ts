@@ -25,6 +25,7 @@ export interface RefinementEvidence {
   excerpt: string;
   commentId: string | null;
   imageNumber: number | null;
+  imageUrl: string | null;
   sourceId: string | null;
   sourceName: string | null;
   path: string | null;

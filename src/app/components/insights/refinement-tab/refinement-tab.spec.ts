@@ -18,6 +18,7 @@ const response: RefinementFindingsResponse = {
       excerpt: 'The current endpoint returns the legacy response.',
       commentId: null,
       imageNumber: null,
+      imageUrl: null,
       sourceId: 'source-1',
       sourceName: 'backlogr-api',
       path: 'src/TicketController.java',

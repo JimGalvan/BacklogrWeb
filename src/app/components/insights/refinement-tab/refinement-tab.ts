@@ -79,7 +79,8 @@ export class RefinementTabComponent {
 
   isNavigable(evidence: RefinementEvidence): boolean {
     return (evidence.type === 'SOURCE_FILE' && !!evidence.path)
-      || (evidence.type === 'COMMENT' && !!evidence.commentId);
+      || (evidence.type === 'COMMENT' && !!evidence.commentId)
+      || (evidence.type === 'IMAGE' && !!evidence.imageUrl);
   }
 
   openEvidence(evidence: RefinementEvidence): void {
@@ -87,6 +88,8 @@ export class RefinementTabComponent {
       this.openSource.emit({ sourceId: evidence.sourceId, path: evidence.path });
     } else if (evidence.type === 'COMMENT' && evidence.commentId) {
       this.scrollToComment(evidence.commentId);
+    } else if (evidence.type === 'IMAGE' && evidence.imageUrl) {
+      this.scrollToImage(evidence.imageUrl);
     }
   }
 
@@ -96,6 +99,22 @@ export class RefinementTabComponent {
     commentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     commentElement.classList.add('comment-highlight');
     setTimeout(() => commentElement.classList.remove('comment-highlight'), 3000);
+  }
+
+  private scrollToImage(imageUrl: string): void {
+    const image = Array.from(document.querySelectorAll('img'))
+      .find(candidate => candidate.src === imageUrl);
+    if (!image) {
+      // The inline image isn't in the DOM (sanitized/proxied src, collapsed comment).
+      // Fall back to opening the original image so the click always does something.
+      window.open(imageUrl, '_blank', 'noopener');
+      return;
+    }
+    image.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const previousOutline = image.style.outline;
+    image.style.outline = '2px solid var(--accent)';
+    image.style.outlineOffset = '2px';
+    setTimeout(() => { image.style.outline = previousOutline; }, 3000);
   }
 
   proposedChangeLabel(finding: RefinementFinding): string {
