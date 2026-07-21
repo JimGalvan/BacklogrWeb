@@ -27,17 +27,21 @@ export class RelevantFilesTabComponent {
 
   load(): void {
     if (this.loaded) return;
-    this.refresh();
+    this.request(false);
   }
 
   refresh(): void {
+    this.request(true);
+  }
+
+  private request(refresh: boolean): void {
     const workspaceId = this.workspaceId();
     const ticketKey = this.ticketKey();
     if (!workspaceId || !ticketKey || this.loading()) return;
 
     this.loading.set(true);
     this.errorMessage.set('');
-    this.relevantFilesService.getRelevantFiles(workspaceId, ticketKey)
+    this.relevantFilesService.getRelevantFiles(workspaceId, ticketKey, refresh)
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: result => {

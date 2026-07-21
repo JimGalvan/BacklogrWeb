@@ -3,7 +3,6 @@ import { Component, input, output } from '@angular/core';
 export interface ToolTab {
   id: string;
   label: string;
-  disabled?: boolean;
 }
 
 @Component({
@@ -20,14 +19,9 @@ export class ToolTabsComponent {
     { id: 'summary', label: 'Summary' },
     { id: 'refinement', label: 'Refinement Findings' },
     { id: 'files', label: 'Relevant Files' },
-    { id: 'hypotheses', label: 'Hypotheses', disabled: true },
-    { id: 'risk', label: 'Risk', disabled: true },
-    { id: 'similar', label: 'Similar', disabled: true },
   ];
 
   selectTab(tab: ToolTab) {
-    if (!tab.disabled) {
-      this.tabChange.emit(tab.id);
-    }
+    this.tabChange.emit(tab.id);
   }
 }

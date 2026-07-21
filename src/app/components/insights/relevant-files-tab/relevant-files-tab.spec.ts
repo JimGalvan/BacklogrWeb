@@ -37,7 +37,7 @@ describe('RelevantFilesTabComponent', () => {
     fixture.detectChanges();
 
     expect(getRelevantFiles).toHaveBeenCalledOnce();
-    expect(getRelevantFiles).toHaveBeenCalledWith('workspace-1', 'backlogr:demo#42');
+    expect(getRelevantFiles).toHaveBeenCalledWith('workspace-1', 'backlogr:demo#42', false);
     expect(fixture.nativeElement.textContent).toContain('src/main/java/TicketCore.java');
     expect(fixture.nativeElement.textContent).toContain('Lines 12–18');
     expect(fixture.nativeElement.querySelector('code')?.textContent).toBe('class TicketCore {}');
@@ -50,6 +50,7 @@ describe('RelevantFilesTabComponent', () => {
     fixture.componentInstance.refresh();
 
     expect(getRelevantFiles).toHaveBeenCalledTimes(2);
+    expect(getRelevantFiles).toHaveBeenLastCalledWith('workspace-1', 'backlogr:demo#42', true);
   });
 
   function createComponent() {

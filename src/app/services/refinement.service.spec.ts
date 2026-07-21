@@ -29,4 +29,15 @@ describe('RefinementService', () => {
     expect(request.request.method).toBe('GET');
     request.flush({ summary: 'Ready.', grounding: 'TICKET', findings: [] });
   });
+
+  it('requests a fresh analysis only when explicitly requested', () => {
+    service.getFindings('workspace-1', 'ticket-42', true).subscribe();
+
+    const request = http.expectOne(request =>
+      request.url === `${BASE}/workspaces/workspace-1/ai/tickets/ticket-42/refinement`
+        && request.params.get('refresh') === 'true',
+    );
+    expect(request.request.method).toBe('GET');
+    request.flush({ summary: 'Fresh.', grounding: 'TICKET', findings: [] });
+  });
 });

@@ -34,7 +34,7 @@ describe('SummaryTabComponent', () => {
     expect(aiService.streamTldr).not.toHaveBeenCalled();
     expect(fixture.nativeElement.querySelector('.ai-run-btn')?.textContent).toContain('Generate TL;DR');
     (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.ai-run-btn')?.click();
-    expect(aiService.streamTldr).toHaveBeenCalledWith('workspace-1', 'owner:repo#42');
+    expect(aiService.streamTldr).toHaveBeenCalledWith('workspace-1', 'owner:repo#42', false);
     streams[0].next('<tldr><p>Implement the import.</p><ul><li data-comment-id="9001">Keep it read-only.</li></ul></tldr>');
     streams[0].complete();
     fixture.detectChanges();
@@ -54,6 +54,18 @@ describe('SummaryTabComponent', () => {
 
     expect(streams[0].observed).toBe(false);
     expect(streams[1].observed).toBe(true);
+    expect(aiService.streamTldr).toHaveBeenLastCalledWith('workspace-1', 'owner:repo#42', false);
+  });
+
+  it('bypasses cached output when a completed TLDR is re-analyzed', () => {
+    const fixture = createComponent();
+    fixture.componentInstance.reanalyze();
+    streams[0].next('<tldr><p>Complete.</p></tldr>');
+    streams[0].complete();
+
+    fixture.componentInstance.reanalyze();
+
+    expect(aiService.streamTldr).toHaveBeenLastCalledWith('workspace-1', 'owner:repo#42', true);
   });
 
   it('shows malformed model output as an actionable error', () => {

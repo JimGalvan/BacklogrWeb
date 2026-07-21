@@ -29,4 +29,15 @@ describe('RelevantFilesService', () => {
     expect(request.request.method).toBe('GET');
     request.flush({ grounding: 'TICKET_AND_CODE', indexing: false, files: [], warnings: [] });
   });
+
+  it('bypasses the cache when relevance is explicitly refreshed', () => {
+    service.getRelevantFiles('workspace-1', 'ticket-42', true).subscribe();
+
+    const request = http.expectOne(request =>
+      request.url === `${BASE}/workspaces/workspace-1/tickets/ticket-42/context/relevant-files`
+        && request.params.get('refresh') === 'true',
+    );
+    expect(request.request.method).toBe('GET');
+    request.flush({ grounding: 'TICKET_AND_CODE', indexing: false, files: [], warnings: [] });
+  });
 });

@@ -61,6 +61,16 @@ describe('RefinementTabComponent', () => {
     expect(text).toContain('src/TicketController.java');
     expect(text).toContain('Decide whether the old response remains compatible.');
     expect(text).toContain('The expected response compatibility is explicit.');
+    expect(getFindings).toHaveBeenCalledWith('workspace-1', 'backlogr:demo#42', false);
+  });
+
+  it('bypasses cached findings when an existing result is re-analyzed', () => {
+    const fixture = createComponent();
+
+    fixture.componentInstance.run();
+    fixture.componentInstance.run();
+
+    expect(getFindings).toHaveBeenLastCalledWith('workspace-1', 'backlogr:demo#42', true);
   });
 
   it('copies only the proposed ticket change', async () => {

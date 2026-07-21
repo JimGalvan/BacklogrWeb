@@ -94,6 +94,7 @@ export class SummaryTabComponent {
     const ticketKey = this.ticketKey();
     if (!workspaceId || !ticketKey) return;
 
+    const refresh = this.isDone() && !this.isError();
     const run = ++this.activeRun;
     this.cancel$.next();
     this.streamedText.set('');
@@ -102,7 +103,7 @@ export class SummaryTabComponent {
     this.isError.set(false);
     this.errorMessage.set(null);
 
-    this.aiService.streamTldr(workspaceId, ticketKey)
+    this.aiService.streamTldr(workspaceId, ticketKey, refresh)
       .pipe(takeUntil(this.cancel$), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: text => {

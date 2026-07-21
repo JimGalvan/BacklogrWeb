@@ -39,7 +39,7 @@ export class RefinementTabComponent {
   readonly errorMessage = signal('');
   readonly copiedFindingId = signal<string | null>(null);
 
-  run(): void {
+  run(forceRefresh = this.result() !== null): void {
     const workspaceId = this.workspaceId();
     const ticketKey = this.ticketKey();
     if (!workspaceId || !ticketKey || this.loading()) return;
@@ -47,7 +47,7 @@ export class RefinementTabComponent {
     this.loading.set(true);
     this.errorMessage.set('');
     this.copiedFindingId.set(null);
-    this.refinementService.getFindings(workspaceId, ticketKey)
+    this.refinementService.getFindings(workspaceId, ticketKey, forceRefresh)
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: response => this.result.set(response),

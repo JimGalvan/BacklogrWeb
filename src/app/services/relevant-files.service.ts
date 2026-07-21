@@ -8,9 +8,14 @@ import { RelevantFilesResponse } from '../models/relevant-files.model';
 export class RelevantFilesService {
   private http = inject(HttpClient);
 
-  getRelevantFiles(workspaceId: string, ticketKey: string): Observable<RelevantFilesResponse> {
+  getRelevantFiles(
+    workspaceId: string,
+    ticketKey: string,
+    refresh = false,
+  ): Observable<RelevantFilesResponse> {
     return this.http.get<RelevantFilesResponse>(
       `${BASE}/workspaces/${workspaceId}/tickets/${encodeURIComponent(ticketKey)}/context/relevant-files`,
+      { params: refresh ? { refresh: 'true' } : {} },
     );
   }
 }

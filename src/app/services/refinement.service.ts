@@ -8,9 +8,14 @@ import { RefinementFindingsResponse } from '../models/refinement.model';
 export class RefinementService {
   private http = inject(HttpClient);
 
-  getFindings(workspaceId: string, ticketKey: string): Observable<RefinementFindingsResponse> {
+  getFindings(
+    workspaceId: string,
+    ticketKey: string,
+    refresh = false,
+  ): Observable<RefinementFindingsResponse> {
     return this.http.get<RefinementFindingsResponse>(
       `${BASE}/workspaces/${workspaceId}/ai/tickets/${encodeURIComponent(ticketKey)}/refinement`,
+      { params: refresh ? { refresh: 'true' } : {} },
     );
   }
 }

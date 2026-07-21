@@ -52,6 +52,17 @@ describe('AiService', () => {
     expect(values).toEqual(['<tldr>Summary', '<tldr>Summary</tldr>']);
   });
 
+  it('adds an explicit refresh query when re-analyzing', () => {
+    const subscription = TestBed.inject(AiService)
+      .streamTldr('workspace-1', 'issue#1', true)
+      .subscribe();
+
+    expect(fetchMock.mock.calls[0][0]).toBe(
+      `${BASE}/workspaces/workspace-1/ai/tickets/issue%231/tldr?refresh=true`,
+    );
+    subscription.unsubscribe();
+  });
+
   it('preserves leading spaces in tokens', async () => {
     // Models emit leading-space tokens (" Alt", " duplication"); the space sits
     // right after `data:` and must survive, or adjacent words run together.
