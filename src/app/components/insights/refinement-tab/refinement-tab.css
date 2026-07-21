@@ -108,6 +108,28 @@
   font-family: 'Geist Mono', monospace;
 }
 
+.evidence-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 6px;
+  color: var(--accent);
+  background: var(--accent-2);
+  border: 1px solid var(--accent-3);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+
+.evidence-link:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.evidence-link code {
+  color: inherit;
+}
+
 .eyebrow {
   color: var(--accent);
   font-size: 9px;

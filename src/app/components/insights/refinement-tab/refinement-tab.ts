@@ -1,4 +1,4 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { finalize } from 'rxjs';
 import {
   RefinementCategory,
@@ -31,6 +31,8 @@ export class RefinementTabComponent {
   ticketKey = input<string>('');
 
   private refinementService = inject(RefinementService);
+
+  readonly openSource = output<{ sourceId: string | null; path: string }>();
 
   readonly result = signal<RefinementFindingsResponse | null>(null);
   readonly loading = signal(false);
@@ -73,6 +75,15 @@ export class RefinementTabComponent {
       case 'SOURCE_PROFILE': return evidence.sourceName;
       default: return null;
     }
+  }
+
+  isNavigableSource(evidence: RefinementEvidence): boolean {
+    return evidence.type === 'SOURCE_FILE' && !!evidence.path;
+  }
+
+  openInRelevantFiles(evidence: RefinementEvidence): void {
+    if (!this.isNavigableSource(evidence) || !evidence.path) return;
+    this.openSource.emit({ sourceId: evidence.sourceId, path: evidence.path });
   }
 
   proposedChangeLabel(finding: RefinementFinding): string {

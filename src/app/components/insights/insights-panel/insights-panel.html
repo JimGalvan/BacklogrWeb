@@ -17,6 +17,7 @@
       [hidden]="activeTab() !== 'refinement'"
       [workspaceId]="workspaceId()"
       [ticketKey]="ticketKey()"
+      (openSource)="openSourceInRelevantFiles($event)"
     />
     <app-relevant-files-tab
       [hidden]="activeTab() !== 'files'"

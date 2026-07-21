@@ -69,7 +69,14 @@
                       <div class="evidence-head">
                         <span>{{ evidence.label }}</span>
                         @if (evidenceReference(evidence); as reference) {
-                          <code>{{ reference }}</code>
+                          @if (isNavigableSource(evidence)) {
+                            <button type="button" class="evidence-link" (click)="openInRelevantFiles(evidence)">
+                              <app-icon name="link" [size]="11" />
+                              <code>{{ reference }}</code>
+                            </button>
+                          } @else {
+                            <code>{{ reference }}</code>
+                          }
                         }
                       </div>
                       <p>{{ evidence.excerpt }}</p>

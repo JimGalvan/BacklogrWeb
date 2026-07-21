@@ -20,6 +20,10 @@ export class RelevantFilesTabComponent {
   readonly result = signal<RelevantFilesResponse | null>(null);
   readonly loading = signal(false);
   readonly errorMessage = signal('');
+  readonly focusedPath = signal<string | null>(null);
+  readonly focusNotice = signal('');
+
+  private pendingFocusPath: string | null = null;
 
   load(): void {
     if (this.loaded) return;
@@ -39,6 +43,7 @@ export class RelevantFilesTabComponent {
         next: result => {
           this.result.set(result);
           this.loaded = true;
+          this.applyPendingFocus();
         },
         error: error => {
           this.errorMessage.set(
@@ -48,6 +53,39 @@ export class RelevantFilesTabComponent {
           );
         },
       });
+  }
+
+  focusFile(path: string): void {
+    this.pendingFocusPath = path;
+    if (this.loaded && !this.loading()) {
+      this.applyPendingFocus();
+    } else {
+      this.load();
+    }
+  }
+
+  isFocused(file: RelevantFile): boolean {
+    return this.focusedPath() === file.path;
+  }
+
+  private applyPendingFocus(): void {
+    const path = this.pendingFocusPath;
+    this.pendingFocusPath = null;
+    if (!path) return;
+
+    const present = (this.result()?.files ?? []).some(file => file.path === path);
+    if (present) {
+      this.focusedPath.set(path);
+      this.focusNotice.set('');
+      setTimeout(() => {
+        document.getElementById('relevant-file-' + path)?.scrollIntoView({ block: 'nearest' });
+      });
+    } else {
+      this.focusedPath.set(null);
+      this.focusNotice.set(
+        'That file is not among the top relevant files for this ticket, so its excerpt is not shown here.',
+      );
+    }
   }
 
   fileType(file: RelevantFile): string {

@@ -54,9 +54,14 @@
         </div>
       </div>
     } @else {
+      @if (focusNotice()) {
+        <p class="focus-notice"><app-icon name="search" [size]="13" /> {{ focusNotice() }}</p>
+      }
       <div class="file-list">
         @for (file of data.files; track file.sourceId + ':' + file.revision + ':' + file.path; let index = $index) {
-          <details class="file-card" [open]="index === 0">
+          <details class="file-card" [id]="'relevant-file-' + file.path"
+                   [class.focused]="isFocused(file)"
+                   [open]="index === 0 || isFocused(file)">
             <summary>
               <span class="path-rail" aria-hidden="true"></span>
               <span class="file-main">

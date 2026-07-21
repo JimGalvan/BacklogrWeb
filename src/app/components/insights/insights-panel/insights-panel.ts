@@ -34,6 +34,11 @@ export class InsightsPanelComponent {
     if (tab === 'files') this.relevantFilesTab()?.load();
   }
 
+  openSourceInRelevantFiles(reference: { sourceId: string | null; path: string }): void {
+    this.activeTab.set('files');
+    this.relevantFilesTab()?.focusFile(reference.path);
+  }
+
   reanalyze(): void {
     switch (this.activeTab()) {
       case 'summary':    this.summaryTab()?.reanalyze(); break;
